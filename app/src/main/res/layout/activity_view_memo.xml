@@ -1,0 +1,40 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ViewMemoActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/wanmemo_background_03"
+        tools:context="com.pliseproject.activities.ViewMemoActivity">
+
+        <!-- toolbar -->
+        <include
+            android:id="@+id/toolbar_menu"
+            layout="@layout/toolbar" />
+
+        <!-- contents -->
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar_menu">
+
+            <fragment
+                class="com.pliseproject.fragments.ViewMemoFragment"
+                android:id="@+id/view_memo_fragment"
+                android:name="com.pliseproject.fragments.ViewMemoFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <include layout="@layout/toolbar_shadow" />
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <!-- nav drawer -->
+    <include layout="@layout/drawer_layout" />
+</android.support.v4.widget.DrawerLayout>

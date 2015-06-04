@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer"
+    android:layout_width="304dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <include layout="@layout/drawer_header" />
+
+    <include
+        android:id="@+id/drawer_create_memo"
+        layout="@layout/drawer_menu" />
+
+    <include layout="@layout/drawer_divider" />
+
+    <include layout="@layout/drawer_sub_header" />
+
+    <include layout="@layout/drawer_memo_list" />
+</LinearLayout>
