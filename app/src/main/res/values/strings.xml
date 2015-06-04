@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 共通 -->
+    <string name="app_name">一週間メモリーズ。</string>
+    <string name="delete_view">本当に消してもいいですか？</string>
+    <string name="success_delete_view">削除に成功しました！</string>
+    <string name="determine">決定</string>
+    <string name="refresh">更新</string>
+    <string name="finish">終了</string>
+    <string name="voice_setting">音声読み上げ設定</string>
+    <string name="go_play_stroe">Playストアへ</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="cancel">戻る</string>
+    <string name="delete">削除</string>
+    <string name="confirmation_of_not_saved">作成中のメモは保存されません。\nよろしいですか?</string>
+
+    <!-- navigation drawer -->
+    <string name="nav_create_memo">新規作成</string>
+    <string name="nav_sub_header_memo_list">メモ一覧</string>
+
+    <!-- 閲覧画面 -->
+    <string name="read_view">閲覧</string>
+    <string name="subject">件名</string>
+    <string name="memo">メモ</string>
+    <string name="edit">編集</string>
+
+    <!-- 作成・編集画面 -->
+    <string name="create_view">メモ作成</string>
+    <string name="store">保存</string>
+    <string name="setting">設定</string>
+
+    <!-- 設定画面 -->
+    <string name="setting_view">設定</string>
+    <string name="alert_view">時刻を設定して下さい</string>
+    <string name="error_past_date">通知時間が過去になっています</string>
+    <string name="alarm_info">通知</string>
+    <string name="alarm_day">通知日</string>
+    <string name="alarm_time">通知時刻</string>
+    <string name="alarm_sound">通知音</string>
+    <string name="is_alarm_view">通知</string>
+    <string name="alarm_day_view">設定日: </string>
+    <string name="alarm_time_view">設定時刻: </string>
+    <string name="alarm_sound_view">設定音: </string>
+    <string name="is_alarm_view_yes">: する</string>
+    <string name="is_alarm_view_no">: しない</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="hour">時</string>
+    <string name="minute">分</string>
+
+    <!-- 愛萌宮さんセリフ集 -->
+    <string name="voice1">く、、くすぐったい、、、</string>
+    <string name="voice2">何か用ですか？</string>
+    <string name="voice3">私、メモ宮。 高校二年生です！</string>
+    <string name="voice4">いっぱいメモしてね！</string>
+    <string name="voice5">呼びましたか？</string>
+    <string name="voice6">いい加減にしないと、、、、、、、、、怒りますよ！</string>
+
+</resources>

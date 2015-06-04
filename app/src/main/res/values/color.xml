@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- app -->
+    <!--<color name="main_color">#00C0D8</color>-->
+    <color name="main_color">#00aa00</color>
+    <color name="sub_color">#FFC107</color>
+
+    <!-- layout -->
+    <color name="background_color">#fafafa</color>
+    <color name="action_bar">#00C0D8</color>
+    <color name="tag_color">#00C0D8</color>
+    <color name="white">#fafafa</color>
+    <color name="white_pressed">#f1f1f1</color>
+    <color name="cover">#80000000</color>
+    <color name="divider">#10000000</color>
+
+    <!-- text -->
+    <color name="text">#424242</color>
+    <color name="sub_text">#808080</color>
+    <color name="hint">#40000000</color>
+    <color name="navigation_drawer_header_sub_text">#D9FFFFFF</color>
+    <color name="navigation_drawer_menu_main_text">#424242</color>
+    <color name="navigation_drawer_sub_header_text">#8D000000</color>
+    <color name="navigation_drawer_sub_menu_text">#808080</color>
+
+    <!-- grey -->
+    <color name="grey200">#EEEEEE</color>
+    <color name="grey400">#DBDBDB</color>
+    <color name="grey600">#757575</color>
+    <color name="grey800">#424242</color>
+
+    <!-- other -->
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="background">#E5E5E5</color>
+    <color name="background_nav_header">#CFD8DC</color>
+    <color name="half_black">#808080</color>
+
+</resources>

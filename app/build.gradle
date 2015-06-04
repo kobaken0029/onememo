@@ -1,0 +1,35 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId "com.pliseproject"
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 6
+        versionName "1.4.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+    // サポートライブラリ
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:recyclerview-v7:21.0.0'
+
+    // FloatingActionButton
+    compile 'com.getbase:floatingactionbutton:1.9.0'
+
+    // Viewの紐付け簡略化
+    compile 'com.jakewharton:butterknife:6.1.0'
+}

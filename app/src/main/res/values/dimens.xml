@@ -1,0 +1,29 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_padding">8dp</dimen>
+
+    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
+         https://developer.android.com/design/patterns/navigation-drawer.html -->
+    <dimen name="navigation_drawer_width">240dp</dimen>
+
+    <!-- 各行の間隔 -->
+    <dimen name="text_line_spacing">6dp</dimen>
+    <dimen name="text_splash_line_spacing">16dp</dimen>
+
+    <!-- テキストサイズ -->
+    <dimen name="text_size_button">18sp</dimen>
+    <dimen name="text_size_hint">14sp</dimen>
+    <dimen name="text_sub_size">14sp</dimen>
+    <dimen name="text_subject_and_memo">32sp</dimen>
+    <dimen name="text_detail">18sp</dimen>
+    <dimen name="text_splash">22sp</dimen>
+    <dimen name="text_splash_sub">18sp</dimen>
+    <dimen name="text_dialog">16sp</dimen>
+    <dimen name="text_tab_widget">16sp</dimen>
+    <dimen name="text_drawer">14sp</dimen>
+    <dimen name="text_list_item">24sp</dimen>
+
+</resources>

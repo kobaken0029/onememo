@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- アイテム種別 type -->
+    <!-- header ログイン前-->
+    <array name="type_header_before_login">
+        <item name="key">type</item>
+        <item name="value">header_before_login</item>
+    </array>
+
+    <!-- header ログイン後-->
+    <array name="type_header_after_login">
+        <item name="key">type</item>
+        <item name="value">header_after_login</item>
+    </array>
+
+    <!-- menu -->
+    <array name="type_menu">
+        <item name="key">type</item>
+        <item name="value">menu</item>
+    </array>
+
+    <!-- divider -->
+    <array name="type_divider">
+        <item name="key">type</item>
+        <item name="value">divider</item>
+    </array>
+
+    <!-- sub header -->
+    <array name="type_sub_header">
+        <item name="key">type</item>
+        <item name="value">sub_header</item>
+    </array>
+
+    <!-- sub menu -->
+    <array name="type_sub_menu">
+        <item name="key">type</item>
+        <item name="value">sub_menu</item>
+    </array>
+
+    <!-- sub menu -->
+    <array name="type_memo_list">
+        <item name="key">type</item>
+        <item name="value">memo_list</item>
+    </array>
+
+
+    <!-- 表示内容・設定 content -->
+    <!-- header contents -->
+    <array name="header_icon">
+        <item name="key">icon</item>
+        <item name="value">@drawable/wanmemo_icon</item>
+    </array>
+    <array name="header_text_1">
+        <item name="key">name</item>
+        <item name="value">愛萌宮</item>
+    </array>
+    <array name="header_text_2">
+        <item name="key">email</item>
+        <item name="value">test@example.com</item>
+    </array>
+    <array name="header_text_3">
+        <item name="key">name</item>
+        <item name="value">@string/app_name</item>
+    </array>
+
+    <!-- menu contents -->
+    <array name="menu_icon_home">
+        <item name="key">icon</item>
+        <item name="value">@drawable/wanmemo_icon</item>
+    </array>
+    <array name="menu_text_1">
+        <item name="key">text</item>
+        <item name="value">めもみや</item>
+    </array>
+
+    <!-- menu contents -->
+    <array name="menu_icon_login">
+        <item name="key">icon</item>
+        <item name="value">@drawable/wanmemo_icon</item>
+    </array>
+    <array name="menu_text_login">
+        <item name="key">text</item>
+        <item name="value">さん</item>
+    </array>
+
+    <!-- menu contents -->
+    <array name="menu_icon_logout">
+        <item name="key">icon</item>
+        <item name="value">@drawable/wanmemo_icon</item>
+    </array>
+    <array name="menu_text_logout">
+        <item name="key">text</item>
+        <item name="value">愛萌宮</item>
+    </array>
+
+    <!-- divider contents -->
+    <array name="divider_color">
+        <item name="key">color</item>
+        <item name="value">@color/divider</item>
+    </array>
+
+    <!-- sub header contents -->
+    <array name="sub_header_text">
+        <item name="key">text</item>
+        <item name="value">Subheader</item>
+    </array>
+
+    <!-- sub menu contents -->
+    <array name="sub_menu_text_1">
+        <item name="key">text</item>
+        <item name="value">利用規約</item>
+    </array>
+    <array name="sub_menu_text_2">
+        <item name="key">text</item>
+        <item name="value">プライバシーポリシー</item>
+    </array>
+
+    <!-- memo list contents -->
+    <array name="memo_list_text">
+        <item name="key">text</item>
+        <item name="value">メモリスト</item>
+    </array>
+
+
+    <!-- アイテム内の構造 item -->
+    <!-- header structure -->
+    <array name="header_before_login">
+        <item>@array/type_header_before_login</item>
+        <item>@array/header_icon</item>
+        <item>@array/header_text_3</item>
+    </array>
+
+    <array name="header_after_login">
+        <item>@array/type_header_after_login</item>
+        <item>@array/header_icon</item>
+        <item>@array/header_text_1</item>
+        <item>@array/header_text_2</item>
+    </array>
+
+    <!-- menu structure -->
+    <array name="go_to_my_page">
+        <item>@array/type_menu</item>
+        <item>@array/menu_icon_home</item>
+        <item>@array/menu_text_1</item>
+    </array>
+
+    <!-- menu structure -->
+    <array name="login">
+        <item>@array/type_menu</item>
+        <item>@array/menu_icon_login</item>
+        <item>@array/menu_text_login</item>
+    </array>
+
+    <!-- menu structure -->
+    <array name="logout">
+        <item>@array/type_menu</item>
+        <item>@array/menu_icon_logout</item>
+        <item>@array/menu_text_logout</item>
+    </array>
+
+    <!-- divider structure -->
+    <array name="divider">
+        <item>@array/type_divider</item>
+        <item>@array/divider_color</item>
+    </array>
+
+    <!-- sub header structure-->
+    <array name="sub_header">
+        <item>@array/type_sub_header</item>
+        <item>@array/sub_header_text</item>
+    </array>
+
+    <!-- sub menu structure -->
+    <array name="acceptable_use_policy">
+        <item>@array/type_sub_menu</item>
+        <item>@array/sub_menu_text_1</item>
+    </array>
+
+    <!-- sub menu structure -->
+    <array name="privacy_policy">
+        <item>@array/type_sub_menu</item>
+        <item>@array/sub_menu_text_2</item>
+    </array>
+
+    <!-- sub menu structure -->
+    <array name="memo_list">
+        <item>@array/type_memo_list</item>
+        <item>@array/memo_list_text</item>
+    </array>
+
+
+    <!-- ドロワーの全体構造 ログイン前 -->
+    <array name="drawer_menu_list_before_login">
+        <item>@array/header_before_login</item>
+        <item>@array/memo_list</item>
+        <!--<item>@array/go_to_my_page</item>-->
+        <!--<item>@array/login</item>-->
+        <!--<item>@array/go_to_my_page</item>-->
+        <!--<item>@array/login</item>-->
+        <!--<item>@array/divider</item>-->
+        <!--<item>@array/acceptable_use_policy</item>-->
+        <!--<item>@array/privacy_policy</item>-->
+    </array>
+
+    <!-- ドロワーの全体構造 ログイン後 -->
+    <array name="drawer_menu_list_after_login">
+        <item>@array/header_after_login</item>
+        <item>@array/go_to_my_page</item>
+        <item>@array/logout</item>
+        <item>@array/go_to_my_page</item>
+        <item>@array/logout</item>
+        <item>@array/divider</item>
+        <item>@array/sub_header</item>
+        <item>@array/go_to_my_page</item>
+        <item>@array/logout</item>
+        <item>@array/divider</item>
+        <item>@array/acceptable_use_policy</item>
+        <item>@array/privacy_policy</item>
+    </array>
+</resources>
