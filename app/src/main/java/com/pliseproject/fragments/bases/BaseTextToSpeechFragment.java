@@ -2,10 +2,13 @@ package com.pliseproject.fragments.bases;
 
 import android.app.Activity;
 import android.os.Build;
+import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.view.View;
 
 import com.pliseproject.R;
 import com.pliseproject.activities.CreateMemoActivity;
+import com.pliseproject.activities.bases.BaseNavigationDrawerActivity;
 import com.pliseproject.utils.UiUtil;
 import com.pliseproject.utils.packageUtil;
 
@@ -29,48 +32,25 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
             tts.stop();
         }
 
-        String message = "";
-        if (activity instanceof CreateMemoActivity) {
-            // 乱数を生成
-            int ran = new Random().nextInt(6);
-
-            // 乱数に応じて、テキストをセット
-            switch (ran) {
-                case 0:
-                    message = getResources().getString(R.string.voice1);
-                    break;
-                case 1:
-                    message = getResources().getString(R.string.voice2);
-                    break;
-                case 2:
-                    message = getResources().getString(R.string.voice3);
-                    break;
-                case 3:
-                    message = getResources().getString(R.string.voice4);
-                    break;
-                case 4:
-                    message = getResources().getString(R.string.voice5);
-                    break;
-                case 5:
-                    message = getResources().getString(R.string.voice6);
-                    break;
-            }
-        } else {
-            message = memo != null
-                    ? ((memo.getSubject() != null
-                    ? memo.getSubject() + "。"
-                    : "") +
-                    (memo.getMemo() != null
-                            ? memo.getMemo()
-                            : ""))
-                    : "";
-        }
-        ttsSpeak(message);
+        ttsSpeak(memo != null
+                ? ((memo.getSubject() != null
+                ? memo.getSubject() + "。"
+                : "") +
+                (memo.getMemo() != null
+                        ? memo.getMemo()
+                        : ""))
+                : "");
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        activity.getDrawerFujimiyaImageView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speakMemomiya();
+            }
+        });
     }
 
     @Override
@@ -132,4 +112,37 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
         }
     }
 
+    /**
+     * 愛萌宮さんがランダムにセリフを喋る。
+     */
+    private void speakMemomiya() {
+        String message = "";
+
+        // 乱数を生成
+        int ran = new Random().nextInt(6);
+
+        // 乱数に応じて、テキストをセット
+        switch (ran) {
+            case 0:
+                message = getResources().getString(R.string.voice1);
+                break;
+            case 1:
+                message = getResources().getString(R.string.voice2);
+                break;
+            case 2:
+                message = getResources().getString(R.string.voice3);
+                break;
+            case 3:
+                message = getResources().getString(R.string.voice4);
+                break;
+            case 4:
+                message = getResources().getString(R.string.voice5);
+                break;
+            case 5:
+                message = getResources().getString(R.string.voice6);
+                break;
+        }
+
+        ttsSpeak(message);
+    }
 }

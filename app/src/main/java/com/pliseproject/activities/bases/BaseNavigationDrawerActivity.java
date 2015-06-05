@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -50,6 +51,9 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
 
     @InjectView(R.id.drawer_header_layout)
     RelativeLayout drawerHeaderRelativeLayout;
+
+    @InjectView(R.id.icon_fujimiya)
+    ImageView drawerFujimiyaImageView;
 
     @OnClick(R.id.drawer_create_memo)
     void onClickDrawerCreateMemo() {
@@ -151,5 +155,9 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
 
     public LinearLayout getDrawerLinearLayout() {
         return drawerLinearLayout;
+    }
+
+    public ImageView getDrawerFujimiyaImageView() {
+        return drawerFujimiyaImageView;
     }
 }
