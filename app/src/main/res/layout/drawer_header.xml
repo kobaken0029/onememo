@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_header_layout"
     android:layout_width="match_parent"
@@ -15,6 +14,22 @@
     <!--android:layout_marginTop="14dp"-->
     <!--android:src="@drawable/fujimiya" />-->
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:id="@+id/icon_fujimiya"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginBottom="-27dp"
+            android:src="@drawable/fujimiya" />
+
+    </FrameLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -25,30 +40,32 @@
         android:paddingTop="8dp">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/message_window"
             style="@style/NavigationDrawerHeaderMainText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/simple_pink"
+            android:gravity="start|center"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp" />
 
-        <TextView
-            android:id="@+id/email"
-            style="@style/NavigationDrawerHeaderSubText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <!--<TextView-->
+        <!--android:id="@+id/name"-->
+        <!--style="@style/NavigationDrawerHeaderMainText"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="16dp"-->
+        <!--android:layout_marginStart="16dp"-->
+        <!--android:textAppearance="?android:attr/textAppearanceMedium" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/email"-->
+        <!--style="@style/NavigationDrawerHeaderSubText"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="16dp"-->
+        <!--android:layout_marginStart="16dp"-->
+        <!--android:textAppearance="?android:attr/textAppearanceMedium" />-->
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/icon_fujimiya"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-32dp"
-        android:src="@drawable/fujimiya" />
 </RelativeLayout>

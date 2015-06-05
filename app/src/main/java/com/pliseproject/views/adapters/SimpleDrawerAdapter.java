@@ -48,14 +48,14 @@ public class SimpleDrawerAdapter extends RecyclerView.Adapter<SimpleDrawerAdapte
             // viewTypeによって値を設定
             switch (viewType) {
                 case R.array.type_header_before_login:
-                    mTextView = findById(itemView, R.id.email);
+//                    mTextView = findById(itemView, R.id.email);
                     mImageView = findById(itemView, R.id.icon);
                     findById(itemView, R.id.drawer_header_layout)
                             .setBackgroundColor(context.getResources().getColor(R.color.action_bar));
                     break;
                 case R.array.type_header_after_login:
-                    mTextView = findById(itemView, R.id.name);
-                    mTextView2 = findById(itemView, R.id.email);
+//                    mTextView = findById(itemView, R.id.name);
+//                    mTextView2 = findById(itemView, R.id.email);
                     mImageView = findById(itemView, R.id.icon);
                     findById(itemView, R.id.drawer_header_layout)
                             .setBackgroundColor(context.getResources().getColor(R.color.action_bar));
