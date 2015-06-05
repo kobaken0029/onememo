@@ -17,6 +17,7 @@ import android.widget.TimePicker;
 import com.pliseproject.R;
 import com.pliseproject.activities.SetAlarmActivity;
 import com.pliseproject.fragments.bases.BaseNavigationDrawerFragment;
+import com.pliseproject.fragments.bases.BaseTextToSpeechFragment;
 import com.pliseproject.models.CustomCheckData;
 import com.pliseproject.models.Memo;
 import com.pliseproject.views.adapters.CustomCheckAdapter;
@@ -31,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
 
-public class SetAlarmFragment extends BaseNavigationDrawerFragment {
+public class SetAlarmFragment extends BaseTextToSpeechFragment {
     private SetAlarmActivity activity;
     private CustomCheckAdapter checkAdapter;
     private int year;

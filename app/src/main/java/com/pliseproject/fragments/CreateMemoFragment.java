@@ -15,6 +15,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.pliseproject.R;
 import com.pliseproject.activities.SetAlarmActivity;
 import com.pliseproject.fragments.bases.BaseNavigationDrawerFragment;
+import com.pliseproject.fragments.bases.BaseTextToSpeechFragment;
 import com.pliseproject.managers.AppController;
 import com.pliseproject.models.Memo;
 
@@ -22,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class CreateMemoFragment extends BaseNavigationDrawerFragment {
+public class CreateMemoFragment extends BaseTextToSpeechFragment {
     private static final int SET_ALARM_ACTIVITY = 1;
 
     private int alarmHour;

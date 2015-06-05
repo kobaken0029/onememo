@@ -33,15 +33,11 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
                 intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
-//        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(),
-//                R.drawable.wanmemo_icon);
-
         // notificationの設定
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 context)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.wanmemo_notification_icon)
-//                .setLargeIcon(largeIcon)
                 .setTicker("メモを通知します")
                 .setDefaults(
                         Notification.DEFAULT_VIBRATE
@@ -54,8 +50,7 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
                         Uri.parse("android.resource://"
                                 + context.getPackageName() + "/" + R.raw.alarm));
 
-        audioManager = (AudioManager) context
-                .getSystemService(Context.AUDIO_SERVICE);
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int ringerMode = audioManager.getRingerMode();
 
         // マナーモードかどうかの判定
