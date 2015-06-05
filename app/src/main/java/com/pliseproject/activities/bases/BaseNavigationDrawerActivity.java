@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.pliseproject.R;
 import com.pliseproject.activities.CreateMemoActivity;
@@ -19,6 +20,7 @@ import com.pliseproject.activities.ViewMemoActivity;
 import com.pliseproject.managers.AppController;
 import com.pliseproject.models.Memo;
 import com.pliseproject.receivers.MyBroadcastReceiver;
+import com.pliseproject.utils.DateUtil;
 import com.pliseproject.views.adapters.MyListAdapter;
 
 import java.util.ArrayList;
@@ -46,6 +48,9 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
     @InjectView(R.id.drawer)
     LinearLayout drawerLinearLayout;
 
+    @InjectView(R.id.drawer_header_layout)
+    RelativeLayout drawerHeaderRelativeLayout;
+
     @OnClick(R.id.drawer_create_memo)
     void onClickDrawerCreateMemo() {
         moveCreateMemoView();
@@ -68,6 +73,21 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
         super.onResume();
         listView.setAdapter(myListAdapter);
         registerForContextMenu(listView);
+
+        switch (DateUtil.checkTimeNow()) {
+            case DateUtil.NOON:
+                drawerHeaderRelativeLayout.setBackgroundResource(R.drawable.school_classroom_at_noon);
+                break;
+            case DateUtil.EVENING:
+                drawerHeaderRelativeLayout.setBackgroundResource(R.drawable.school_classroom_at_evening);
+                break;
+            case DateUtil.NIGHT:
+                drawerHeaderRelativeLayout.setBackgroundResource(R.drawable.school_classroom_at_night);
+                break;
+            case DateUtil.LATE_NIGHT:
+                drawerHeaderRelativeLayout.setBackgroundResource(R.drawable.school_classroom_at_late_night);
+                break;
+        }
     }
 
     @Override
