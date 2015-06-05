@@ -1,13 +1,13 @@
 package com.pliseproject.fragments.bases;
 
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 
 import com.pliseproject.R;
-import com.pliseproject.activities.CreateMemoActivity;
 import com.pliseproject.activities.bases.BaseNavigationDrawerActivity;
 import com.pliseproject.utils.UiUtil;
 import com.pliseproject.utils.packageUtil;
@@ -48,7 +48,10 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
         activity.getDrawerFujimiyaImageView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speakMemomiya();
+                activity.getMessageWindowTextView().setText("");
+                String message = getMessage();
+                ttsSpeak(message);
+                new MyHandler(message, activity).sendEmptyMessage(1);
             }
         });
     }
@@ -113,9 +116,9 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
     }
 
     /**
-     * 愛萌宮さんがランダムにセリフを喋る。
+     * 愛萌宮さんのランダムセリフを取得する。
      */
-    private void speakMemomiya() {
+    private String getMessage() {
         String message = "";
 
         // 乱数を生成
@@ -143,6 +146,38 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
                 break;
         }
 
-        ttsSpeak(message);
+        return message;
     }
+
+    static class MyHandler extends Handler {
+        private String message;
+        private BaseNavigationDrawerActivity activity;
+        private String buff = "";
+        private int i = 0;
+
+        MyHandler(String message, BaseNavigationDrawerActivity activity) {
+            this.message = message;
+            this.activity = activity;
+        }
+
+        @Override
+        public void dispatchMessage(Message msg) {
+            char data[] = message.toCharArray();
+
+            if (i < data.length) {
+                if (msg.what == 1) {
+                    buff += String.valueOf(data[i]);
+                    activity.getMessageWindowTextView().setText(buff);
+                    this.sendEmptyMessageDelayed(1, 100);
+                    i++;
+                } else {
+                    super.dispatchMessage(msg);
+                }
+            } else {
+                i = 0;
+                buff = "";
+            }
+        }
+    }
+
 }

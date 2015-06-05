@@ -1,6 +1,8 @@
 package com.pliseproject.activities.bases;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.pliseproject.R;
 import com.pliseproject.activities.CreateMemoActivity;
@@ -55,6 +58,9 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
     @InjectView(R.id.icon_fujimiya)
     ImageView drawerFujimiyaImageView;
 
+    @InjectView(R.id.message_window)
+    TextView messageWinsowTextView;
+
     @OnClick(R.id.drawer_create_memo)
     void onClickDrawerCreateMemo() {
         moveCreateMemoView();
@@ -93,6 +99,7 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
                 break;
         }
     }
+
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -159,5 +166,9 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
 
     public ImageView getDrawerFujimiyaImageView() {
         return drawerFujimiyaImageView;
+    }
+
+    public TextView getMessageWindowTextView() {
+        return messageWinsowTextView;
     }
 }
