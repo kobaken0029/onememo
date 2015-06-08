@@ -77,7 +77,7 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
 
         // 過去だったらエラーメッセージを出す
         if (calendar.getTimeInMillis() < System.currentTimeMillis() && memo.getPostFlg() == 1) {
-            UiUtil.showToast(this, getString(R.string.error_past_date));
+            UiUtil.showToast(this, getString(R.string.error_past_date_message));
             return;
         }
 
@@ -85,8 +85,6 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
 
         Intent intent = new Intent(this, CreateMemoActivity.class);
         intent.putExtra("memo", memo);
-//        intent.putExtra("hour", hour);
-//        intent.putExtra("minute", minute);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

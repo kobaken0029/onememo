@@ -52,7 +52,7 @@ public class AppController extends Application {
      * 画面遷移前確認ダイアログを表示する。
      */
     public void showDialogBeforeMoveMemoView(final Activity activity, final Intent intent) {
-        UiUtil.showDialog(activity, getString(R.string.confirmation_of_not_saved),
+        UiUtil.showDialog(activity, getString(R.string.confirmation_of_not_saved_message),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -152,7 +152,7 @@ public class AppController extends Application {
     public void deleteMemo(Memo memo) {
         AppController.dbAdapter.open();
         if (AppController.dbAdapter.deleteMemo(memo.getId())) {
-            UiUtil.showToast(mContext, R.string.success_delete_view);
+            UiUtil.showToast(mContext, R.string.success_delete_message);
         }
         AppController.dbAdapter.close();
         ((AlarmManager) getSystemService(ALARM_SERVICE)).cancel(getPendingIntent(memo));
