@@ -56,6 +56,9 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
 
     @OnClick(R.id.alert_button)
     void onClickSetAlertButton() {
+        memo.setSubject(subjectEditText.getText().toString());
+        memo.setMemo(memoEditText.getText().toString());
+
         Intent intent = new Intent(activity, SetAlarmActivity.class);
         intent.putExtra("memo", memo);
         startActivityForResult(intent, SET_ALARM_ACTIVITY);
