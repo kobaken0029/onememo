@@ -104,13 +104,13 @@ public class BaseNavigationDrawerFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item, DialogInterface.OnClickListener listener) {
         super.onContextItemSelected(item);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        memo = activity.getMemos().get(info.position);
+        final Memo selectedMemo = activity.getMemos().get(info.position);
 
         switch (item.getItemId()) {
             // メモを編集する
             case BaseNavigationDrawerActivity.MENU_ITEM_ID_EDIT:
                 Intent intent = new Intent(activity, CreateMemoActivity.class);
-                intent.putExtra("memo", memo);
+                intent.putExtra("memo", selectedMemo);
                 if (((activity instanceof CreateMemoActivity) && activity.getIntent().getSerializableExtra("memo") != null)
                         || activity instanceof SetAlarmActivity) {
                     appController.showDialogBeforeMoveMemoView(activity, intent);
@@ -126,10 +126,13 @@ public class BaseNavigationDrawerFragment extends Fragment {
                         listener != null ? listener : new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                deletedMemoId = BaseNavigationDrawerFragment.this.memo.getId();
-                                ((AppController) activity.getApplication()).deleteMemo(memo);
-                                BaseNavigationDrawerFragment.this.memo = (Memo) activity.getListView().getItemAtPosition(0);
+                                deletedMemoId = selectedMemo.getId();
+                                ((AppController) activity.getApplication()).deleteMemo(selectedMemo);
                                 loadMemos();
+                                if (memo.getId() == deletedMemoId
+                                        && activity instanceof CreateMemoActivity) {
+                                    activity.finish();
+                                }
                             }
                         });
                 break;
