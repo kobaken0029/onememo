@@ -16,7 +16,6 @@ import android.widget.TimePicker;
 
 import com.pliseproject.R;
 import com.pliseproject.activities.SetAlarmActivity;
-import com.pliseproject.fragments.bases.BaseNavigationDrawerFragment;
 import com.pliseproject.fragments.bases.BaseTextToSpeechFragment;
 import com.pliseproject.models.CustomCheckData;
 import com.pliseproject.models.Memo;
@@ -43,8 +42,6 @@ public class SetAlarmFragment extends BaseTextToSpeechFragment {
 
     @InjectView(R.id.setting_list)
     ListView settingList;
-
-    private CheckBox checkBox;
 
     @OnItemClick(R.id.setting_list)
     void onItemClickSettingList(AdapterView<?> parent, View view, int position, long id) {
@@ -111,7 +108,7 @@ public class SetAlarmFragment extends BaseTextToSpeechFragment {
                 }, hour, minute, true).show();
                 break;
             case LIST_ID_POST:
-                checkBox = findById(view, R.id.check_alarm);
+                CheckBox checkBox = findById(view, R.id.check_alarm);
                 CustomCheckData data = checkAdapter.getItem(position);
                 String isAlarm;
 
@@ -191,6 +188,7 @@ public class SetAlarmFragment extends BaseTextToSpeechFragment {
                         + minute + activity.getString(R.string.minute));
             }
 
+            activity.setPostedMemo(memo);
             activity.setYear(year);
             activity.setMonth(month);
             activity.setDay(day);

@@ -22,6 +22,7 @@ import butterknife.InjectView;
  * アラーム設定画面のActivityです。
  */
 public class SetAlarmActivity extends BaseNavigationDrawerActivity {
+    private Memo postedMemo;
     private Calendar calendar = Calendar.getInstance();
     private int year = calendar.get(Calendar.YEAR);
     private int month = calendar.get(Calendar.MONTH);
@@ -42,16 +43,16 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            save((Memo) getIntent().getSerializableExtra("memo"));
+        if (item.getItemId() == android.R.id.home && postedMemo != null) {
+            save(postedMemo);
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            save((Memo) getIntent().getSerializableExtra("memo"));
+        if (keyCode == KeyEvent.KEYCODE_BACK && postedMemo != null) {
+            save(postedMemo);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -88,6 +89,10 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
         intent.putExtra("minute", minute);
         setResult(Activity.RESULT_OK, intent);
         finish();
+    }
+
+    public void setPostedMemo(Memo postedMemo) {
+        this.postedMemo = postedMemo;
     }
 
     public void setYear(int year) {
