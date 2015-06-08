@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/activity_padding"
@@ -72,12 +72,22 @@
         </TableRow>
     </TableLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/store_button_in_create_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            fab:fab_colorNormal="@color/main_color"
+            fab:fab_colorPressed="@color/sub_color"
+            fab:fab_icon="@drawable/ic_action_editor_mode_edit"
+            fab:fab_title="@string/store" />
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/multiple_actions"
@@ -108,5 +118,5 @@
                 fab:fab_size="mini"
                 fab:fab_title="@string/store" />
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
-    </LinearLayout>
+    </FrameLayout>
 </RelativeLayout>

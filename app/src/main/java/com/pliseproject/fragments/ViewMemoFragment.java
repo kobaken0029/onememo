@@ -105,12 +105,17 @@ public class ViewMemoFragment extends BaseTextToSpeechFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final Memo selectedMemo = activity.getMemos().get(info.position);
+
         return super.onContextItemSelected(item, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                setDeletedMemoId(ViewMemoFragment.this.memo.getId());
-                ((AppController) activity.getApplication()).deleteMemo(memo);
-                ViewMemoFragment.this.memo = null;
+                setDeletedMemoId(selectedMemo.getId());
+                ((AppController) activity.getApplication()).deleteMemo(selectedMemo);
+                if (memo.getId() == selectedMemo.getId()) {
+                    memo = null;
+                }
                 loadMemos();
                 loadMemo();
             }
@@ -130,10 +135,7 @@ public class ViewMemoFragment extends BaseTextToSpeechFragment {
             findById(activity, R.id.delete_button).setVisibility(View.VISIBLE);
             findById(activity, R.id.edit_button).setVisibility(View.VISIBLE);
         } else {
-            memo = new Memo();
-            memo.setSubject("あなたへ");
-            memo.setMemo("メモ書いて！");
-
+            memo = appController.findMemo(-1);
             findById(activity, R.id.delete_button).setVisibility(View.GONE);
             findById(activity, R.id.edit_button).setVisibility(View.GONE);
         }
