@@ -26,8 +26,8 @@ import butterknife.OnClick;
 public class CreateMemoFragment extends BaseTextToSpeechFragment {
     private static final int SET_ALARM_ACTIVITY = 1;
 
-    private int alarmHour;
-    private int alarmMinute;
+//    private int alarmHour;
+//    private int alarmMinute;
     private AppController appController;
     private Memo memo;
 
@@ -48,7 +48,7 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
         if (memo == null || memo.getId() == getDeletedMemoId()) {
             appController.saveMemo(subjectEditText, memoEditText);
         } else {
-            appController.updateMemo(memo, alarmHour, alarmMinute, subjectEditText, memoEditText);
+            appController.updateMemo(memo, subjectEditText, memoEditText);
         }
         activity.finish();
         floatingActionsMenu.collapse();
@@ -56,9 +56,6 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
 
     @OnClick(R.id.alert_button)
     void onClickSetAlertButton() {
-        memo.setSubject(subjectEditText.getText().toString());
-        memo.setMemo(memoEditText.getText().toString());
-
         Intent intent = new Intent(activity, SetAlarmActivity.class);
         intent.putExtra("memo", memo);
         startActivityForResult(intent, SET_ALARM_ACTIVITY);
@@ -88,6 +85,7 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // メモを取得
         memo = (Memo) activity.getIntent().getSerializableExtra("memo");
 
         setAlertButton.setVisibility(View.GONE);
@@ -104,9 +102,12 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SET_ALARM_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
+                // 通知時間が設定されたメモを取得
                 memo = (Memo) data.getSerializableExtra("memo");
-                alarmHour = data.getIntExtra("hour", 0);
-                alarmMinute = data.getIntExtra("minute", 0);
+
+                // 通知時間を取得
+//                alarmHour = data.getIntExtra("hour", 0);
+//                alarmMinute = data.getIntExtra("minute", 0);
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 activity.finish();
             }
