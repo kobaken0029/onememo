@@ -25,7 +25,7 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
     private static final int SET_ALARM_ACTIVITY = 1;
 
     private AppController appController;
-    private Memo memo;
+//    private Memo memo;
 
     @InjectView(R.id.subject_editText)
     EditText subjectEditText;
@@ -36,8 +36,8 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
     @InjectView(R.id.multiple_actions)
     FloatingActionsMenu floatingActionsMenu;
 
-    @InjectView(R.id.alert_button)
-    FloatingActionButton setAlertButton;
+    @InjectView(R.id.store_button_in_create_view)
+    FloatingActionButton storeInCreateViewFloatingActionButton;
 
     @OnClick(R.id.store_button)
     void onClickStoreMemoButton() {
@@ -48,6 +48,12 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
         }
         activity.finish();
         floatingActionsMenu.collapse();
+    }
+
+    @OnClick(R.id.store_button_in_create_view)
+    void onClickStoreMemoInCreateViewButton() {
+        appController.saveMemo(subjectEditText, memoEditText);
+        activity.finish();
     }
 
     @OnClick(R.id.alert_button)
@@ -84,12 +90,14 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
         // メモを取得
         memo = (Memo) activity.getIntent().getSerializableExtra("memo");
 
-        setAlertButton.setVisibility(View.GONE);
+        storeInCreateViewFloatingActionButton.setVisibility(View.VISIBLE);
+        floatingActionsMenu.setVisibility(View.GONE);
 
         if (memo != null) {
             subjectEditText.setText(memo.getSubject());
             memoEditText.setText(memo.getMemo());
-            setAlertButton.setVisibility(View.VISIBLE);
+            storeInCreateViewFloatingActionButton.setVisibility(View.GONE);
+            floatingActionsMenu.setVisibility(View.VISIBLE);
         }
     }
 
