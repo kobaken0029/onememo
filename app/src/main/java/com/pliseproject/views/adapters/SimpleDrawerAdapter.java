@@ -86,7 +86,7 @@ public class SimpleDrawerAdapter extends RecyclerView.Adapter<SimpleDrawerAdapte
     private List<Map<String, Object>> mDrawerMenuArr;
 
     // ListViewのアダプター
-    private MyListAdapter mMyListAdapter;
+    private MemoListAdapter mMemoListAdapter;
 
     /**
      * コンストラクタ。
@@ -94,10 +94,10 @@ public class SimpleDrawerAdapter extends RecyclerView.Adapter<SimpleDrawerAdapte
      * @param context   コンテキスト
      * @param arrayList 対象のデータ
      */
-    public SimpleDrawerAdapter(Context context, List<Map<String, Object>> arrayList, MyListAdapter myListAdapter) {
+    public SimpleDrawerAdapter(Context context, List<Map<String, Object>> arrayList, MemoListAdapter memoListAdapter) {
         mContext = context;
         mDrawerMenuArr = arrayList;
-        mMyListAdapter = myListAdapter;
+        mMemoListAdapter = memoListAdapter;
     }
 
     @Override
@@ -169,7 +169,7 @@ public class SimpleDrawerAdapter extends RecyclerView.Adapter<SimpleDrawerAdapte
                 holder.mTextView.setText(menu.get("text").toString());
                 break;
             case R.array.type_memo_list:
-                holder.mListView.setAdapter(mMyListAdapter);
+                holder.mListView.setAdapter(mMemoListAdapter);
             default:
                 break;
         }

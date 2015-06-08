@@ -1,8 +1,6 @@
 package com.pliseproject.activities.bases;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -25,7 +23,7 @@ import com.pliseproject.managers.AppController;
 import com.pliseproject.models.Memo;
 import com.pliseproject.receivers.MyBroadcastReceiver;
 import com.pliseproject.utils.DateUtil;
-import com.pliseproject.views.adapters.MyListAdapter;
+import com.pliseproject.views.adapters.MemoListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +39,7 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
 
     private MyBroadcastReceiver mBroadcastReceiver;
     private List<Memo> memos;
-    private MyListAdapter myListAdapter;
+    private MemoListAdapter memoListAdapter;
 
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -75,13 +73,13 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
         mBroadcastReceiver.registerReceiver();
 
         memos = new ArrayList<>();
-        myListAdapter = new MyListAdapter(this, memos);
+        memoListAdapter = new MemoListAdapter(this, memos);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        listView.setAdapter(myListAdapter);
+        listView.setAdapter(memoListAdapter);
         registerForContextMenu(listView);
 
         switch (DateUtil.checkTimeNow()) {
@@ -148,8 +146,8 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
         return memos;
     }
 
-    public MyListAdapter getMyListAdapter() {
-        return myListAdapter;
+    public MemoListAdapter getMemoListAdapter() {
+        return memoListAdapter;
     }
 
     public DrawerLayout getDrawerLayout() {
