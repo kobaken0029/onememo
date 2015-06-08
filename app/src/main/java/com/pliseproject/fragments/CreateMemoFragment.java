@@ -1,7 +1,6 @@
 package com.pliseproject.fragments;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.pliseproject.R;
 import com.pliseproject.activities.SetAlarmActivity;
-import com.pliseproject.fragments.bases.BaseNavigationDrawerFragment;
 import com.pliseproject.fragments.bases.BaseTextToSpeechFragment;
 import com.pliseproject.managers.AppController;
 import com.pliseproject.models.Memo;

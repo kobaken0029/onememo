@@ -7,8 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.util.Log;
 
-import com.pliseproject.utils.UiUtil;
-
 public class MyAlarmManager {
     private Context mContext;
     private AlarmManager am;

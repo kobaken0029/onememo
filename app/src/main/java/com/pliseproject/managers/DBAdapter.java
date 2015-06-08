@@ -1,9 +1,7 @@
 package com.pliseproject.managers;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import com.pliseproject.models.Memo;
@@ -19,8 +17,8 @@ import android.database.sqlite.SQLiteOpenHelper;
  * DBのAdapterです。
  */
 public class DBAdapter {
-    static final String DATABASE_NAME = "wanmemo.db";
-    static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "wanmemo.db";
+    private static final int DATABASE_VERSION = 1;
 
     public static final String TABLE_NAME = "memos";
     public static final String COL_ID = "_id";
