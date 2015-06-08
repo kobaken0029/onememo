@@ -85,8 +85,8 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
 
         Intent intent = new Intent(this, CreateMemoActivity.class);
         intent.putExtra("memo", memo);
-        intent.putExtra("hour", hour);
-        intent.putExtra("minute", minute);
+//        intent.putExtra("hour", hour);
+//        intent.putExtra("minute", minute);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

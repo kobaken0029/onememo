@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,28 +115,33 @@ public class AppController extends Application {
     /**
      * メモを更新します。
      */
-    public void updateMemo(Memo memo, int alarmHour, int alarmMinute, View... views) {
-        // Intentの発行設定
+    public void updateMemo(Memo memo, View... views) {
+        if (views.length == 2) {
+            // メモに値をセット
+            memo.setSubject(((TextView) views[0]).getText().toString());
+            memo.setMemo(((TextView) views[1]).getText().toString());
+            ((TextView) views[0]).setText("");
+            ((TextView) views[1]).setText("");
+        }
+
+        // メモを更新
+        AppController.dbAdapter.open();
+        AppController.dbAdapter.updateMemo(memo);
+        AppController.dbAdapter.close();
+
+        // PendingIntentの発行
         PendingIntent pending = getPendingIntent(memo);
 
-        // アラームをセットする
+        // アラームをセット
         AlarmManager am = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
         if (memo.getPostFlg() == 1) {
-            UiUtil.showToast(mContext, String.format("%02d時%02d分に通知します。", alarmHour, alarmMinute));
+            UiUtil.showToast(mContext, String.format("%02d時%02d分に通知します。",
+                    memo.getPostTime().get(Calendar.HOUR_OF_DAY),
+                    memo.getPostTime().get(Calendar.MINUTE)));
             am.set(AlarmManager.RTC_WAKEUP, memo.getPostTime().getTimeInMillis(), pending);
         } else {
             am.cancel(pending);
         }
-
-        // メモを更新する
-        memo.setSubject(((TextView) views[0]).getText().toString());
-        memo.setMemo(((TextView) views[1]).getText().toString());
-
-        AppController.dbAdapter.open();
-        AppController.dbAdapter.updateMemo(memo);
-        AppController.dbAdapter.close();
-        ((TextView) views[0]).setText("");
-        ((TextView) views[1]).setText("");
     }
 
     /**
