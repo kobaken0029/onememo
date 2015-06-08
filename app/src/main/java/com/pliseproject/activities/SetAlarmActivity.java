@@ -22,6 +22,7 @@ import butterknife.InjectView;
  * アラーム設定画面のActivityです。
  */
 public class SetAlarmActivity extends BaseNavigationDrawerActivity {
+    private Memo postedMemo;
     private Calendar calendar = Calendar.getInstance();
     private int year = calendar.get(Calendar.YEAR);
     private int month = calendar.get(Calendar.MONTH);
@@ -42,16 +43,16 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            save((Memo) getIntent().getSerializableExtra("memo"));
+        if (item.getItemId() == android.R.id.home && postedMemo != null) {
+            save(postedMemo);
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            save((Memo) getIntent().getSerializableExtra("memo"));
+        if (keyCode == KeyEvent.KEYCODE_BACK && postedMemo != null) {
+            save(postedMemo);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -76,7 +77,7 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
 
         // 過去だったらエラーメッセージを出す
         if (calendar.getTimeInMillis() < System.currentTimeMillis() && memo.getPostFlg() == 1) {
-            UiUtil.showToast(this, getString(R.string.error_past_date));
+            UiUtil.showToast(this, getString(R.string.error_past_date_message));
             return;
         }
 
@@ -84,10 +85,12 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
 
         Intent intent = new Intent(this, CreateMemoActivity.class);
         intent.putExtra("memo", memo);
-        intent.putExtra("hour", hour);
-        intent.putExtra("minute", minute);
         setResult(Activity.RESULT_OK, intent);
         finish();
+    }
+
+    public void setPostedMemo(Memo postedMemo) {
+        this.postedMemo = postedMemo;
     }
 
     public void setYear(int year) {

@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.pliseproject.R;
 import com.pliseproject.activities.CreateMemoActivity;
-import com.pliseproject.activities.bases.BaseNavigationDrawerActivity;
 import com.pliseproject.fragments.bases.BaseTextToSpeechFragment;
 import com.pliseproject.managers.AppController;
 import com.pliseproject.models.Memo;
@@ -49,7 +48,7 @@ public class ViewMemoFragment extends BaseTextToSpeechFragment {
 
     @OnClick(R.id.delete_button)
     void onClickDeleteButton() {
-        UiUtil.showDialog(activity, R.string.delete_view, new DialogInterface.OnClickListener() {
+        UiUtil.showDialog(activity, R.string.check_delete_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 setDeletedMemoId(memo.getId());

@@ -1,7 +1,6 @@
 package com.pliseproject.fragments;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.pliseproject.R;
 import com.pliseproject.activities.SetAlarmActivity;
-import com.pliseproject.fragments.bases.BaseNavigationDrawerFragment;
 import com.pliseproject.fragments.bases.BaseTextToSpeechFragment;
 import com.pliseproject.managers.AppController;
 import com.pliseproject.models.Memo;
@@ -26,8 +24,6 @@ import butterknife.OnClick;
 public class CreateMemoFragment extends BaseTextToSpeechFragment {
     private static final int SET_ALARM_ACTIVITY = 1;
 
-    private int alarmHour;
-    private int alarmMinute;
     private AppController appController;
     private Memo memo;
 
@@ -48,7 +44,7 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
         if (memo == null || memo.getId() == getDeletedMemoId()) {
             appController.saveMemo(subjectEditText, memoEditText);
         } else {
-            appController.updateMemo(memo, alarmHour, alarmMinute, subjectEditText, memoEditText);
+            appController.updateMemo(memo, subjectEditText, memoEditText);
         }
         activity.finish();
         floatingActionsMenu.collapse();
@@ -85,6 +81,7 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // メモを取得
         memo = (Memo) activity.getIntent().getSerializableExtra("memo");
 
         setAlertButton.setVisibility(View.GONE);
@@ -101,9 +98,8 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SET_ALARM_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
+                // 通知時間が設定されたメモを取得
                 memo = (Memo) data.getSerializableExtra("memo");
-                alarmHour = data.getIntExtra("hour", 0);
-                alarmMinute = data.getIntExtra("minute", 0);
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 activity.finish();
             }

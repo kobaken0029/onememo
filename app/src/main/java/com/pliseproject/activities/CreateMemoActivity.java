@@ -2,11 +2,9 @@ package com.pliseproject.activities;
 
 import com.pliseproject.R;
 import com.pliseproject.activities.bases.BaseNavigationDrawerActivity;
-import com.pliseproject.models.Memo;
 import com.pliseproject.utils.UiUtil;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -44,7 +42,7 @@ public class CreateMemoActivity extends BaseNavigationDrawerActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            UiUtil.showDialog(this, getString(R.string.confirmation_of_not_saved),
+            UiUtil.showDialog(this, getString(R.string.confirmation_of_not_saved_message),
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -59,7 +57,7 @@ public class CreateMemoActivity extends BaseNavigationDrawerActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            UiUtil.showDialog(this, getString(R.string.confirmation_of_not_saved),
+            UiUtil.showDialog(this, getString(R.string.confirmation_of_not_saved_message),
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
