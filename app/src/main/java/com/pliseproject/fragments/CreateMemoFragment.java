@@ -26,8 +26,6 @@ import butterknife.OnClick;
 public class CreateMemoFragment extends BaseTextToSpeechFragment {
     private static final int SET_ALARM_ACTIVITY = 1;
 
-//    private int alarmHour;
-//    private int alarmMinute;
     private AppController appController;
     private Memo memo;
 
@@ -104,10 +102,6 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
             if (resultCode == Activity.RESULT_OK) {
                 // 通知時間が設定されたメモを取得
                 memo = (Memo) data.getSerializableExtra("memo");
-
-                // 通知時間を取得
-//                alarmHour = data.getIntExtra("hour", 0);
-//                alarmMinute = data.getIntExtra("minute", 0);
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 activity.finish();
             }

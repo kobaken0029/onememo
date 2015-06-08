@@ -122,7 +122,7 @@ public class BaseNavigationDrawerFragment extends Fragment {
 
             // メモを削除する
             case BaseNavigationDrawerActivity.MENU_ITEM_ID_DELETE:
-                UiUtil.showDialog(activity, R.string.delete_view,
+                UiUtil.showDialog(activity, R.string.check_delete_message,
                         listener != null ? listener : new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

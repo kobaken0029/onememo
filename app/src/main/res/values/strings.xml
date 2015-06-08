@@ -3,8 +3,8 @@
 
     <!-- 共通 -->
     <string name="app_name">一週間メモリーズ。</string>
-    <string name="delete_view">本当に消してもいいですか？</string>
-    <string name="success_delete_view">削除に成功しました！</string>
+    <string name="check_delete_message">本当に消してもいいですか？</string>
+    <string name="success_delete_message">削除に成功しました！</string>
     <string name="determine">決定</string>
     <string name="refresh">更新</string>
     <string name="finish">終了</string>
@@ -14,7 +14,7 @@
     <string name="no">いいえ</string>
     <string name="cancel">戻る</string>
     <string name="delete">削除</string>
-    <string name="confirmation_of_not_saved">作成中のメモは保存されません。\nよろしいですか?</string>
+    <string name="confirmation_of_not_saved_message">作成中のメモは保存されません。\nよろしいですか?</string>
 
     <!-- navigation drawer -->
     <string name="nav_create_memo">新規作成</string>
@@ -33,8 +33,7 @@
 
     <!-- 設定画面 -->
     <string name="setting_view">設定</string>
-    <string name="alert_view">時刻を設定して下さい</string>
-    <string name="error_past_date">通知時間が過去になっています</string>
+    <string name="error_past_date_message">通知時間が過去になっています</string>
     <string name="alarm_info">通知</string>
     <string name="alarm_day">通知日</string>
     <string name="alarm_time">通知時刻</string>
