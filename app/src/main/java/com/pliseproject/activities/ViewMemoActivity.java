@@ -64,13 +64,11 @@ public class ViewMemoActivity extends BaseNavigationDrawerActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-
         // ActionBarDrawerToggleにandroid.id.home(up ナビゲーション)を渡す。
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 }

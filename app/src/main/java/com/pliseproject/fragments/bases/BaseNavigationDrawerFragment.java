@@ -88,7 +88,7 @@ public class BaseNavigationDrawerFragment extends Fragment {
             } while (c.moveToNext());
         }
         AppController.dbAdapter.close();
-        activity.getMyListAdapter().notifyDataSetChanged();
+        activity.getMemoListAdapter().notifyDataSetChanged();
 
         if (activity.getListView().getCount() == 0) {
             activity.getDrawerLinearLayout().removeView(emptyRelativeLayout);

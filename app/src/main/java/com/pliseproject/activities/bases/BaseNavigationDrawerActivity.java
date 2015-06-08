@@ -9,8 +9,11 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.pliseproject.R;
 import com.pliseproject.activities.CreateMemoActivity;
@@ -19,7 +22,8 @@ import com.pliseproject.activities.ViewMemoActivity;
 import com.pliseproject.managers.AppController;
 import com.pliseproject.models.Memo;
 import com.pliseproject.receivers.MyBroadcastReceiver;
-import com.pliseproject.views.adapters.MyListAdapter;
+import com.pliseproject.utils.DateUtil;
+import com.pliseproject.views.adapters.MemoListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +39,7 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
 
     private MyBroadcastReceiver mBroadcastReceiver;
     private List<Memo> memos;
-    private MyListAdapter myListAdapter;
+    private MemoListAdapter memoListAdapter;
 
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -45,6 +49,15 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
 
     @InjectView(R.id.drawer)
     LinearLayout drawerLinearLayout;
+
+    @InjectView(R.id.drawer_header_layout)
+    RelativeLayout drawerHeaderRelativeLayout;
+
+    @InjectView(R.id.icon_fujimiya)
+    ImageView drawerFujimiyaImageView;
+
+    @InjectView(R.id.message_window)
+    TextView messageWinsowTextView;
 
     @OnClick(R.id.drawer_create_memo)
     void onClickDrawerCreateMemo() {
@@ -60,15 +73,31 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
         mBroadcastReceiver.registerReceiver();
 
         memos = new ArrayList<>();
-        myListAdapter = new MyListAdapter(this, memos);
+        memoListAdapter = new MemoListAdapter(this, memos);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        listView.setAdapter(myListAdapter);
+        listView.setAdapter(memoListAdapter);
         registerForContextMenu(listView);
+
+        switch (DateUtil.checkTimeNow()) {
+            case DateUtil.NOON:
+                drawerHeaderRelativeLayout.setBackgroundResource(R.drawable.school_classroom_at_noon);
+                break;
+            case DateUtil.EVENING:
+                drawerHeaderRelativeLayout.setBackgroundResource(R.drawable.school_classroom_at_evening);
+                break;
+            case DateUtil.NIGHT:
+                drawerHeaderRelativeLayout.setBackgroundResource(R.drawable.school_classroom_at_night);
+                break;
+            case DateUtil.LATE_NIGHT:
+                drawerHeaderRelativeLayout.setBackgroundResource(R.drawable.school_classroom_at_late_night);
+                break;
+        }
     }
+
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -117,8 +146,8 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
         return memos;
     }
 
-    public MyListAdapter getMyListAdapter() {
-        return myListAdapter;
+    public MemoListAdapter getMemoListAdapter() {
+        return memoListAdapter;
     }
 
     public DrawerLayout getDrawerLayout() {
@@ -131,5 +160,13 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
 
     public LinearLayout getDrawerLinearLayout() {
         return drawerLinearLayout;
+    }
+
+    public ImageView getDrawerFujimiyaImageView() {
+        return drawerFujimiyaImageView;
+    }
+
+    public TextView getMessageWindowTextView() {
+        return messageWinsowTextView;
     }
 }

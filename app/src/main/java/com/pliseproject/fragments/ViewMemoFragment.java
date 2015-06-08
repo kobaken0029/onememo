@@ -123,9 +123,9 @@ public class ViewMemoFragment extends BaseTextToSpeechFragment {
      */
     private void loadMemo() {
         if (activity.getListView().getCount() > 0) {
-            if (memo == null) {
+            if (memo == null || !activity.getMemos().contains(memo)) {
                 memo = (Memo) activity.getListView().getItemAtPosition(0);
-            } else if (activity.getMemos().contains(memo)) {
+            } else {
                 memo = appController.findMemo(memo.getId());
             }
             findById(activity, R.id.delete_button).setVisibility(View.VISIBLE);

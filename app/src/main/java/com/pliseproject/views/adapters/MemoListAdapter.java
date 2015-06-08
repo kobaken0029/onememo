@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * メモリストのAdapterです。
  */
-public class MyListAdapter extends BaseAdapter {
+public class MemoListAdapter extends BaseAdapter {
     private Context mContext;
     private List<Memo> memos;
 
@@ -25,7 +25,7 @@ public class MyListAdapter extends BaseAdapter {
      * @param context コンテキスト
      * @param memos   メモ群
      */
-    public MyListAdapter(Context context, List<Memo> memos) {
+    public MemoListAdapter(Context context, List<Memo> memos) {
         mContext = context;
         this.memos = memos;
     }

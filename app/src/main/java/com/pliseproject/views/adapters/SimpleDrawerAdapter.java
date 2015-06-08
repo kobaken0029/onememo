@@ -48,14 +48,14 @@ public class SimpleDrawerAdapter extends RecyclerView.Adapter<SimpleDrawerAdapte
             // viewTypeによって値を設定
             switch (viewType) {
                 case R.array.type_header_before_login:
-                    mTextView = findById(itemView, R.id.email);
+//                    mTextView = findById(itemView, R.id.email);
                     mImageView = findById(itemView, R.id.icon);
                     findById(itemView, R.id.drawer_header_layout)
                             .setBackgroundColor(context.getResources().getColor(R.color.action_bar));
                     break;
                 case R.array.type_header_after_login:
-                    mTextView = findById(itemView, R.id.name);
-                    mTextView2 = findById(itemView, R.id.email);
+//                    mTextView = findById(itemView, R.id.name);
+//                    mTextView2 = findById(itemView, R.id.email);
                     mImageView = findById(itemView, R.id.icon);
                     findById(itemView, R.id.drawer_header_layout)
                             .setBackgroundColor(context.getResources().getColor(R.color.action_bar));
@@ -86,7 +86,7 @@ public class SimpleDrawerAdapter extends RecyclerView.Adapter<SimpleDrawerAdapte
     private List<Map<String, Object>> mDrawerMenuArr;
 
     // ListViewのアダプター
-    private MyListAdapter mMyListAdapter;
+    private MemoListAdapter mMemoListAdapter;
 
     /**
      * コンストラクタ。
@@ -94,10 +94,10 @@ public class SimpleDrawerAdapter extends RecyclerView.Adapter<SimpleDrawerAdapte
      * @param context   コンテキスト
      * @param arrayList 対象のデータ
      */
-    public SimpleDrawerAdapter(Context context, List<Map<String, Object>> arrayList, MyListAdapter myListAdapter) {
+    public SimpleDrawerAdapter(Context context, List<Map<String, Object>> arrayList, MemoListAdapter memoListAdapter) {
         mContext = context;
         mDrawerMenuArr = arrayList;
-        mMyListAdapter = myListAdapter;
+        mMemoListAdapter = memoListAdapter;
     }
 
     @Override
@@ -169,7 +169,7 @@ public class SimpleDrawerAdapter extends RecyclerView.Adapter<SimpleDrawerAdapte
                 holder.mTextView.setText(menu.get("text").toString());
                 break;
             case R.array.type_memo_list:
-                holder.mListView.setAdapter(mMyListAdapter);
+                holder.mListView.setAdapter(mMemoListAdapter);
             default:
                 break;
         }

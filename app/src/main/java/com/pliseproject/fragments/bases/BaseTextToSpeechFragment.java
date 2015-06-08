@@ -1,11 +1,14 @@
 package com.pliseproject.fragments.bases;
 
-import android.app.Activity;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.speech.tts.TextToSpeech;
+import android.view.View;
 
 import com.pliseproject.R;
-import com.pliseproject.activities.CreateMemoActivity;
+import com.pliseproject.activities.bases.BaseNavigationDrawerActivity;
 import com.pliseproject.utils.UiUtil;
 import com.pliseproject.utils.packageUtil;
 
@@ -29,48 +32,28 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
             tts.stop();
         }
 
-        String message = "";
-        if (activity instanceof CreateMemoActivity) {
-            // 乱数を生成
-            int ran = new Random().nextInt(6);
-
-            // 乱数に応じて、テキストをセット
-            switch (ran) {
-                case 0:
-                    message = getResources().getString(R.string.voice1);
-                    break;
-                case 1:
-                    message = getResources().getString(R.string.voice2);
-                    break;
-                case 2:
-                    message = getResources().getString(R.string.voice3);
-                    break;
-                case 3:
-                    message = getResources().getString(R.string.voice4);
-                    break;
-                case 4:
-                    message = getResources().getString(R.string.voice5);
-                    break;
-                case 5:
-                    message = getResources().getString(R.string.voice6);
-                    break;
-            }
-        } else {
-            message = memo != null
-                    ? ((memo.getSubject() != null
-                    ? memo.getSubject() + "。"
-                    : "") +
-                    (memo.getMemo() != null
-                            ? memo.getMemo()
-                            : ""))
-                    : "";
-        }
-        ttsSpeak(message);
+        ttsSpeak(memo != null
+                ? ((memo.getSubject() != null
+                ? memo.getSubject() + "。"
+                : "") +
+                (memo.getMemo() != null
+                        ? memo.getMemo()
+                        : ""))
+                : "");
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        activity.getDrawerFujimiyaImageView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.getMessageWindowTextView().setText("");
+                String message = getMessage();
+                ttsSpeak(message);
+                new MyHandler(message, activity).sendEmptyMessage(1);
+            }
+        });
     }
 
     @Override
@@ -129,6 +112,71 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
             }
         } else {
             UiUtil.showToast(activity, packageUtil.N2TTS_PACKAGE_NOT_FOUND_MESSAGE);
+        }
+    }
+
+    /**
+     * 愛萌宮さんのランダムセリフを取得する。
+     */
+    private String getMessage() {
+        String message = "";
+
+        // 乱数を生成
+        int ran = new Random().nextInt(6);
+
+        // 乱数に応じて、テキストをセット
+        switch (ran) {
+            case 0:
+                message = getResources().getString(R.string.voice1);
+                break;
+            case 1:
+                message = getResources().getString(R.string.voice2);
+                break;
+            case 2:
+                message = getResources().getString(R.string.voice3);
+                break;
+            case 3:
+                message = getResources().getString(R.string.voice4);
+                break;
+            case 4:
+                message = getResources().getString(R.string.voice5);
+                break;
+            case 5:
+                message = getResources().getString(R.string.voice6);
+                break;
+        }
+
+        return message;
+    }
+
+    static class MyHandler extends Handler {
+        private String message;
+        private BaseNavigationDrawerActivity activity;
+        private String buff = "";
+        private int i = 0;
+
+        MyHandler(String message, BaseNavigationDrawerActivity activity) {
+            this.message = message;
+            this.activity = activity;
+        }
+
+        @Override
+        public void dispatchMessage(Message msg) {
+            char data[] = message.toCharArray();
+
+            if (i < data.length) {
+                if (msg.what == 1) {
+                    buff += String.valueOf(data[i]);
+                    activity.getMessageWindowTextView().setText(buff);
+                    this.sendEmptyMessageDelayed(1, 100);
+                    i++;
+                } else {
+                    super.dispatchMessage(msg);
+                }
+            } else {
+                i = 0;
+                buff = "";
+            }
         }
     }
 
