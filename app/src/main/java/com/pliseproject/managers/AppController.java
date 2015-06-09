@@ -177,16 +177,16 @@ public class AppController extends Application {
     /**
      * 音声読上げ設定画面へ遷移します。
      */
-    public void settingReadVoice() {
-        if (packageUtil.packageCheck(packageUtil.N2TTS_PACKAGE_NAME, mContext.getPackageManager())) {
+    public void settingReadVoice(final Context context) {
+        if (packageUtil.packageCheck(packageUtil.N2TTS_PACKAGE_NAME, context.getPackageManager())) {
             Intent n2tts = new Intent(Intent.ACTION_MAIN);
             n2tts.setAction("android.intent.category.LAUNCHER");
             n2tts.setClassName(packageUtil.N2TTS_PACKAGE_NAME, packageUtil.N2TTS_PACKAGE_NAME + ".TtsServiceSettings");
             n2tts.setFlags(0x10000000);
-            mContext.startActivity(n2tts);
+            context.startActivity(n2tts);
         } else {
-            new AlertDialog.Builder(mContext)
-                    .setTitle(packageUtil.N2TTS_PACKAGE_NOT_FOUND_MESSAGE)
+            new AlertDialog.Builder(context)
+                    .setMessage(packageUtil.N2TTS_PACKAGE_NOT_FOUND_MESSAGE)
                     .setPositiveButton(getResources().getString(R.string.go_play_stroe),
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -194,7 +194,7 @@ public class AppController extends Application {
                                                     int which) {
                                     Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=jp.kddilabs.n2tts&hl=ja");
                                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                                    mContext.startActivity(intent);
+                                    context.startActivity(intent);
                                 }
                             })
                     .setNegativeButton(getResources().getString(R.string.no), null).show();

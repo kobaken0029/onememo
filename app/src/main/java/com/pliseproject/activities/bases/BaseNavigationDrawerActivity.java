@@ -120,7 +120,7 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
                 finish();
                 break;
             case R.id.menu_setting:
-                ((AppController) getApplication()).settingReadVoice();
+                ((AppController) getApplication()).settingReadVoice(this);
                 break;
             case R.id.menu_end:
                 mBroadcastReceiver.sendReceiver();
