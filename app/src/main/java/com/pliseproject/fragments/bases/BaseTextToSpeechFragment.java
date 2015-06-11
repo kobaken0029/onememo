@@ -45,7 +45,7 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity.getDrawerFujimiyaImageView().setOnClickListener(new View.OnClickListener() {
+        activity.getDrawerMemomiyaImageView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.getMessageWindowTextView().setText("");

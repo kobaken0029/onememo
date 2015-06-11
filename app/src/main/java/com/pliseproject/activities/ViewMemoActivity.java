@@ -19,9 +19,6 @@ import butterknife.InjectView;
 public class ViewMemoActivity extends BaseNavigationDrawerActivity {
     private ActionBarDrawerToggle drawerToggle;
 
-    @InjectView(R.id.toolbar_menu)
-    Toolbar toolbar;
-
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawer;
 
@@ -29,20 +26,15 @@ public class ViewMemoActivity extends BaseNavigationDrawerActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_memo);
-        ButterKnife.inject(this);
-        initToolbar();
+        initToolbar(R.string.read_view);
     }
 
     /**
      * ツールバーを設定する。
      */
-    private void initToolbar() {
-        toolbar.setTitle(R.string.read_view);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
+    @Override
+    protected void initToolbar(int titleResId) {
+        super.initToolbar(titleResId);
         drawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.app_name, R.string.app_name);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawer.setDrawerListener(drawerToggle);
