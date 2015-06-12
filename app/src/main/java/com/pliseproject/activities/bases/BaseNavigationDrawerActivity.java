@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import com.pliseproject.views.adapters.MemoListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -41,6 +43,9 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
     private List<Memo> memos;
     private MemoListAdapter memoListAdapter;
 
+    @InjectView(R.id.toolbar_menu)
+    Toolbar toolbar;
+
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
@@ -53,8 +58,8 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
     @InjectView(R.id.drawer_header_layout)
     RelativeLayout drawerHeaderRelativeLayout;
 
-    @InjectView(R.id.icon_fujimiya)
-    ImageView drawerFujimiyaImageView;
+    @InjectView(R.id.icon_memomiya)
+    ImageView drawerMemomiyaImageView;
 
     @InjectView(R.id.message_window)
     TextView messageWinsowTextView;
@@ -63,6 +68,12 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
     void onClickDrawerCreateMemo() {
         moveCreateMemoView();
         drawerLayout.closeDrawer(Gravity.START);
+    }
+
+    @Override
+    public void setContentView(int layoutResID) {
+        super.setContentView(layoutResID);
+        ButterKnife.inject(this);
     }
 
     @Override
@@ -98,6 +109,16 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * ツールバーを設定する。
+     */
+    protected void initToolbar(int titleResId) {
+        toolbar.setTitle(titleResId);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -162,8 +183,8 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
         return drawerLinearLayout;
     }
 
-    public ImageView getDrawerFujimiyaImageView() {
-        return drawerFujimiyaImageView;
+    public ImageView getDrawerMemomiyaImageView() {
+        return drawerMemomiyaImageView;
     }
 
     public TextView getMessageWindowTextView() {

@@ -17,26 +17,12 @@ import butterknife.InjectView;
  * メモ作成画面のActivityです。
  */
 public class CreateMemoActivity extends BaseNavigationDrawerActivity {
-    @InjectView(R.id.toolbar_menu)
-    Toolbar toolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_memo);
-        ButterKnife.inject(this);
-        initToolbar();
-    }
-
-    /**
-     * ツールバーを設定する。
-     */
-    private void initToolbar() {
-        toolbar.setTitle(R.string.create_view);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        initToolbar(R.string.create_view);
     }
 
     @Override

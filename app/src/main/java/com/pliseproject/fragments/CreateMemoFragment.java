@@ -24,9 +24,6 @@ import butterknife.OnClick;
 public class CreateMemoFragment extends BaseTextToSpeechFragment {
     private static final int SET_ALARM_ACTIVITY = 1;
 
-    private AppController appController;
-//    private Memo memo;
-
     @InjectView(R.id.subject_editText)
     EditText subjectEditText;
 
@@ -67,7 +64,6 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        appController = (AppController) activity.getApplication();
     }
 
     @Override

@@ -30,15 +30,11 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
     private int hour = calendar.get(Calendar.HOUR_OF_DAY);
     private int minute = calendar.get(Calendar.MINUTE);
 
-    @InjectView(R.id.toolbar_menu)
-    Toolbar toolbar;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
-        ButterKnife.inject(this);
-        initToolbar();
+        initToolbar(R.string.setting_view);
     }
 
     @Override
@@ -56,17 +52,6 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    /**
-     * ツールバーを設定する。
-     */
-    private void initToolbar() {
-        toolbar.setTitle(R.string.setting_view);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     /**

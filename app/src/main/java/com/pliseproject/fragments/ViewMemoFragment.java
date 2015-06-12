@@ -27,8 +27,6 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ViewMemoFragment extends BaseTextToSpeechFragment {
-    private AppController appController;
-
     @InjectView(R.id.subject_textView)
     TextView subjectView;
 
@@ -70,7 +68,6 @@ public class ViewMemoFragment extends BaseTextToSpeechFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        appController = (AppController) activity.getApplication();
     }
 
     @Override
