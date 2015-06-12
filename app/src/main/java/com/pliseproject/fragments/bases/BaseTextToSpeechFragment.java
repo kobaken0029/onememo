@@ -65,17 +65,8 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (tts != null) {
-            tts.shutdown();
-            tts = null;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onPause() {
+        super.onPause();
         if (tts != null) {
             tts.shutdown();
             tts = null;
@@ -152,7 +143,7 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
     static class MyHandler extends Handler {
         private String message;
         private BaseNavigationDrawerActivity activity;
-        private String buff = "";
+        private String buff = "「";
         private int i = 0;
 
         MyHandler(String message, BaseNavigationDrawerActivity activity) {
@@ -173,9 +164,12 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
                 } else {
                     super.dispatchMessage(msg);
                 }
+            } else if (i == data.length) {
+                buff += "」";
+                activity.getMessageWindowTextView().setText(buff);
             } else {
                 i = 0;
-                buff = "";
+                buff = "「";
             }
         }
     }
