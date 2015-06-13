@@ -129,11 +129,14 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment implements OnBa
             appController.saveMemo(subjectEditText, memoEditText);
             activity.finish();
         } else if (isModified()) {
-            Memo memo = (Memo) activity.getIntent().getSerializableExtra("memo");
+            Memo memo = new Memo();
+            memo.setId(this.memo.getId());
             memo.setSubject(subjectEditText.getText().toString());
             memo.setMemo(memoEditText.getText().toString());
             memo.setPostFlg(this.memo.getPostFlg());
             memo.setPostTime(this.memo.getPostTime());
+            memo.setCreateAt(this.memo.getCreateAt());
+            memo.setUpdateAt(this.memo.getUpdateAt());
             Intent intent = new Intent(activity, ViewMemoActivity.class);
             intent.putExtra("memo", memo);
             appController.showDialogBeforeMoveMemoView(activity, intent);
