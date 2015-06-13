@@ -2,22 +2,17 @@ package com.pliseproject.activities;
 
 import com.pliseproject.R;
 import com.pliseproject.activities.bases.BaseNavigationDrawerActivity;
-import com.pliseproject.utils.UiUtil;
+import com.pliseproject.fragments.CreateMemoFragment;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * メモ作成画面のActivityです。
  */
 public class CreateMemoActivity extends BaseNavigationDrawerActivity {
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,33 +21,19 @@ public class CreateMemoActivity extends BaseNavigationDrawerActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            UiUtil.showDialog(this, getString(R.string.confirmation_of_not_saved_message),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public void onBackPressed() {
+        ((CreateMemoFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.create_fragment)).onBackPressed();
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            UiUtil.showDialog(this, getString(R.string.confirmation_of_not_saved_message),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
-            return true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            ((CreateMemoFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.create_fragment)).onBackPressed();
+            return false;
         }
-        return super.onKeyDown(keyCode, event);
-    }
 
+        return super.onOptionsItemSelected(item);
+    }
 }

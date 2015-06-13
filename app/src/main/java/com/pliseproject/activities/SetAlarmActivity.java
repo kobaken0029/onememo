@@ -9,14 +9,10 @@ import com.pliseproject.utils.UiUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import java.util.Calendar;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * アラーム設定画面のActivityです。
@@ -40,7 +36,7 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home && postedMemo != null) {
-            save(postedMemo);
+            saveSetting(postedMemo);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -48,7 +44,7 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && postedMemo != null) {
-            save(postedMemo);
+            saveSetting(postedMemo);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -57,7 +53,7 @@ public class SetAlarmActivity extends BaseNavigationDrawerActivity {
     /**
      * 設定を保存する。
      */
-    public void save(Memo memo) {
+    public void saveSetting(Memo memo) {
         calendar = new MyAlarmManager(this).setAlarm(year, month, day, hour, minute);
 
         // 過去だったらエラーメッセージを出す

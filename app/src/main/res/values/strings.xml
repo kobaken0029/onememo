@@ -12,9 +12,11 @@
     <string name="go_play_stroe">Playストアへ</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
-    <string name="cancel">戻る</string>
+    <string name="cancel">キャンセル</string>
     <string name="delete">削除</string>
-    <string name="confirmation_of_not_saved_message">作成中のメモは保存されません。\nよろしいですか?</string>
+    <string name="confirmation_saved_message">内容が変更されています。\n保存しますか?</string>
+    <string name="saved">保存する</string>
+    <string name="not_saved">保存しない</string>
 
     <!-- navigation drawer -->
     <string name="nav_create_memo">新規作成</string>
