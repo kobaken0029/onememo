@@ -35,7 +35,14 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class BaseNavigationDrawerActivity extends ActionBarActivity {
+    /**
+     * コンテキストメニューの編集ID
+     */
     public static final int MENU_ITEM_ID_EDIT = 1;
+
+    /**
+     * コンテキストメニューの削除ID
+     */
     public static final int MENU_ITEM_ID_DELETE = 2;
 
     protected AppController appController;

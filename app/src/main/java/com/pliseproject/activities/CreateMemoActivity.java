@@ -5,8 +5,6 @@ import com.pliseproject.activities.bases.BaseNavigationDrawerActivity;
 import com.pliseproject.fragments.CreateMemoFragment;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 
 /**

@@ -102,7 +102,7 @@ public class BaseTextToSpeechFragment extends BaseNavigationDrawerFragment
                 tts.speak(text, TextToSpeech.QUEUE_FLUSH, ttsParam);
             }
         } else {
-            UiUtil.showToast(activity, packageUtil.N2TTS_PACKAGE_NOT_FOUND_MESSAGE);
+            UiUtil.showToast(activity, getString(R.string.n2tts_not_found_message));
         }
     }
 

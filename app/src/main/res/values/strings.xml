@@ -17,6 +17,9 @@
     <string name="confirmation_saved_message">内容が変更されています。\n保存しますか?</string>
     <string name="saved">保存する</string>
     <string name="not_saved">保存しない</string>
+    <string name="default_memo_subject">あなたへ</string>
+    <string name="default_memo_content">メモ書いて！</string>
+    <string name="n2tts_not_found_message">音声出力エンジンのN2 TTSが見当たりません</string>
 
     <!-- navigation drawer -->
     <string name="nav_create_memo">新規作成</string>

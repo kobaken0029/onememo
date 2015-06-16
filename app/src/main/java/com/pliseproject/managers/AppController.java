@@ -99,8 +99,8 @@ public class AppController extends Application {
      */
     public Memo findMemo(int memoId) {
         Memo memo = new Memo();
-        memo.setSubject("あなたへ");
-        memo.setMemo("メモ書いて！");
+        memo.setSubject(mContext.getString(R.string.default_memo_subject));
+        memo.setMemo(mContext.getString(R.string.default_memo_content));
 
         if (memoId != -1) {
             AppController.dbAdapter.open();
@@ -199,7 +199,7 @@ public class AppController extends Application {
             context.startActivity(n2tts);
         } else {
             new AlertDialog.Builder(context)
-                    .setMessage(packageUtil.N2TTS_PACKAGE_NOT_FOUND_MESSAGE)
+                    .setMessage(mContext.getString(R.string.n2tts_not_found_message))
                     .setPositiveButton(getResources().getString(R.string.go_play_stroe),
                             new DialogInterface.OnClickListener() {
                                 @Override

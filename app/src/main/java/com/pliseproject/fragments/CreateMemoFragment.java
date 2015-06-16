@@ -121,6 +121,11 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment implements OnBa
         return super.onContextItemSelected(item, null);
     }
 
+    @Override
+    public void onBackPressed() {
+        storeMemo();
+    }
+
     /**
      * メモを保存・更新する。
      */
@@ -129,16 +134,8 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment implements OnBa
             appController.saveMemo(subjectEditText, memoEditText);
             activity.finish();
         } else if (isModified()) {
-            Memo memo = new Memo();
-            memo.setId(this.memo.getId());
-            memo.setSubject(subjectEditText.getText().toString());
-            memo.setMemo(memoEditText.getText().toString());
-            memo.setPostFlg(this.memo.getPostFlg());
-            memo.setPostTime(this.memo.getPostTime());
-            memo.setCreateAt(this.memo.getCreateAt());
-            memo.setUpdateAt(this.memo.getUpdateAt());
             Intent intent = new Intent(activity, ViewMemoActivity.class);
-            intent.putExtra("memo", memo);
+            intent.putExtra("memo", createMemoForExist());
             appController.showDialogBeforeMoveMemoView(activity, intent);
             activity.setModifiedFlg(true);
         } else {
@@ -146,13 +143,30 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment implements OnBa
         }
     }
 
+    /**
+     * メモに変更点があった稼働が判定する。
+     *
+     * @return 変更があったらtrue
+     */
     private boolean isModified() {
         return !(memo.getSubject().equals(subjectEditText.getText().toString())
                 && memo.getMemo().equals(memoEditText.getText().toString()));
     }
 
-    @Override
-    public void onBackPressed() {
-        storeMemo();
+    /**
+     * 現在のメモから最新の状態のメモを作成する。
+     *
+     * @return メモ
+     */
+    private Memo createMemoForExist() {
+        Memo memo = new Memo();
+        memo.setId(this.memo.getId());
+        memo.setSubject(subjectEditText.getText().toString());
+        memo.setMemo(memoEditText.getText().toString());
+        memo.setPostFlg(this.memo.getPostFlg());
+        memo.setPostTime(this.memo.getPostTime());
+        memo.setCreateAt(this.memo.getCreateAt());
+        memo.setUpdateAt(this.memo.getUpdateAt());
+        return memo;
     }
 }
