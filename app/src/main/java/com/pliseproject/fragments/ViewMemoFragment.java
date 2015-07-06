@@ -16,7 +16,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.pliseproject.R;
 import com.pliseproject.activities.CreateMemoActivity;
 import com.pliseproject.fragments.bases.BaseTextToSpeechFragment;
-import com.pliseproject.managers.AppController;
 import com.pliseproject.models.Memo;
 import com.pliseproject.utils.UiUtil;
 
@@ -49,11 +48,7 @@ public class ViewMemoFragment extends BaseTextToSpeechFragment {
         UiUtil.showDialog(activity, R.string.check_delete_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                setDeletedMemoId(memo.getId());
-                appController.deleteMemo(memo);
-                memo = null;
-                loadMemos();
-                loadMemo();
+                deleteMemo(memo.getId());
             }
         });
         floatingActionsMenu.collapse();
@@ -101,20 +96,12 @@ public class ViewMemoFragment extends BaseTextToSpeechFragment {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        final Memo selectedMemo = activity.getMemos().get(info.position);
-
+    public boolean onContextItemSelected(final MenuItem item) {
         return super.onContextItemSelected(item, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                setDeletedMemoId(selectedMemo.getId());
-                ((AppController) activity.getApplication()).deleteMemo(selectedMemo);
-                if (memo.getId() == selectedMemo.getId()) {
-                    memo = null;
-                }
-                loadMemos();
-                loadMemo();
+                deleteMemo(activity.getMemos()
+                        .get(((AdapterView.AdapterContextMenuInfo) item.getMenuInfo()).position).getId());
             }
         });
     }
@@ -124,8 +111,8 @@ public class ViewMemoFragment extends BaseTextToSpeechFragment {
      */
     private void loadMemo() {
         if (activity.getListView().getCount() > 0) {
-            if (memo == null || !activity.getMemos().contains(memo)) {
-                memo = (Memo) activity.getListView().getItemAtPosition(0);
+            if (memo == null) {
+                memo = (Memo) activity.getListView().getItemAtPosition(activity.getMemos().size() - 1);
             } else {
                 memo = appController.findMemo(memo.getId());
             }
@@ -140,5 +127,18 @@ public class ViewMemoFragment extends BaseTextToSpeechFragment {
         // 画面に値をセット
         subjectView.setText(memo.getSubject());
         memoView.setText(memo.getMemo());
+    }
+
+    /**
+     * メモ削除時の処理。
+     */
+    private void deleteMemo(int selectedMemoId) {
+        setDeletedMemoId(memo.getId());
+        appController.deleteMemo(memo);
+        if (memo.getId() == selectedMemoId) {
+            memo = null;
+        }
+        loadMemos();
+        loadMemo();
     }
 }

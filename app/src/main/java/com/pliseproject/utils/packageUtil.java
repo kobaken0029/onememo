@@ -5,7 +5,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 
 public class packageUtil {
     public static final String N2TTS_PACKAGE_NAME = "jp.kddilabs.n2tts";
-    public static final String N2TTS_PACKAGE_NOT_FOUND_MESSAGE = "音声出力エンジンのN2 TTSが見当たりません";
 
     /**
      * コンストラクタ。

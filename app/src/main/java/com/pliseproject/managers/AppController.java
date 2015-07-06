@@ -16,17 +16,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class AppController extends Application {
     private static Context mContext;
@@ -52,23 +50,46 @@ public class AppController extends Application {
      * 画面遷移前確認ダイアログを表示する。
      */
     public void showDialogBeforeMoveMemoView(final Activity activity, final Intent intent) {
-        UiUtil.showDialog(activity, getString(R.string.confirmation_of_not_saved_message),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                | Intent.FLAG_ACTIVITY_NEW_TASK);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            private void moveActivity() {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                        if (activity instanceof SetAlarmActivity) {
-                            activity.setResult(Activity.RESULT_CANCELED, intent);
-                        } else {
-                            startActivity(intent);
-                        }
+                if (activity instanceof SetAlarmActivity) {
+                    activity.setResult(Activity.RESULT_CANCELED, intent);
+                } else {
+                    startActivity(intent);
+                }
 
-                        activity.finish();
+                activity.finish();
+            }
 
-                    }
-                });
+            @Override
+            public void run() {
+                new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme))
+                        .setMessage(getString(R.string.confirmation_saved_message))
+                        .setPositiveButton(R.string.saved, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                updateMemo((Memo) intent.getSerializableExtra("memo"));
+                                moveActivity();
+                            }
+                        })
+                        .setNegativeButton(R.string.not_saved, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                moveActivity();
+                            }
+                        })
+                        .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+            }
+        });
     }
 
     /**
@@ -78,8 +99,8 @@ public class AppController extends Application {
      */
     public Memo findMemo(int memoId) {
         Memo memo = new Memo();
-        memo.setSubject("あなたへ");
-        memo.setMemo("メモ書いて！");
+        memo.setSubject(mContext.getString(R.string.default_memo_subject));
+        memo.setMemo(mContext.getString(R.string.default_memo_content));
 
         if (memoId != -1) {
             AppController.dbAdapter.open();
@@ -115,15 +136,7 @@ public class AppController extends Application {
     /**
      * メモを更新します。
      */
-    public void updateMemo(Memo memo, View... views) {
-        if (views.length == 2) {
-            // メモに値をセット
-            memo.setSubject(((TextView) views[0]).getText().toString());
-            memo.setMemo(((TextView) views[1]).getText().toString());
-            ((TextView) views[0]).setText("");
-            ((TextView) views[1]).setText("");
-        }
-
+    public void updateMemo(Memo memo) {
         // メモを更新
         AppController.dbAdapter.open();
         AppController.dbAdapter.updateMemo(memo);
@@ -186,7 +199,7 @@ public class AppController extends Application {
             context.startActivity(n2tts);
         } else {
             new AlertDialog.Builder(context)
-                    .setMessage(packageUtil.N2TTS_PACKAGE_NOT_FOUND_MESSAGE)
+                    .setMessage(mContext.getString(R.string.n2tts_not_found_message))
                     .setPositiveButton(getResources().getString(R.string.go_play_stroe),
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -199,37 +212,5 @@ public class AppController extends Application {
                             })
                     .setNegativeButton(getResources().getString(R.string.no), null).show();
         }
-    }
-
-    /**
-     * xmlからMapのListへパースする。
-     *
-     * @param arrayId arrayId
-     */
-    public List<Map<String, Object>> parse(int arrayId) {
-        TypedArray drawerMenuList = getResources().obtainTypedArray(arrayId);
-
-        // RecyclerView.Adapter に渡すデータ
-        List<Map<String, Object>> mDrawerMenuArr = new ArrayList<>();
-
-        for (int i = 0; i < drawerMenuList.length(); i++) {
-            TypedArray itemArr = getResources().obtainTypedArray(drawerMenuList.getResourceId(i, 0));
-            Map<String, Object> content = new HashMap<>();
-            mDrawerMenuArr.add(content);
-            for (int j = 0; j < itemArr.length(); j++) {
-                TypedArray contentArr = getResources().obtainTypedArray(itemArr.getResourceId(j, 0));
-
-                // key-value
-                if (contentArr.getString(0).contains("icon")) {
-                    content.put(contentArr.getString(0), contentArr.getDrawable(1));
-                } else {
-                    content.put(contentArr.getString(0), contentArr.getString(1));
-                }
-                contentArr.recycle();
-            }
-            itemArr.recycle();
-        }
-
-        return mDrawerMenuArr;
     }
 }

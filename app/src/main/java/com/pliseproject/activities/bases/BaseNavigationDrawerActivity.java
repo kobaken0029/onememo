@@ -1,5 +1,6 @@
 package com.pliseproject.activities.bases;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -34,7 +35,14 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class BaseNavigationDrawerActivity extends ActionBarActivity {
+    /**
+     * コンテキストメニューの編集ID
+     */
     public static final int MENU_ITEM_ID_EDIT = 1;
+
+    /**
+     * コンテキストメニューの削除ID
+     */
     public static final int MENU_ITEM_ID_DELETE = 2;
 
     protected AppController appController;
@@ -42,6 +50,7 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
     private MyBroadcastReceiver mBroadcastReceiver;
     private List<Memo> memos;
     private MemoListAdapter memoListAdapter;
+    private boolean modifiedFlg;
 
     @InjectView(R.id.toolbar_menu)
     Toolbar toolbar;
@@ -157,7 +166,22 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
     public void moveCreateMemoView() {
         if (((this instanceof CreateMemoActivity) && getIntent().getSerializableExtra("memo") != null)
                 || this instanceof SetAlarmActivity) {
-            appController.showDialogBeforeMoveMemoView(this, new Intent(this, CreateMemoActivity.class));
+            Intent intent = new Intent(this, CreateMemoActivity.class);
+            intent.putExtra("memo", getIntent().getSerializableExtra("memo"));
+            if (modifiedFlg) {
+                appController.showDialogBeforeMoveMemoView(this, intent);
+            } else {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                if (this instanceof SetAlarmActivity) {
+                    setResult(Activity.RESULT_CANCELED, intent);
+                } else {
+                    startActivity(intent);
+                }
+
+                finish();
+            }
         } else if (this instanceof ViewMemoActivity) {
             startActivity(new Intent(this, CreateMemoActivity.class));
         }
@@ -189,5 +213,13 @@ public class BaseNavigationDrawerActivity extends ActionBarActivity {
 
     public TextView getMessageWindowTextView() {
         return messageWinsowTextView;
+    }
+
+    public boolean isModifiedFlg() {
+        return modifiedFlg;
+    }
+
+    public void setModifiedFlg(boolean modifiedFlg) {
+        this.modifiedFlg = modifiedFlg;
     }
 }

@@ -13,15 +13,16 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.pliseproject.R;
 import com.pliseproject.activities.SetAlarmActivity;
+import com.pliseproject.activities.ViewMemoActivity;
 import com.pliseproject.fragments.bases.BaseTextToSpeechFragment;
-import com.pliseproject.managers.AppController;
+import com.pliseproject.fragments.interfaces.OnBackListener;
 import com.pliseproject.models.Memo;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class CreateMemoFragment extends BaseTextToSpeechFragment {
+public class CreateMemoFragment extends BaseTextToSpeechFragment implements OnBackListener {
     private static final int SET_ALARM_ACTIVITY = 1;
 
     @InjectView(R.id.subject_editText)
@@ -41,7 +42,9 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
         if (memo == null || memo.getId() == getDeletedMemoId()) {
             appController.saveMemo(subjectEditText, memoEditText);
         } else {
-            appController.updateMemo(memo, subjectEditText, memoEditText);
+            memo.setSubject(subjectEditText.getText().toString());
+            memo.setMemo(memoEditText.getText().toString());
+            appController.updateMemo(memo);
         }
         activity.finish();
         floatingActionsMenu.collapse();
@@ -94,6 +97,9 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
             memoEditText.setText(memo.getMemo());
             storeInCreateViewFloatingActionButton.setVisibility(View.GONE);
             floatingActionsMenu.setVisibility(View.VISIBLE);
+        } else {
+            subjectEditText.setText("");
+            memoEditText.setText("");
         }
     }
 
@@ -113,5 +119,54 @@ public class CreateMemoFragment extends BaseTextToSpeechFragment {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         return super.onContextItemSelected(item, null);
+    }
+
+    @Override
+    public void onBackPressed() {
+        storeMemo();
+    }
+
+    /**
+     * メモを保存・更新する。
+     */
+    private void storeMemo() {
+        if (memo == null || memo.getId() == getDeletedMemoId()) {
+            appController.saveMemo(subjectEditText, memoEditText);
+            activity.finish();
+        } else if (isModified()) {
+            Intent intent = new Intent(activity, ViewMemoActivity.class);
+            intent.putExtra("memo", createMemoForExist());
+            appController.showDialogBeforeMoveMemoView(activity, intent);
+            activity.setModifiedFlg(true);
+        } else {
+            activity.finish();
+        }
+    }
+
+    /**
+     * メモに変更点があった稼働が判定する。
+     *
+     * @return 変更があったらtrue
+     */
+    private boolean isModified() {
+        return !(memo.getSubject().equals(subjectEditText.getText().toString())
+                && memo.getMemo().equals(memoEditText.getText().toString()));
+    }
+
+    /**
+     * 現在のメモから最新の状態のメモを作成する。
+     *
+     * @return メモ
+     */
+    private Memo createMemoForExist() {
+        Memo memo = new Memo();
+        memo.setId(this.memo.getId());
+        memo.setSubject(subjectEditText.getText().toString());
+        memo.setMemo(memoEditText.getText().toString());
+        memo.setPostFlg(this.memo.getPostFlg());
+        memo.setPostTime(this.memo.getPostTime());
+        memo.setCreateAt(this.memo.getCreateAt());
+        memo.setUpdateAt(this.memo.getUpdateAt());
+        return memo;
     }
 }

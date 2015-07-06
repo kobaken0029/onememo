@@ -1,11 +1,11 @@
 package com.pliseproject.fragments.bases;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,7 +55,20 @@ public class BaseNavigationDrawerFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(activity, ViewMemoActivity.class);
                 intent.putExtra("memo", (Memo) parent.getItemAtPosition(position));
-                appController.showDialogBeforeMoveMemoView(activity, intent);
+                if (activity.isModifiedFlg()) {
+                    appController.showDialogBeforeMoveMemoView(activity, intent);
+                } else {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    if (activity instanceof SetAlarmActivity) {
+                        activity.setResult(Activity.RESULT_CANCELED, intent);
+                    } else {
+                        startActivity(intent);
+                    }
+
+                    activity.finish();
+                }
                 activity.getDrawerLayout().closeDrawer(Gravity.START);
             }
         });
@@ -113,7 +126,20 @@ public class BaseNavigationDrawerFragment extends Fragment {
                 intent.putExtra("memo", selectedMemo);
                 if (((activity instanceof CreateMemoActivity) && activity.getIntent().getSerializableExtra("memo") != null)
                         || activity instanceof SetAlarmActivity) {
-                    appController.showDialogBeforeMoveMemoView(activity, intent);
+                    if (activity.isModifiedFlg()) {
+                        appController.showDialogBeforeMoveMemoView(activity, intent);
+                    } else {
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        if (activity instanceof SetAlarmActivity) {
+                            activity.setResult(Activity.RESULT_CANCELED, intent);
+                        } else {
+                            startActivity(intent);
+                        }
+
+                        activity.finish();
+                    }
                 } else if (activity instanceof ViewMemoActivity) {
                     startActivity(intent);
                 }
