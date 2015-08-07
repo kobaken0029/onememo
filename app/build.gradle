@@ -23,11 +23,14 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 
     // サポートライブラリ
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:support-v4:22.2.1'
 
     // FloatingActionButton
     compile 'com.getbase:floatingactionbutton:1.9.0'
+
+    // RecyclerView
+    compile 'com.android.support:recyclerview-v7:22.2.1'
 
     // Viewの紐付け簡略化
     compile 'com.jakewharton:butterknife:6.1.0'
