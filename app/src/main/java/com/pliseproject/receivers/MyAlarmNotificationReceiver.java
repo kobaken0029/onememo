@@ -1,7 +1,6 @@
 package com.pliseproject.receivers;
 
 import com.pliseproject.R;
-import com.pliseproject.activities.ViewPostMemoActivity;
 import com.pliseproject.models.Memo;
 
 import android.app.Notification;
@@ -26,7 +25,8 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
         Memo memo = (Memo) intent.getSerializableExtra("memo");
 
         // アラームを受け取って起動するActivityを指定
-        Intent intent2 = new Intent(context, ViewPostMemoActivity.class);
+//        Intent intent2 = new Intent(context, ViewPostMemoActivity.class);
+        Intent intent2 = new Intent();
         intent2.putExtra("memo", memo);
         intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

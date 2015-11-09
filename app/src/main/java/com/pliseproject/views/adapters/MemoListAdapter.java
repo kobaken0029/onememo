@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.pliseproject.R;
 import com.pliseproject.models.Memo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,5 +67,9 @@ public class MemoListAdapter extends BaseAdapter {
         }
 
         return v;
+    }
+
+    public void setMemos(List<Memo> memos) {
+        this.memos = new ArrayList<>(memos);
     }
 }

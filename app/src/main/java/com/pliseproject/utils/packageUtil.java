@@ -3,13 +3,13 @@ package com.pliseproject.utils;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-public class packageUtil {
+public class PackageUtil {
     public static final String N2TTS_PACKAGE_NAME = "jp.kddilabs.n2tts";
 
     /**
      * コンストラクタ。
      */
-    private packageUtil() {
+    private PackageUtil() {
     }
 
     /**
