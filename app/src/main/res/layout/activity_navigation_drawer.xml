@@ -5,8 +5,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/wanmemo_background_03">
+        android:layout_height="match_parent">
 
         <!-- toolbar -->
         <include

@@ -57,7 +57,9 @@ public class MemoHelperImpl implements MemoHelper {
         Memo memo = new Memo();
         memo.setSubject(subject);
         memo.setMemo(mainText);
-        memo.setPostTime(new Date());
+        String createdAt = DateUtil.converString(new Date());
+        memo.setCreateAt(createdAt);
+        memo.setUpdateAt(createdAt);
         memo.save();
 
         return memo;
@@ -67,6 +69,7 @@ public class MemoHelperImpl implements MemoHelper {
      * メモを更新します。
      */
     public Memo update(Context mContext, Memo memo) {
+        memo.setUpdateAt(DateUtil.converString(new Date()));
         memo.update();
 
         // PendingIntentの発行
@@ -96,6 +99,7 @@ public class MemoHelperImpl implements MemoHelper {
      */
     public void delete(Context mContext, Memo memo) {
         memo.delete();
+        mCurrentMemo = null;
         UiUtil.showToast(mContext, R.string.success_delete_message);
         ((AlarmManager) mContext.getSystemService(ALARM_SERVICE)).cancel(getPendingIntent(mContext, memo));
     }

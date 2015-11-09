@@ -3,8 +3,6 @@ package com.pliseproject.views.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +11,14 @@ import android.widget.EditText;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.pliseproject.R;
-import com.pliseproject.views.activities.BaseActivity;
 import com.pliseproject.views.activities.SetAlarmActivity;
-import com.pliseproject.views.fragments.interfaces.OnBackListener;
 import com.pliseproject.models.Memo;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-public class MemoFragment extends TextToSpeechFragment implements OnBackListener {
+public class MemoFragment extends TextToSpeechFragment {
     private static final int SET_ALARM_ACTIVITY = 1;
 
     @Bind(R.id.subject_editText)
@@ -36,14 +32,8 @@ public class MemoFragment extends TextToSpeechFragment implements OnBackListener
 
     @OnClick(R.id.store_button_in_create_view)
     void onClickStoreMemoInCreateViewButton() {
-        Memo createdMemo = mMemoHelper.create(subjectEditText.getText().toString(), memoEditText.getText().toString());
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Memo.class.getName(), createdMemo);
-        ViewMemoFragment f = new ViewMemoFragment();
-        f.setArguments(bundle);
-        ((BaseActivity) getActivity()).replaceFragment(R.id.container, f);
-
-        mFloatingActionMenu.setVisibility(View.VISIBLE);
+        mMemoHelper.setCurrentMemo(mMemoHelper.create(subjectEditText.getText().toString(), memoEditText.getText().toString()));
+        getFragmentManager().popBackStack();
     }
 
     @OnClick(R.id.alert_button)
@@ -64,13 +54,7 @@ public class MemoFragment extends TextToSpeechFragment implements OnBackListener
             mMemoHelper.update(getActivity(), memo);
         }
         mMemoHelper.setCurrentMemo(memo);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Memo.class.getName(), memo);
-        ViewMemoFragment f = new ViewMemoFragment();
-        f.setArguments(bundle);
-        ((BaseActivity) getActivity()).replaceFragment(R.id.container, f);
-
-        mFloatingActionMenu.setVisibility(View.VISIBLE);
+        getFragmentManager().popBackStack();
     }
 
     @Override
@@ -116,32 +100,9 @@ public class MemoFragment extends TextToSpeechFragment implements OnBackListener
     }
 
     @Override
-    public void onBackPressed() {
-        storeMemo();
-    }
-
-    /**
-     * メモを保存・更新する。
-     */
-    private void storeMemo() {
-        Memo memo = mMemoHelper.getCurrentMemo();
-        if (memo == null || memo.getId() == deletedMemoId) {
-            mMemoHelper.create(subjectEditText.getText().toString(), memoEditText.getText().toString());
-        } else if (isModified(memo)) {
-            memo.setSubject(subjectEditText.getText().toString());
-            memo.setMemo(memoEditText.getText().toString());
-            mMemoHelper.update(getActivity(), memo);
-        }
-    }
-
-    /**
-     * メモに変更点があったかどうか判定する。
-     *
-     * @return 変更があったらtrue
-     */
-    private boolean isModified(Memo memo) {
-        return !(memo.getSubject().equals(subjectEditText.getText().toString())
-                && memo.getMemo().equals(memoEditText.getText().toString()));
+    public void onStop() {
+        super.onStop();
+        mFloatingActionMenu.setVisibility(View.VISIBLE);
     }
 
     /**

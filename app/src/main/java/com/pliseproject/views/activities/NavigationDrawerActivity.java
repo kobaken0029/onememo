@@ -12,39 +12,50 @@ import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.pliseproject.R;
+import com.pliseproject.models.Memo;
 import com.pliseproject.utils.PackageUtil;
+import com.pliseproject.utils.UiUtil;
+import com.pliseproject.views.adapters.MemoListAdapter;
+import com.pliseproject.views.fragments.MemoFragment;
 import com.pliseproject.views.fragments.ViewMemoFragment;
 import com.pliseproject.utils.DateUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static butterknife.ButterKnife.findById;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class NavigationDrawerActivity extends BaseActivity {
-    /**
-     * コンテキストメニューの編集ID
-     */
-    public static final int MENU_ITEM_ID_EDIT = 1;
-
-    /**
-     * コンテキストメニューの削除ID
-     */
-    public static final int MENU_ITEM_ID_DELETE = 2;
-
-
     @Bind(R.id.toolbar_menu)
     Toolbar toolbar;
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @Bind(R.id.drawer_header_layout)
     RelativeLayout drawerHeaderRelativeLayout;
+    @Bind(R.id.memo_list)
+    ListView mListView;
+    @Bind(R.id.drawer)
+    LinearLayout drawer;
+
+    private RelativeLayout mEmptyRelativeLayout;
+    private MemoListAdapter mMemoListAdapter;
 
     @OnClick(R.id.drawer_create_memo)
     void onClickDrawerCreateMemo() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Memo.class.getName(), new Memo());
+        MemoFragment f = new MemoFragment();
+        f.setArguments(bundle);
+        replaceFragment(R.id.container, f, MemoFragment.class.getName());
         drawerLayout.closeDrawer(GravityCompat.START);
     }
 
@@ -68,17 +79,24 @@ public class NavigationDrawerActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
         ButterKnife.bind(this);
-
         mToolbarHelper.init(this, toolbar, R.string.read_view, false, true, mMenuItemClickListener);
+        mEmptyRelativeLayout = (RelativeLayout) getLayoutInflater().inflate(R.layout.drawer_empty, null);
 
-        ViewMemoFragment f = new ViewMemoFragment();
-        addFragment(R.id.container, f);
+        List<Memo> memos = mMemoHelper.findAll();
+        if (memos == null) {
+            memos = new ArrayList<>();
+        }
+        mMemoListAdapter = new MemoListAdapter(this, memos);
+
+        if (savedInstanceState == null) {
+            addFragment(R.id.container, new ViewMemoFragment(), ViewMemoFragment.class.getName());
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerForContextMenu(findViewById(android.R.id.list));
+        registerForContextMenu(findById(this, R.id.memo_list));
 
         switch (DateUtil.checkTimeNow()) {
             case DateUtil.NOON:
@@ -97,11 +115,17 @@ public class NavigationDrawerActivity extends BaseActivity {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, MENU_ITEM_ID_EDIT, 0, getString(R.string.edit));
-        menu.add(0, MENU_ITEM_ID_DELETE, 0, getString(R.string.delete));
+    protected void onDestroy() {
+        ButterKnife.unbind(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().findFragmentByTag(MemoFragment.class.getName()) == null) {
+            super.onBackPressed();
+        }
+        getFragmentManager().popBackStack();
     }
 
     /**
@@ -133,5 +157,21 @@ public class NavigationDrawerActivity extends BaseActivity {
 
     public DrawerLayout getDrawerLayout() {
         return drawerLayout;
+    }
+
+    public ListView getMemoListView() {
+        return mListView;
+    }
+
+    public LinearLayout getDrawer() {
+        return drawer;
+    }
+
+    public View getEmptyRelativeLayout() {
+        return mEmptyRelativeLayout;
+    }
+
+    public MemoListAdapter getMemoListAdapter() {
+        return mMemoListAdapter;
     }
 }

@@ -3,7 +3,9 @@ package com.pliseproject.di.modules;
 import android.content.Context;
 
 import com.pliseproject.WanmemoApplication;
+import com.pliseproject.helpers.MemoHelper;
 import com.pliseproject.helpers.ToolbarHelper;
+import com.pliseproject.helpers.impls.MemoHelperImpl;
 import com.pliseproject.helpers.impls.ToolbarHelperImpl;
 
 import javax.inject.Singleton;
@@ -29,5 +31,11 @@ public class ApplicationModule {
     @Singleton
     ToolbarHelper provideToolbarHelper() {
         return new ToolbarHelperImpl();
+    }
+
+    @Provides
+    @Singleton
+    MemoHelper provideMemoHelper() {
+        return new MemoHelperImpl();
     }
 }
