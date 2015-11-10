@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
  * アラーム設定画面のActivityです。
  */
 public class SetAlarmActivity extends BaseActivity {
+    public static final int SET_ALARM_ACTIVITY = 1;
 
     private Memo postedMemo;
     private Calendar calendar = Calendar.getInstance();

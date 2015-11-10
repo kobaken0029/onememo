@@ -13,6 +13,8 @@ import com.pliseproject.helpers.ToolbarHelper;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+
 public class BaseActivity extends AppCompatActivity {
     @Inject
     ToolbarHelper mToolbarHelper;
@@ -30,6 +32,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         mToolbarHelper = null;
+        ButterKnife.unbind(this);
         super.onDestroy();
     }
 

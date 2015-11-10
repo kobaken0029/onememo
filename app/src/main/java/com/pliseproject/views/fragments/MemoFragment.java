@@ -8,60 +8,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.pliseproject.R;
-import com.pliseproject.views.activities.SetAlarmActivity;
 import com.pliseproject.models.Memo;
+import com.pliseproject.views.activities.NavigationDrawerActivity;
+import com.pliseproject.views.activities.SetAlarmActivity;
+import com.pliseproject.views.viewmodels.FloatingActionViewModel;
+import com.pliseproject.views.viewmodels.MemoViewModel;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
-import butterknife.OnClick;
+import butterknife.ButterKnife;
 
 public class MemoFragment extends TextToSpeechFragment {
-    private static final int SET_ALARM_ACTIVITY = 1;
+    public static final String TAG = MemoFragment.class.getName();
+
+    private MemoViewModel mMemoViewModel;
 
     @Bind(R.id.subject_editText)
     EditText subjectEditText;
     @Bind(R.id.memo_editText)
     EditText memoEditText;
-    @Bind(R.id.multiple_actions)
-    FloatingActionsMenu mFloatingActionMenu;
-    @Bind(R.id.store_button_in_create_view)
-    FloatingActionButton mStoreInCreateViewFloatingActionButton;
-
-    @OnClick(R.id.store_button_in_create_view)
-    void onClickStoreMemoInCreateViewButton() {
-        mMemoHelper.setCurrentMemo(mMemoHelper.create(subjectEditText.getText().toString(), memoEditText.getText().toString()));
-        getFragmentManager().popBackStack();
-    }
-
-    @OnClick(R.id.alert_button)
-    void onClickSetAlertButton() {
-        Intent intent = new Intent(getActivity(), SetAlarmActivity.class);
-        intent.putExtra(Memo.class.getName(), mMemoHelper.getCurrentMemo());
-        startActivityForResult(intent, SET_ALARM_ACTIVITY);
-    }
-
-    @OnClick(R.id.store_button)
-    void onClickStoreMemoButton() {
-        Memo memo = mMemoHelper.getCurrentMemo();
-        if (isMemoEmpty(memo) || memo.getId() == deletedMemoId) {
-            memo = mMemoHelper.create(subjectEditText.getText().toString(), memoEditText.getText().toString());
-        } else {
-            memo.setSubject(subjectEditText.getText().toString());
-            memo.setMemo(memoEditText.getText().toString());
-            mMemoHelper.update(getActivity(), memo);
-        }
-        mMemoHelper.setCurrentMemo(memo);
-        getFragmentManager().popBackStack();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_memo, container, false);
         ButterKnife.bind(this, view);
+        bindView();
         return view;
     }
 
@@ -70,29 +42,32 @@ public class MemoFragment extends TextToSpeechFragment {
         super.onActivityCreated(savedInstanceState);
 
         // メモを取得
-        Memo memo = (Memo) getArguments().getSerializable(Memo.class.getName());
+        Memo memo = (Memo) getArguments().getSerializable(Memo.TAG);
         mMemoHelper.setCurrentMemo(memo);
 
-        if (!isMemoEmpty(memo)) {
-            subjectEditText.setText(memo.getSubject());
+        FloatingActionViewModel viewModel = ((NavigationDrawerActivity) getActivity()).getFloatingActionViewModel();
+        View storeFab = viewModel.getStoreInCreateViewFab();
+        View floatingActionMenu = viewModel.getFloatingActionMenu();
+        if (!mMemoHelper.isMemoEmpty(memo)) {
+            subjectEditText.setText(memo.getSubject() == null ? "" : memo.getSubject());
             memoEditText.setText(memo.getMemo());
-            mStoreInCreateViewFloatingActionButton.setVisibility(View.GONE);
-            mFloatingActionMenu.setVisibility(View.VISIBLE);
+            storeFab.setVisibility(View.GONE);
+            floatingActionMenu.setVisibility(View.VISIBLE);
         } else {
             subjectEditText.setText("");
             memoEditText.setText("");
-            mStoreInCreateViewFloatingActionButton.setVisibility(View.VISIBLE);
-            mFloatingActionMenu.setVisibility(View.GONE);
+            storeFab.setVisibility(View.VISIBLE);
+            floatingActionMenu.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SET_ALARM_ACTIVITY) {
+        if (requestCode == SetAlarmActivity.SET_ALARM_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
                 // 通知時間が設定されたメモを取得
-                mMemoHelper.setCurrentMemo((Memo) data.getSerializableExtra(Memo.class.getName()));
+                mMemoHelper.setCurrentMemo((Memo) data.getSerializableExtra(Memo.TAG));
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 getActivity().finish();
             }
@@ -102,16 +77,19 @@ public class MemoFragment extends TextToSpeechFragment {
     @Override
     public void onStop() {
         super.onStop();
-        mFloatingActionMenu.setVisibility(View.VISIBLE);
+        ((NavigationDrawerActivity) getActivity()).getFloatingActionViewModel()
+                .getFloatingActionMenu()
+                .setVisibility(View.VISIBLE);
     }
 
-    /**
-     * メモの空判定をする。
-     *
-     * @param memo 対象メモ
-     * @return 空だったらtrue
-     */
-    private boolean isMemoEmpty(Memo memo) {
-        return memo == null || memo.getId() == null;
+    @Override
+    void bindView() {
+        mMemoViewModel = new MemoViewModel();
+        mMemoViewModel.setSubjectEditText(subjectEditText);
+        mMemoViewModel.setMemoEditText(memoEditText);
+    }
+
+    public MemoViewModel getMemoViewModel() {
+        return mMemoViewModel;
     }
 }

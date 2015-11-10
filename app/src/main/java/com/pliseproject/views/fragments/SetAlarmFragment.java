@@ -14,20 +14,20 @@ import android.widget.ListView;
 import android.widget.TimePicker;
 
 import com.pliseproject.R;
-import com.pliseproject.views.activities.SetAlarmActivity;
 import com.pliseproject.models.CustomCheckData;
 import com.pliseproject.models.Memo;
+import com.pliseproject.views.activities.SetAlarmActivity;
 import com.pliseproject.views.adapters.CustomCheckAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static butterknife.ButterKnife.findById;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
+
+import static butterknife.ButterKnife.findById;
 
 public class SetAlarmFragment extends TextToSpeechFragment {
     @Bind(R.id.setting_list)
@@ -195,5 +195,9 @@ public class SetAlarmFragment extends TextToSpeechFragment {
             activity.setHour(hour);
             activity.setMinute(minute);
         }
+    }
+
+    @Override
+    void bindView() {
     }
 }

@@ -15,6 +15,7 @@ import java.util.Date;
  */
 @Table(databaseName = WanmemoDatabase.NAME, tableName = Memo.NAME)
 public class Memo extends BaseEntity {
+    public static final String TAG = Memo.class.getName();
     public static final String NAME = "memos";
     public static final String ID = "id";
 

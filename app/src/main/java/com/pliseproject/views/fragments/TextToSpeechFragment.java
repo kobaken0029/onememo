@@ -9,10 +9,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.pliseproject.R;
-import com.pliseproject.views.activities.NavigationDrawerActivity;
 import com.pliseproject.models.Memo;
-import com.pliseproject.utils.UiUtil;
 import com.pliseproject.utils.PackageUtil;
+import com.pliseproject.utils.UiUtil;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -25,7 +24,7 @@ import static butterknife.ButterKnife.findById;
 /**
  * TextToSpeechを使ったBaseFragment。
  */
-public class TextToSpeechFragment extends BaseFragment
+public abstract class TextToSpeechFragment extends BaseFragment
         implements TextToSpeech.OnInitListener {
     protected TextToSpeech tts;
 
@@ -144,6 +143,10 @@ public class TextToSpeechFragment extends BaseFragment
         }
 
         return message;
+    }
+
+    @Override
+    void bindView() {
     }
 
     static class MyHandler extends Handler {

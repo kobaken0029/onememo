@@ -24,20 +24,22 @@ public class ToolbarHelperImpl implements ToolbarHelper {
             toolbar.setOnMenuItemClickListener(menuItemClickListener);
         }
 
-        if (isShowBackArrow) {
+        if (activity instanceof NavigationDrawerActivity) {
+            toolbar.setNavigationIcon(R.drawable.ic_launcher);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((NavigationDrawerActivity) activity).getDrawerViewModel()
+                            .getDrawerLayout()
+                            .openDrawer(GravityCompat.START);
+                }
+            });
+        } else if (isShowBackArrow) {
 //            mToolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     activity.getFragmentManager().popBackStack();
-                }
-            });
-        } else if (activity instanceof NavigationDrawerActivity) {
-            toolbar.setNavigationIcon(R.drawable.ic_launcher);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((NavigationDrawerActivity) activity).getDrawerLayout().openDrawer(GravityCompat.START);
                 }
             });
         }

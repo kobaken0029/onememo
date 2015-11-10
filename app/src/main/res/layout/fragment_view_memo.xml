@@ -1,9 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_padding"
-    android:background="@drawable/wanmemo_background_03">
+    android:background="@drawable/wanmemo_background_03"
+    android:padding="@dimen/activity_padding">
 
     <include
         android:id="@+id/footer"
@@ -75,56 +74,5 @@
             </TableRow>
         </ScrollView>
     </TableLayout>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true">
-
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/multiple_actions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            fab:fab_addButtonColorNormal="@color/white"
-            fab:fab_addButtonColorPressed="@color/white_pressed"
-            fab:fab_addButtonPlusIconColor="@color/black_semi_transparent"
-            fab:fab_labelStyle="@style/menu_labels_style">
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/delete_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/main_color"
-                fab:fab_colorPressed="@color/sub_color"
-                fab:fab_icon="@drawable/ic_action_content_clear"
-                fab:fab_size="mini"
-                fab:fab_title="@string/delete" />
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/edit_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/main_color"
-                fab:fab_colorPressed="@color/sub_color"
-                fab:fab_icon="@drawable/ic_action_editor_mode_edit"
-                fab:fab_size="mini"
-                fab:fab_title="@string/edit" />
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/create_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/main_color"
-                fab:fab_colorPressed="@color/sub_color"
-                fab:fab_icon="@drawable/ic_action_action_note_add"
-                fab:fab_size="mini"
-                fab:fab_title="@string/nav_create_memo" />
-
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-    </FrameLayout>
 
 </RelativeLayout>

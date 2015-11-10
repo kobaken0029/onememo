@@ -11,8 +11,8 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
-public class BaseFragment extends Fragment {
-    protected static long deletedMemoId;
+public abstract class BaseFragment extends Fragment {
+    protected static long mDeletedMemoId;
 
     @Inject
     MemoHelper mMemoHelper;
@@ -36,5 +36,11 @@ public class BaseFragment extends Fragment {
                 .wanmemoModule(new WanmemoModule())
                 .build()
                 .inject(this);
+    }
+
+    abstract void bindView();
+
+    public long getDeletedMemoId() {
+        return mDeletedMemoId;
     }
 }
