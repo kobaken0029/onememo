@@ -27,7 +27,7 @@
 
             <fragment
                 android:id="@+id/set_alarm_fragment"
-                android:name="com.pliseproject.views.fragments.SetAlarmFragment"
+                android:name="com.kobaken0029.views.fragments.SetAlarmFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
