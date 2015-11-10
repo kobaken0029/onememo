@@ -3,6 +3,7 @@ package com.pliseproject.utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateUtil {
     public static final String YEAR_MONTH_DAY_HOUR_MINUTE_SECOND = "yyyy/MM/dd HH:mm:ss (E)";
@@ -36,13 +37,25 @@ public class DateUtil {
     }
 
     /**
+     * Dateから文字列に変換します。
+     *
+     * @param date Date
+     * @return 文字列
+     */
+    public static String converString(Date date) {
+        return date != null
+                ? new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MINUTE_SECOND, Locale.JAPAN).format(date)
+                : "";
+    }
+
+    /**
      * 文字列からCalendarに変換します。
      *
      * @param data 文字列
      * @return Calendar
      */
     public static Calendar convertStringToCalendar(String data) {
-        SimpleDateFormat sdf = new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MINUTE);
+        SimpleDateFormat sdf = new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MINUTE, Locale.JAPAN);
         Date date = null;
 
         if (data == null) {

@@ -10,14 +10,27 @@ import android.widget.TextView;
 import com.pliseproject.R;
 import com.pliseproject.models.Memo;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static butterknife.ButterKnife.findById;
 
 /**
  * メモリストのAdapterです。
  */
 public class MemoListAdapter extends BaseAdapter {
-    private Context mContext;
     private List<Memo> memos;
+    private LayoutInflater mInflater;
+
+    class ViewHolder {
+        TextView subjectTextView;
+        TextView lastUpdateTextView;
+
+        ViewHolder(View view) {
+            subjectTextView = findById(view, R.id.memo_text);
+            lastUpdateTextView = findById(view, R.id.last_update_text);
+        }
+    }
 
     /**
      * コンストラクタ。
@@ -26,8 +39,9 @@ public class MemoListAdapter extends BaseAdapter {
      * @param memos   メモ群
      */
     public MemoListAdapter(Context context, List<Memo> memos) {
-        mContext = context;
         this.memos = memos;
+        this.mInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -47,24 +61,26 @@ public class MemoListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView subjectTextView;
-        TextView lastUpdateTextView;
-        View v = convertView;
+        ViewHolder holder;
 
-        if (v == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.row, null);
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.row, null);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
-        Memo memo = (Memo) getItem(position);
 
+        final Memo memo = (Memo) getItem(position);
         if (memo != null) {
-            subjectTextView = (TextView) v.findViewById(R.id.memo_text);
-            lastUpdateTextView = (TextView) v
-                    .findViewById(R.id.last_update_text);
-            subjectTextView.setText(memo.getSubject());
-            lastUpdateTextView.setText(memo.getUpdateAt());
+            holder.subjectTextView.setText(memo.getSubject());
+            holder.lastUpdateTextView.setText(memo.getUpdateAt());
         }
 
-        return v;
+        return convertView;
+    }
+
+    public void setMemos(List<Memo> memos) {
+        this.memos = new ArrayList<>(memos);
     }
 }
