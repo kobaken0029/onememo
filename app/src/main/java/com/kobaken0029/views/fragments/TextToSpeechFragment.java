@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
-import com.kobaken0029.utils.PackageUtil;
+import com.kobaken0029.utils.N2ttsUtil;
 import com.kobaken0029.utils.UiUtil;
 
 import java.util.HashMap;
@@ -97,7 +97,7 @@ public abstract class TextToSpeechFragment extends BaseFragment
      * @param text 読み上げるテキスト
      */
     private void ttsSpeak(String text) {
-        if (PackageUtil.packageCheck(PackageUtil.N2TTS_PACKAGE_NAME, getActivity().getPackageManager())) {
+        if (N2ttsUtil.packageCheck(N2ttsUtil.N2TTS_PACKAGE_NAME, getActivity().getPackageManager())) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
             } else {

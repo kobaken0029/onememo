@@ -20,7 +20,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.utils.DateUtil;
-import com.kobaken0029.utils.PackageUtil;
+import com.kobaken0029.utils.N2ttsUtil;
 import com.kobaken0029.utils.UiUtil;
 import com.kobaken0029.views.adapters.MemoListAdapter;
 import com.kobaken0029.views.fragments.MemoFragment;
@@ -274,10 +274,10 @@ public class NavigationDrawerActivity extends BaseActivity {
      * 音声読上げ設定画面へ遷移します。
      */
     private void settingReadVoice(final Context mContext) {
-        if (PackageUtil.packageCheck(PackageUtil.N2TTS_PACKAGE_NAME, mContext.getPackageManager())) {
+        if (N2ttsUtil.packageCheck(N2ttsUtil.N2TTS_PACKAGE_NAME, mContext.getPackageManager())) {
             Intent n2tts = new Intent(Intent.ACTION_MAIN);
             n2tts.setAction("android.intent.category.LAUNCHER");
-            n2tts.setClassName(PackageUtil.N2TTS_PACKAGE_NAME, PackageUtil.N2TTS_PACKAGE_NAME + ".TtsServiceSettings");
+            n2tts.setClassName(N2ttsUtil.N2TTS_PACKAGE_NAME, N2ttsUtil.N2TTS_PACKAGE_NAME + ".TtsServiceSettings");
             n2tts.setFlags(0x10000000);
             mContext.startActivity(n2tts);
         } else {
