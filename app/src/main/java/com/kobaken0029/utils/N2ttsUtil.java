@@ -3,13 +3,13 @@ package com.kobaken0029.utils;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-public class PackageUtil {
+public class N2ttsUtil {
     public static final String N2TTS_PACKAGE_NAME = "jp.kddilabs.n2tts";
 
     /**
      * コンストラクタ。
      */
-    private PackageUtil() {
+    private N2ttsUtil() {
     }
 
     /**
