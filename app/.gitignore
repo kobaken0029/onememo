@@ -14,12 +14,6 @@ hs_err_pid*
 
 
 ### Android ###
-# Built application files
-*.apk
-
-# Files for the Dalvik VM
-*.dex
-
 # Generated files
 bin/
 gen/
