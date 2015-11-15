@@ -3,6 +3,7 @@ package com.kobaken0029.views.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
+import com.kobaken0029.views.activities.BaseActivity;
 import com.kobaken0029.views.activities.NavigationDrawerActivity;
 import com.kobaken0029.views.activities.SetAlarmActivity;
 import com.kobaken0029.views.viewmodels.FloatingActionViewModel;
@@ -17,6 +19,8 @@ import com.kobaken0029.views.viewmodels.MemoViewModel;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static butterknife.ButterKnife.findById;
 
 public class MemoFragment extends TextToSpeechFragment {
     public static final String TAG = MemoFragment.class.getName();
@@ -59,6 +63,13 @@ public class MemoFragment extends TextToSpeechFragment {
             storeFab.setVisibility(View.VISIBLE);
             floatingActionMenu.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toolbar t = findById(getActivity(), R.id.toolbar_menu);
+        mToolbarHelper.change((BaseActivity) getActivity(), t, R.string.create_view, true);
     }
 
     @Override

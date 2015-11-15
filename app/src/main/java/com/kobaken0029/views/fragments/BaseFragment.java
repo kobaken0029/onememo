@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.kobaken0029.di.components.DaggerWanmemoComponent;
 import com.kobaken0029.di.modules.WanmemoModule;
 import com.kobaken0029.helpers.MemoHelper;
+import com.kobaken0029.helpers.ToolbarHelper;
 
 import javax.inject.Inject;
 
@@ -14,6 +15,8 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment extends Fragment {
     protected static long mDeletedMemoId;
 
+    @Inject
+    ToolbarHelper mToolbarHelper;
     @Inject
     MemoHelper mMemoHelper;
 
