@@ -1,17 +1,21 @@
 package com.kobaken0029.views.fragments;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kobaken0029.R;
+import com.kobaken0029.views.activities.BaseActivity;
 import com.kobaken0029.views.activities.NavigationDrawerActivity;
 import com.kobaken0029.views.viewmodels.ViewMemoViewModel;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static butterknife.ButterKnife.findById;
 
 public class ViewMemoFragment extends TextToSpeechFragment {
     public static final String TAG = ViewMemoFragment.class.getName();
@@ -41,6 +45,8 @@ public class ViewMemoFragment extends TextToSpeechFragment {
     public void onResume() {
         super.onResume();
         refresh();
+        Toolbar t = findById(getActivity(), R.id.toolbar_menu);
+        mToolbarHelper.change((BaseActivity) getActivity(), t, R.string.read_view, false);
     }
 
     @Override
@@ -48,7 +54,6 @@ public class ViewMemoFragment extends TextToSpeechFragment {
         mViewMemoViewModel = new ViewMemoViewModel();
         mViewMemoViewModel.setSubjectView(subjectView);
         mViewMemoViewModel.setMemoView(memoView);
-
     }
 
     public void refresh() {

@@ -37,8 +37,7 @@ public class SetAlarmActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
         ButterKnife.bind(this);
-
-        mToolbarHelper.init(this, toolbar, R.string.setting_view, false, false, null);
+        mToolbarHelper.init(this, toolbar, R.string.setting_view, false, false);
     }
 
     @Override

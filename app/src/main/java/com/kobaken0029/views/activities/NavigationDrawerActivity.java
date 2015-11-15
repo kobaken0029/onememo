@@ -1,15 +1,11 @@
 package com.kobaken0029.views.activities;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -20,7 +16,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.utils.DateUtil;
-import com.kobaken0029.utils.N2ttsUtil;
 import com.kobaken0029.utils.UiUtil;
 import com.kobaken0029.views.adapters.MemoListAdapter;
 import com.kobaken0029.views.fragments.MemoFragment;
@@ -165,6 +160,7 @@ public class NavigationDrawerActivity extends BaseActivity {
             f.setArguments(bundle);
             replaceFragment(R.id.container, f, MemoFragment.class.getName());
         }
+        mFloatingActionMenu.collapse();
         drawerLayout.closeDrawer(GravityCompat.START);
     }
 
@@ -181,23 +177,10 @@ public class NavigationDrawerActivity extends BaseActivity {
             }
         }
 
+        mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
+        mFloatingActionMenu.collapse();
         drawerLayout.closeDrawer(GravityCompat.START);
     }
-
-    private Toolbar.OnMenuItemClickListener mMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case android.R.id.home:
-                    finish();
-                    break;
-                case R.id.menu_setting:
-                    settingReadVoice(NavigationDrawerActivity.this);
-                    break;
-            }
-            return true;
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -205,7 +188,7 @@ public class NavigationDrawerActivity extends BaseActivity {
         setContentView(R.layout.activity_navigation_drawer);
         ButterKnife.bind(this);
         bindView();
-        mToolbarHelper.init(this, toolbar, R.string.read_view, false, true, mMenuItemClickListener);
+        mToolbarHelper.init(this, toolbar, R.string.read_view, false, true);
 
         List<Memo> memos = mMemoHelper.findAll();
         if (memos == null) {
@@ -268,33 +251,6 @@ public class NavigationDrawerActivity extends BaseActivity {
         mFloatingActionViewModel.setDeleteFab(mDeleteFab);
         mFloatingActionViewModel.setEditFab(mEditFab);
         mFloatingActionViewModel.setCreateFab(mCreateFab);
-    }
-
-    /**
-     * 音声読上げ設定画面へ遷移します。
-     */
-    private void settingReadVoice(final Context mContext) {
-        if (N2ttsUtil.packageCheck(N2ttsUtil.N2TTS_PACKAGE_NAME, mContext.getPackageManager())) {
-            Intent n2tts = new Intent(Intent.ACTION_MAIN);
-            n2tts.setAction("android.intent.category.LAUNCHER");
-            n2tts.setClassName(N2ttsUtil.N2TTS_PACKAGE_NAME, N2ttsUtil.N2TTS_PACKAGE_NAME + ".TtsServiceSettings");
-            n2tts.setFlags(0x10000000);
-            mContext.startActivity(n2tts);
-        } else {
-            new AlertDialog.Builder(mContext)
-                    .setMessage(mContext.getString(R.string.n2tts_not_found_message))
-                    .setPositiveButton(mContext.getResources().getString(R.string.go_play_stroe),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=jp.kddilabs.n2tts&hl=ja");
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                                    mContext.startActivity(intent);
-                                }
-                            })
-                    .setNegativeButton(mContext.getResources().getString(R.string.no), null).show();
-        }
     }
 
     public MemoListAdapter getMemoListAdapter() {
