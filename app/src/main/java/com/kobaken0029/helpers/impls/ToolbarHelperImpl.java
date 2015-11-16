@@ -1,7 +1,6 @@
 package com.kobaken0029.helpers.impls;
 
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;

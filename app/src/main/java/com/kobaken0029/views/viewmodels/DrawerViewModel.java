@@ -16,6 +16,17 @@ public class DrawerViewModel {
         return drawerLayout;
     }
 
+    public void modify(boolean exist) {
+        drawer.removeView(memoListEmptyLayout);
+        drawer.removeView(memoListView);
+
+        if (exist) {
+            drawer.addView(memoListView);
+        } else {
+            drawer.addView(memoListEmptyLayout);
+        }
+    }
+
     public void setDrawerLayout(DrawerLayout drawerLayout) {
         this.drawerLayout = drawerLayout;
     }

@@ -12,6 +12,7 @@ import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.utils.N2ttsUtil;
 import com.kobaken0029.utils.UiUtil;
+import com.kobaken0029.views.activities.NavigationDrawerActivity;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -34,7 +35,7 @@ public abstract class TextToSpeechFragment extends BaseFragment
             tts.stop();
         }
 
-        Memo memo = mMemoHelper.getCurrentMemo();
+        Memo memo = mMemoHelper.find(((NavigationDrawerActivity) getActivity()).currentMemoId);
         ttsSpeak(memo != null
                 ? ((memo.getSubject() != null
                 ? memo.getSubject() + "。"
@@ -48,6 +49,8 @@ public abstract class TextToSpeechFragment extends BaseFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        tts = new TextToSpeech(getActivity(), this);
+
         View view = findById(getActivity(), R.id.icon_memomiya);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,12 +88,13 @@ public abstract class TextToSpeechFragment extends BaseFragment
             float rate = 1.0f;
             Locale locale = Locale.JAPAN;
 
+            tts = tts == null ? new TextToSpeech(getActivity(), this) : tts;
             tts.setPitch(pitch);
             tts.setSpeechRate(rate);
             tts.setLanguage(locale);
         }
     }
-
+ 
     /**
      * N2 TTSで音声読み上げを行います。
      *
