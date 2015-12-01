@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.tts.TextToSpeech;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,14 +37,18 @@ public abstract class TextToSpeechFragment extends BaseFragment
         }
 
         Memo memo = mMemoHelper.find(((NavigationDrawerActivity) getActivity()).currentMemoId);
-        ttsSpeak(memo != null
-                ? ((memo.getSubject() != null
-                ? memo.getSubject() + "。"
-                : "") +
-                (memo.getMemo() != null
-                        ? memo.getMemo()
-                        : ""))
-                : "");
+        if (memo != null) {
+            StringBuilder str = new StringBuilder();
+            str.append("");
+            if (TextUtils.isEmpty(memo.getSubject())) {
+                str.append(memo.getSubject());
+                str.append("。");
+            }
+            if (TextUtils.isEmpty(memo.getMemo())) {
+                str.append(memo.getMemo());
+            }
+            ttsSpeak(str.toString());
+        }
     }
 
     @Override
@@ -94,7 +99,7 @@ public abstract class TextToSpeechFragment extends BaseFragment
             tts.setLanguage(locale);
         }
     }
- 
+
     /**
      * N2 TTSで音声読み上げを行います。
      *
@@ -121,11 +126,8 @@ public abstract class TextToSpeechFragment extends BaseFragment
     private String getMessage() {
         String message = "";
 
-        // 乱数を生成
-        int ran = new Random().nextInt(6);
-
         // 乱数に応じて、テキストをセット
-        switch (ran) {
+        switch (new Random().nextInt(6)) {
             case 0:
                 message = getResources().getString(R.string.voice1);
                 break;
