@@ -3,7 +3,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "22.0.1"
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
         applicationId "com.pliseproject"
@@ -11,11 +11,15 @@ android {
         targetSdkVersion 22
         versionCode 6
         versionName "1.4.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            testCoverageEnabled true
         }
     }
     packagingOptions {
@@ -24,33 +28,29 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-
+    compile fileTree(include: '*.jar', dir: 'libs')
     // サポートライブラリ
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:support-v4:23.1.0'
-
     // FloatingActionButton
     compile 'com.getbase:floatingactionbutton:1.9.0'
-
     // RecyclerView
     compile 'com.android.support:recyclerview-v7:23.1.0'
-
     // Viewの紐付け簡略化
     compile 'com.jakewharton:butterknife:7.0.1'
-
     // O/Rマッパー
     apt 'com.raizlabs.android:DBFlow-Compiler:2.2.1'
-    compile "com.raizlabs.android:DBFlow-Core:2.2.1"
-    compile "com.raizlabs.android:DBFlow:2.2.1"
-
+    compile 'com.raizlabs.android:DBFlow-Core:2.2.1'
+    compile 'com.raizlabs.android:DBFlow:2.2.1'
     // DI
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     compile 'com.google.dagger:dagger:2.0.2'
-
     // Needed for @Generated annotation (missing in Java <= 1.6; therefore, Android)
     compile 'javax.annotation:jsr250-api:1.0'
-
     // Component Helper
     compile 'net.ypresto.scabbard:scabbard:0.1.0'
+    // unit test
+    androidTestCompile 'com.android.support.test:runner:0.3'
+    androidTestCompile 'com.android.support.test:rules:0.3'
+    androidTestCompile 'com.android.support:support-annotations:23.1.0'
 }

@@ -17,6 +17,8 @@ public class Memo extends BaseEntity {
     public static final String TAG = Memo.class.getName();
     public static final String NAME = "memos";
     public static final String ID = "id";
+    public static final String SUBJECT = "subject";
+    public static final String MEMO = "memo";
 
     @Column
     @Unique
