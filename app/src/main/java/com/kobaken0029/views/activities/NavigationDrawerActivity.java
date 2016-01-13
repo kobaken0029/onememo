@@ -279,10 +279,6 @@ public class NavigationDrawerActivity extends BaseActivity {
         }
     }
 
-    public MemoListAdapter getMemoListAdapter() {
-        return mMemoListAdapter;
-    }
-
     public DrawerViewModel getDrawerViewModel() {
         return mDrawerViewModel;
     }
