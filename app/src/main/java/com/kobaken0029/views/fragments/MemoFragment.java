@@ -14,7 +14,6 @@ import com.kobaken0029.models.Memo;
 import com.kobaken0029.views.activities.BaseActivity;
 import com.kobaken0029.views.activities.NavigationDrawerActivity;
 import com.kobaken0029.views.activities.SetAlarmActivity;
-import com.kobaken0029.views.viewmodels.FloatingActionViewModel;
 import com.kobaken0029.views.viewmodels.MemoViewModel;
 
 import butterknife.Bind;
@@ -47,22 +46,12 @@ public class MemoFragment extends TextToSpeechFragment {
 
         // メモを取得
         Memo memo = (Memo) getArguments().getSerializable(Memo.TAG);
-        mMemoHelper.setCurrentMemo(memo);
-
-        FloatingActionViewModel viewModel = ((NavigationDrawerActivity) getActivity()).getFloatingActionViewModel();
-        View storeFab = viewModel.getStoreInCreateViewFab();
-        View floatingActionMenu = viewModel.getFloatingActionMenu();
-        if (!mMemoHelper.isMemoEmpty(memo)) {
-            subjectEditText.setText(memo.getSubject() == null ? "" : memo.getSubject());
-            memoEditText.setText(memo.getMemo());
-            storeFab.setVisibility(View.GONE);
-            floatingActionMenu.setVisibility(View.VISIBLE);
-        } else {
-            subjectEditText.setText("");
-            memoEditText.setText("");
-            storeFab.setVisibility(View.VISIBLE);
-            floatingActionMenu.setVisibility(View.GONE);
+        if (!mMemoHelper.isEmpty(memo)) {
+            ((NavigationDrawerActivity) getActivity()).currentMemoId = memo.getId();
         }
+
+        // メモをViewに設定
+        mMemoViewModel.setMemoView(memo, !mMemoHelper.isEmpty(memo));
     }
 
     @Override
@@ -78,7 +67,7 @@ public class MemoFragment extends TextToSpeechFragment {
         if (requestCode == SetAlarmActivity.SET_ALARM_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
                 // 通知時間が設定されたメモを取得
-                mMemoHelper.setCurrentMemo((Memo) data.getSerializableExtra(Memo.TAG));
+                ((NavigationDrawerActivity) getActivity()).currentMemoId = ((Memo) data.getSerializableExtra(Memo.TAG)).getId();
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 getActivity().finish();
             }
@@ -95,7 +84,9 @@ public class MemoFragment extends TextToSpeechFragment {
 
     @Override
     void bindView() {
-        mMemoViewModel = new MemoViewModel();
+        if (mMemoViewModel == null) {
+            mMemoViewModel = new MemoViewModel();
+        }
         mMemoViewModel.setSubjectEditText(subjectEditText);
         mMemoViewModel.setMemoEditText(memoEditText);
     }

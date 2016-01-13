@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.tts.TextToSpeech;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.utils.N2ttsUtil;
 import com.kobaken0029.utils.UiUtil;
+import com.kobaken0029.views.activities.NavigationDrawerActivity;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -34,20 +36,26 @@ public abstract class TextToSpeechFragment extends BaseFragment
             tts.stop();
         }
 
-        Memo memo = mMemoHelper.getCurrentMemo();
-        ttsSpeak(memo != null
-                ? ((memo.getSubject() != null
-                ? memo.getSubject() + "。"
-                : "") +
-                (memo.getMemo() != null
-                        ? memo.getMemo()
-                        : ""))
-                : "");
+        Memo memo = mMemoHelper.find(((NavigationDrawerActivity) getActivity()).currentMemoId);
+        if (memo != null) {
+            StringBuilder str = new StringBuilder();
+            str.append("");
+            if (TextUtils.isEmpty(memo.getSubject())) {
+                str.append(memo.getSubject());
+                str.append("。");
+            }
+            if (TextUtils.isEmpty(memo.getMemo())) {
+                str.append(memo.getMemo());
+            }
+            ttsSpeak(str.toString());
+        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        tts = new TextToSpeech(getActivity(), this);
+
         View view = findById(getActivity(), R.id.icon_memomiya);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +93,7 @@ public abstract class TextToSpeechFragment extends BaseFragment
             float rate = 1.0f;
             Locale locale = Locale.JAPAN;
 
+            tts = tts == null ? new TextToSpeech(getActivity(), this) : tts;
             tts.setPitch(pitch);
             tts.setSpeechRate(rate);
             tts.setLanguage(locale);
@@ -117,11 +126,8 @@ public abstract class TextToSpeechFragment extends BaseFragment
     private String getMessage() {
         String message = "";
 
-        // 乱数を生成
-        int ran = new Random().nextInt(6);
-
         // 乱数に応じて、テキストをセット
-        switch (ran) {
+        switch (new Random().nextInt(6)) {
             case 0:
                 message = getResources().getString(R.string.voice1);
                 break;

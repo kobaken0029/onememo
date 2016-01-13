@@ -23,6 +23,7 @@ import com.kobaken0029.views.fragments.ViewMemoFragment;
 import com.kobaken0029.views.viewmodels.DrawerViewModel;
 import com.kobaken0029.views.viewmodels.FloatingActionViewModel;
 import com.kobaken0029.views.viewmodels.MemoViewModel;
+import com.kobaken0029.views.viewmodels.ViewMemoViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +64,10 @@ public class NavigationDrawerActivity extends BaseActivity {
     @Bind(R.id.create_button)
     FloatingActionButton mCreateFab;
 
-
     private DrawerViewModel mDrawerViewModel;
     private FloatingActionViewModel mFloatingActionViewModel;
     private MemoListAdapter mMemoListAdapter;
+    public Long currentMemoId;
 
     private void replaceMemoFragment(Bundle bundle, boolean newMemo) {
         MemoFragment f = new MemoFragment();
@@ -78,8 +79,14 @@ public class NavigationDrawerActivity extends BaseActivity {
     }
 
     private void popBackStackToViewMemoFragment(Memo memo) {
-        mMemoHelper.setCurrentMemo(memo);
+        currentMemoId = memo.getId();
         getFragmentManager().popBackStack();
+
+        ((ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG))
+                .getViewMemoViewModel()
+                .setMemoView(mMemoHelper.find(currentMemoId), mMemoHelper.isEmpty(mMemoHelper.find(currentMemoId)));
+
+        mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
         mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
         mFloatingActionViewModel.collapse();
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -95,7 +102,7 @@ public class NavigationDrawerActivity extends BaseActivity {
     @OnClick(R.id.edit_button)
     void onClickEditButton() {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Memo.TAG, mMemoHelper.getCurrentMemo());
+        bundle.putSerializable(Memo.TAG, mMemoHelper.find(currentMemoId));
         replaceMemoFragment(bundle, false);
     }
 
@@ -104,12 +111,13 @@ public class NavigationDrawerActivity extends BaseActivity {
         UiUtil.showDialog(this, R.string.check_delete_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mMemoHelper.delete(NavigationDrawerActivity.this, mMemoHelper.getCurrentMemo());
+                Memo target = mMemoHelper.find(currentMemoId);
+                mMemoHelper.delete(NavigationDrawerActivity.this, target);
                 mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
                 ViewMemoFragment f = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
                 if (f != null) {
-                    f.refresh();
-                    f.getViewMemoViewModel().reset();
+                    mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
+                    f.getViewMemoViewModel().setMemoView(target, false);
                 }
             }
         });
@@ -128,7 +136,7 @@ public class NavigationDrawerActivity extends BaseActivity {
     @OnClick(R.id.alert_button)
     void onClickSetAlertButton() {
         Intent intent = new Intent(this, SetAlarmActivity.class);
-        intent.putExtra(Memo.TAG, mMemoHelper.getCurrentMemo());
+        intent.putExtra(Memo.TAG, mMemoHelper.find(currentMemoId));
         startActivityForResult(intent, SetAlarmActivity.SET_ALARM_ACTIVITY);
         mFloatingActionViewModel.collapse();
     }
@@ -138,8 +146,8 @@ public class NavigationDrawerActivity extends BaseActivity {
         MemoFragment f = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
         MemoViewModel viewModel = f.getMemoViewModel();
 
-        Memo memo = mMemoHelper.getCurrentMemo();
-        if (mMemoHelper.isMemoEmpty(memo) || memo.getId() == f.getDeletedMemoId()) {
+        Memo memo = mMemoHelper.find(currentMemoId);
+        if (mMemoHelper.isEmpty(memo) || memo.getId() == f.getDeletedMemoId()) {
             memo = mMemoHelper.create(
                     viewModel.getSubjectEditText().getText().toString(),
                     viewModel.getMemoEditText().getText().toString());
@@ -148,6 +156,7 @@ public class NavigationDrawerActivity extends BaseActivity {
             memo.setMemo(viewModel.getMemoEditText().getText().toString());
             mMemoHelper.update(NavigationDrawerActivity.this, memo);
         }
+
         popBackStackToViewMemoFragment(memo);
     }
 
@@ -156,25 +165,26 @@ public class NavigationDrawerActivity extends BaseActivity {
         if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) == null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Memo.TAG, new Memo());
-            MemoFragment f = new MemoFragment();
-            f.setArguments(bundle);
-            replaceFragment(R.id.container, f, MemoFragment.class.getName());
+            replaceMemoFragment(bundle, true);
+        } else {
+            mFloatingActionMenu.collapse();
+            drawerLayout.closeDrawer(GravityCompat.START);
         }
-        mFloatingActionMenu.collapse();
-        drawerLayout.closeDrawer(GravityCompat.START);
     }
 
     @OnItemClick(R.id.memo_list)
     void onClickItemMemoList(AdapterView<?> parent, int position) {
-        mMemoHelper.setCurrentMemo((Memo) parent.getItemAtPosition(position));
+        currentMemoId = ((Memo) parent.getItemAtPosition(position)).getId();
 
         if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) != null) {
             getFragmentManager().popBackStack();
-        } else {
-            ViewMemoFragment f = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
-            if (f != null) {
-                mMemoHelper.loadMemo(f.getViewMemoViewModel());
-            }
+        }
+
+        ViewMemoFragment f = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
+        if (f != null) {
+            ViewMemoViewModel viewModel = f.getViewMemoViewModel();
+            Memo memo = mMemoHelper.find(currentMemoId);
+            viewModel.setMemoView(memo, true);
         }
 
         mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
@@ -191,15 +201,26 @@ public class NavigationDrawerActivity extends BaseActivity {
         mToolbarHelper.init(this, toolbar, R.string.read_view, false, true);
 
         List<Memo> memos = mMemoHelper.findAll();
-        if (memos == null) {
+        boolean notExists = !mMemoHelper.exists();
+        if (notExists) {
             memos = new ArrayList<>();
         }
         mMemoListAdapter = new MemoListAdapter(this, memos);
         mListView.setAdapter(mMemoListAdapter);
 
         if (savedInstanceState == null) {
-            mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
-            addFragment(R.id.container, new ViewMemoFragment(), ViewMemoFragment.class.getName());
+            mFloatingActionViewModel.stateViewMemoFragment(notExists);
+
+            ViewMemoFragment f = new ViewMemoFragment();
+            if (mMemoHelper.exists()) {
+                Memo memo = memos.get(0);
+                currentMemoId = memo.getId();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Memo.TAG, memo);
+                f.setArguments(bundle);
+            }
+            addFragment(R.id.container, f, ViewMemoFragment.TAG);
         }
     }
 
@@ -226,8 +247,9 @@ public class NavigationDrawerActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().findFragmentByTag(MemoFragment.class.getName()) != null) {
+        if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) != null) {
             getFragmentManager().popBackStack();
+            mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
             mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
             drawerLayout.closeDrawer(GravityCompat.START);
             return;
@@ -236,21 +258,25 @@ public class NavigationDrawerActivity extends BaseActivity {
     }
 
     private void bindView() {
-        mDrawerViewModel = new DrawerViewModel();
-        mDrawerViewModel.setDrawerLayout(drawerLayout);
-        mDrawerViewModel.setDrawer(drawer);
-        mDrawerViewModel.setHeaderLayout(drawerHeaderRelativeLayout);
-        mDrawerViewModel.setMemoListView(mListView);
-        mDrawerViewModel.setMemoListEmptyLayout((RelativeLayout) getLayoutInflater().inflate(R.layout.drawer_empty, null));
+        if (mDrawerViewModel == null) {
+            mDrawerViewModel = new DrawerViewModel();
+            mDrawerViewModel.setDrawerLayout(drawerLayout);
+            mDrawerViewModel.setDrawer(drawer);
+            mDrawerViewModel.setHeaderLayout(drawerHeaderRelativeLayout);
+            mDrawerViewModel.setMemoListView(mListView);
+            mDrawerViewModel.setMemoListEmptyLayout((RelativeLayout) getLayoutInflater().inflate(R.layout.drawer_empty, null));
+        }
 
-        mFloatingActionViewModel = new FloatingActionViewModel();
-        mFloatingActionViewModel.setFloatingActionMenu(mFloatingActionMenu);
-        mFloatingActionViewModel.setStoreInCreateViewFab(mStoreInCreateViewFab);
-        mFloatingActionViewModel.setAlertFab(mAlertFab);
-        mFloatingActionViewModel.setStoreFab(mStoreFab);
-        mFloatingActionViewModel.setDeleteFab(mDeleteFab);
-        mFloatingActionViewModel.setEditFab(mEditFab);
-        mFloatingActionViewModel.setCreateFab(mCreateFab);
+        if (mFloatingActionViewModel == null) {
+            mFloatingActionViewModel = new FloatingActionViewModel();
+            mFloatingActionViewModel.setFloatingActionMenu(mFloatingActionMenu);
+            mFloatingActionViewModel.setStoreInCreateViewFab(mStoreInCreateViewFab);
+            mFloatingActionViewModel.setAlertFab(mAlertFab);
+            mFloatingActionViewModel.setStoreFab(mStoreFab);
+            mFloatingActionViewModel.setDeleteFab(mDeleteFab);
+            mFloatingActionViewModel.setEditFab(mEditFab);
+            mFloatingActionViewModel.setCreateFab(mCreateFab);
+        }
     }
 
     public MemoListAdapter getMemoListAdapter() {

@@ -16,9 +16,6 @@ public interface MemoHelper {
     Memo update(Context mContext, Memo memo);
     void delete(Context mContext, Memo memo);
     void loadMemos(MemoListAdapter adapter, DrawerViewModel viewModel);
-    void loadMemo(ViewMemoViewModel viewModel);
-    boolean isMemoEmpty(Memo memo);
+    boolean isEmpty(Memo memo);
     boolean exists();
-    Memo getCurrentMemo();
-    void setCurrentMemo(Memo memo);
 }

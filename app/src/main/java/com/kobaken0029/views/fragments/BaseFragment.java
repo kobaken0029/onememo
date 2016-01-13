@@ -3,8 +3,7 @@ package com.kobaken0029.views.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 
-import com.kobaken0029.di.components.DaggerWanmemoComponent;
-import com.kobaken0029.di.modules.WanmemoModule;
+import com.kobaken0029.WanmemoApplication;
 import com.kobaken0029.helpers.MemoHelper;
 import com.kobaken0029.helpers.ToolbarHelper;
 
@@ -28,17 +27,20 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
         ButterKnife.unbind(this);
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        mToolbarHelper = null;
         mMemoHelper = null;
         super.onDestroy();
     }
 
     private void initializeInjector() {
-        DaggerWanmemoComponent.builder()
-                .wanmemoModule(new WanmemoModule())
-                .build()
-                .inject(this);
+        ((WanmemoApplication) getActivity().getApplication()).getApplicationComponent().inject(this);
     }
 
     abstract void bindView();

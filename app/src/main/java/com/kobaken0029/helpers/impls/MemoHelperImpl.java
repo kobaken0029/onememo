@@ -4,8 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import com.kobaken0029.R;
 import com.kobaken0029.helpers.MemoHelper;
@@ -15,7 +13,6 @@ import com.kobaken0029.utils.DateUtil;
 import com.kobaken0029.utils.UiUtil;
 import com.kobaken0029.views.adapters.MemoListAdapter;
 import com.kobaken0029.views.viewmodels.DrawerViewModel;
-import com.kobaken0029.views.viewmodels.ViewMemoViewModel;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
@@ -26,14 +23,10 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.content.Context.ALARM_SERVICE;
-import static butterknife.ButterKnife.findById;
 
 public class MemoHelperImpl implements MemoHelper {
-    private Memo mCurrentMemo;
 
     public MemoHelperImpl() {
-        List<Memo> memos = findAll();
-        mCurrentMemo = memos.isEmpty() ? new Memo() : memos.get(0);
     }
 
     /**
@@ -104,7 +97,6 @@ public class MemoHelperImpl implements MemoHelper {
      */
     public void delete(Context mContext, Memo memo) {
         memo.delete();
-        mCurrentMemo = null;
         UiUtil.showToast(mContext, R.string.success_delete_message);
         ((AlarmManager) mContext.getSystemService(ALARM_SERVICE)).cancel(getPendingIntent(mContext, memo));
     }
@@ -113,44 +105,10 @@ public class MemoHelperImpl implements MemoHelper {
      * メモ群を読み込む。
      */
     public void loadMemos(MemoListAdapter adapter, DrawerViewModel viewModel) {
-        LinearLayout drawerLayout = viewModel.getDrawer();
-        View emptyLayout = viewModel.getMemoListEmptyLayout();
-        View memoListView = viewModel.getMemoListView();
-
         List<Memo> memos = findAll();
         adapter.setMemos(memos);
         adapter.notifyDataSetChanged();
-
-        drawerLayout.removeView(emptyLayout);
-        drawerLayout.removeView(memoListView);
-
-        if (memos.size() == 0) {
-            drawerLayout.addView(emptyLayout);
-        } else {
-            drawerLayout.addView(memoListView);
-        }
-    }
-
-    /**
-     * メモを読み込む。
-     */
-    public void loadMemo(ViewMemoViewModel viewModel) {
-        List<Memo> memos = findAll();
-
-        if (findAll().size() > 0) {
-            if (mCurrentMemo.getId() == null) {
-                mCurrentMemo = memos.get(0);
-            }
-//            viewModel.getDeleteButton().setVisibility(View.VISIBLE);
-//            viewModel.getEditButton().setVisibility(View.VISIBLE);
-        } else {
-//            viewModel.getDeleteButton().setVisibility(View.GONE);
-//            viewModel.getEditButton().setVisibility(View.GONE);
-        }
-
-        // 画面に値をセット
-        viewModel.getSubjectView().setText(mCurrentMemo.getId() == null ? "" : mCurrentMemo.getSubject());
-        viewModel.getMemoView().setText(mCurrentMemo.getId() == null ? "" : mCurrentMemo.getMemo());
+        viewModel.modify(exists());
     }
 
     /**
@@ -159,7 +117,7 @@ public class MemoHelperImpl implements MemoHelper {
      * @param memo 対象メモ
      * @return 空だったらtrue
      */
-    public boolean isMemoEmpty(Memo memo) {
+    public boolean isEmpty(Memo memo) {
         return memo == null || memo.getId() == null;
     }
 
@@ -187,13 +145,5 @@ public class MemoHelperImpl implements MemoHelper {
         return PendingIntent.getBroadcast(mContext,
                 PendingIntent.FLAG_ONE_SHOT, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    public Memo getCurrentMemo() {
-        return mCurrentMemo != null ? mCurrentMemo : new Memo();
-    }
-
-    public void setCurrentMemo(Memo memo) {
-        mCurrentMemo = memo;
     }
 }

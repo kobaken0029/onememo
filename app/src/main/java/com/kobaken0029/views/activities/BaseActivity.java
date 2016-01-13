@@ -32,6 +32,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         mToolbarHelper = null;
+        mMemoHelper = null;
         ButterKnife.unbind(this);
         super.onDestroy();
     }
