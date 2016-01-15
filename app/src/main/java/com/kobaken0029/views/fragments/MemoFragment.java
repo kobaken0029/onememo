@@ -21,6 +21,9 @@ import butterknife.ButterKnife;
 
 import static butterknife.ButterKnife.findById;
 
+/**
+ * メモを作成・編集するFragment。
+ */
 public class MemoFragment extends TextToSpeechFragment {
     public static final String TAG = MemoFragment.class.getName();
 
@@ -59,19 +62,6 @@ public class MemoFragment extends TextToSpeechFragment {
         super.onResume();
         Toolbar t = findById(getActivity(), R.id.toolbar_menu);
         mToolbarHelper.change((BaseActivity) getActivity(), t, R.string.create_view, true);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SetAlarmActivity.SET_ALARM_ACTIVITY) {
-            if (resultCode == Activity.RESULT_OK) {
-                // 通知時間が設定されたメモを取得
-                ((NavigationDrawerActivity) getActivity()).currentMemoId = ((Memo) data.getSerializableExtra(Memo.TAG)).getId();
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                getActivity().finish();
-            }
-        }
     }
 
     @Override

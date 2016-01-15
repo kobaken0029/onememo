@@ -42,7 +42,7 @@ public class DateUtil {
      * @param date Date
      * @return 文字列
      */
-    public static String converString(Date date) {
+    public static String convertToString(Date date) {
         return date != null
                 ? new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MINUTE_SECOND, Locale.JAPAN).format(date)
                 : "";

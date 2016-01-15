@@ -1,5 +1,6 @@
 package com.kobaken0029.views.activities;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,6 +36,9 @@ import butterknife.OnItemClick;
 
 import static butterknife.ButterKnife.findById;
 
+/**
+ * ナビゲーションドロワー付きのActivityです。
+ */
 public class NavigationDrawerActivity extends BaseActivity {
     public static final String TAG = NavigationDrawerActivity.class.getName();
 
@@ -69,6 +73,11 @@ public class NavigationDrawerActivity extends BaseActivity {
     private MemoListAdapter mMemoListAdapter;
     public Long currentMemoId;
 
+    /**
+     * Fragmentを置き換える
+     * @param bundle バンドル
+     * @param newMemo 新規メモならtrue
+     */
     private void replaceMemoFragment(Bundle bundle, boolean newMemo) {
         MemoFragment f = new MemoFragment();
         f.setArguments(bundle);
@@ -78,6 +87,10 @@ public class NavigationDrawerActivity extends BaseActivity {
         drawerLayout.closeDrawer(GravityCompat.START);
     }
 
+    /**
+     * Fragmentを取り出す。
+     * @param memo メモ
+     */
     private void popBackStackToViewMemoFragment(Memo memo) {
         currentMemoId = memo.getId();
         getFragmentManager().popBackStack();
@@ -242,6 +255,20 @@ public class NavigationDrawerActivity extends BaseActivity {
             case DateUtil.LATE_NIGHT:
                 drawerHeaderRelativeLayout.setBackgroundResource(R.drawable.school_classroom_at_late_night);
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SetAlarmActivity.SET_ALARM_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                // 通知時間が設定されたメモを取得
+                Memo settingMemo = (Memo) data.getSerializableExtra(Memo.TAG);
+                mMemoHelper.update(this, settingMemo);
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+//                finish();
+            }
         }
     }
 

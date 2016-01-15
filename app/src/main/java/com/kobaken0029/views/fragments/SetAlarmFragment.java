@@ -18,10 +18,12 @@ import com.kobaken0029.models.CustomCheckData;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.views.activities.SetAlarmActivity;
 import com.kobaken0029.views.adapters.CustomCheckAdapter;
+import com.kobaken0029.views.viewmodels.SetAlarmViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,17 +31,16 @@ import butterknife.OnItemClick;
 
 import static butterknife.ButterKnife.findById;
 
+/**
+ * アラームをセットするFragment。
+ */
 public class SetAlarmFragment extends TextToSpeechFragment {
     @Bind(R.id.setting_list)
     ListView settingList;
 
     private SetAlarmActivity activity;
     private CustomCheckAdapter checkAdapter;
-    private int year;
-    private int month;
-    private int day;
-    private int hour;
-    private int minute;
+    private SetAlarmViewModel alarmViewModel;
     private Memo memo;
 
     @OnItemClick(R.id.setting_list)
@@ -63,20 +64,17 @@ public class SetAlarmFragment extends TextToSpeechFragment {
                         String y = String.valueOf(year);
                         String month = String.valueOf(monthOfYear + 1);
                         String day = String.valueOf(dayOfMonth);
-                        data.setText(activity.getString(R.string.alarm_day_view)
+                        data.setText(activity.getString(R.string.alarm_day)
                                 + y + activity.getString(R.string.year)
                                 + month + activity.getString(R.string.month)
                                 + day + activity.getString(R.string.day));
                         settingList.setAdapter(checkAdapter);
 
-                        SetAlarmFragment.this.year = year;
-                        SetAlarmFragment.this.month = monthOfYear;
-                        SetAlarmFragment.this.day = dayOfMonth;
-                        activity.setYear(year);
-                        activity.setMonth(monthOfYear);
-                        activity.setDay(dayOfMonth);
+                        alarmViewModel.setYear(year);
+                        alarmViewModel.setMonth(monthOfYear);
+                        alarmViewModel.setDay(dayOfMonth);
                     }
-                }, year, month, day).show();
+                }, alarmViewModel.getYear(), alarmViewModel.getMonth(), alarmViewModel.getDay()).show();
                 break;
             case LIST_ID_POST_TIME:
                 new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
@@ -94,17 +92,15 @@ public class SetAlarmFragment extends TextToSpeechFragment {
                             min = "0" + min;
                         }
 
-                        data.setText(activity.getString(R.string.alarm_time_view)
+                        data.setText(activity.getString(R.string.alarm_time)
                                 + hour + activity.getString(R.string.hour)
                                 + min + activity.getString(R.string.minute));
                         settingList.setAdapter(checkAdapter);
 
-                        SetAlarmFragment.this.hour = hourOfDay;
-                        SetAlarmFragment.this.minute = minute;
-                        activity.setHour(hourOfDay);
-                        activity.setMinute(minute);
+                        alarmViewModel.setHour(hourOfDay);
+                        alarmViewModel.setMinute(minute);
                     }
-                }, hour, minute, true).show();
+                }, alarmViewModel.getHour(), alarmViewModel.getMinute(), true).show();
                 break;
             case LIST_ID_POST:
                 CheckBox checkBox = findById(view, R.id.check_alarm);
@@ -138,13 +134,14 @@ public class SetAlarmFragment extends TextToSpeechFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_set_alarm, container, false);
         ButterKnife.bind(this, view);
+        bindView();
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        memo = (Memo) activity.getIntent().getSerializableExtra(Memo.class.getName());
+        memo = (Memo) activity.getIntent().getSerializableExtra(Memo.TAG);
 
         if (memo != null) {
             // メモの通知有無を取得
@@ -171,33 +168,29 @@ public class SetAlarmFragment extends TextToSpeechFragment {
             if (memo.getPostTime() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(memo.getPostTime());
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                day = calendar.get(Calendar.DAY_OF_MONTH);
-                hour = calendar.get(Calendar.HOUR_OF_DAY);
-                minute = calendar.get(Calendar.MINUTE);
+                alarmViewModel.setAlarmTime(calendar);
 
                 CustomCheckData date = checkAdapter.getItem(0);
                 CustomCheckData time = checkAdapter.getItem(1);
-                date.setText(activity.getString(R.string.alarm_day_view)
-                        + year + activity.getString(R.string.year)
-                        + (month + 1) + activity.getString(R.string.month)
-                        + day + activity.getString(R.string.day));
-                time.setText(activity.getString(R.string.alarm_time_view)
-                        + hour + activity.getString(R.string.hour)
-                        + minute + activity.getString(R.string.minute));
+                date.setText(activity.getString(R.string.alarm_day)
+                        + alarmViewModel.getYear() + activity.getString(R.string.year)
+                        + (alarmViewModel.getMonth() + 1) + activity.getString(R.string.month)
+                        + alarmViewModel.getDay() + activity.getString(R.string.day));
+                time.setText(activity.getString(R.string.alarm_time)
+                        + alarmViewModel.getHour() + activity.getString(R.string.hour)
+                        + alarmViewModel.getMinute() + activity.getString(R.string.minute));
             }
 
             activity.setPostedMemo(memo);
-            activity.setYear(year);
-            activity.setMonth(month);
-            activity.setDay(day);
-            activity.setHour(hour);
-            activity.setMinute(minute);
+            activity.setAlarmViewModel(alarmViewModel);
         }
     }
 
     @Override
     void bindView() {
+        if (alarmViewModel == null) {
+            alarmViewModel = new SetAlarmViewModel();
+            alarmViewModel.setAlarmTime(Calendar.getInstance(Locale.JAPAN));
+        }
     }
 }
