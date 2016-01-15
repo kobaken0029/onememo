@@ -17,6 +17,23 @@ public class SetAlarmViewModel {
         minute = calendar.get(Calendar.MINUTE);
     }
 
+    public Calendar generatePostedCalendar() {
+        // アラームの時間設定
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        // 設定した時刻をカレンダーに設定
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar;
+    }
+
     public int getYear() {
         return year;
     }

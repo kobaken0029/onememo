@@ -1,7 +1,6 @@
 package com.kobaken0029.views.activities;
 
 import com.kobaken0029.R;
-import com.kobaken0029.managers.MyAlarmManager;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.utils.UiUtil;
 import com.kobaken0029.views.viewmodels.SetAlarmViewModel;
@@ -58,7 +57,7 @@ public class SetAlarmActivity extends BaseActivity {
      * 設定を保存する。
      */
     public void saveSetting(Memo memo) {
-        Calendar calendar = new MyAlarmManager(alarmViewModel).getCalendar();
+        Calendar calendar = alarmViewModel.generatePostedCalendar();
 
         // 過去だったらエラーメッセージを出す
         if (calendar.getTimeInMillis() < System.currentTimeMillis() && memo.getPostFlg() == 1) {
