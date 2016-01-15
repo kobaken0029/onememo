@@ -53,7 +53,7 @@ public class MemoHelperImpl implements MemoHelper {
      * メモを作成します。
      */
     public Memo create(String subject, String mainText) {
-        String createdAt = DateUtil.converString(new Date());
+        String createdAt = DateUtil.convertToString(new Date());
         Memo memo = new Memo();
         memo.setSubject(subject);
         memo.setMemo(mainText);
@@ -67,7 +67,7 @@ public class MemoHelperImpl implements MemoHelper {
      * メモを更新します。
      */
     public Memo update(Context mContext, Memo memo) {
-        memo.setUpdateAt(DateUtil.converString(new Date()));
+        memo.setUpdateAt(DateUtil.convertToString(new Date()));
         memo.update();
 
         // PendingIntentの発行
@@ -76,7 +76,7 @@ public class MemoHelperImpl implements MemoHelper {
         // アラームをセット
         AlarmManager am = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         if (memo.getPostFlg() == 1) {
-            SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.YEAR_MONTH_DAY_HOUR_MINUTE_SECOND, Locale.JAPAN);
+            SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.YEAR_MONTH_DAY_HOUR_MINUTE, Locale.JAPAN);
             Calendar postTime = DateUtil.convertStringToCalendar(sdf.format(memo.getPostTime()));
 
             UiUtil.showToast(mContext, String.format("%02d時%02d分に通知します。",

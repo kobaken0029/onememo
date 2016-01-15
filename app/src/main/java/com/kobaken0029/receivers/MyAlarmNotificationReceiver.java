@@ -22,33 +22,27 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Memo memo = (Memo) intent.getSerializableExtra("memo");
+        Memo memo = (Memo) intent.getSerializableExtra(Memo.TAG);
 
         // アラームを受け取って起動するActivityを指定
-//        Intent intent2 = new Intent(context, ViewPostMemoActivity.class);
         Intent intent2 = new Intent();
-        intent2.putExtra("memo", memo);
+        intent2.putExtra(Memo.TAG, memo);
         intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-                intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent2,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         // notificationの設定
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                context)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.wanmemo_notification_icon)
                 .setTicker("メモを通知します")
-                .setDefaults(
-                        Notification.DEFAULT_VIBRATE
-                                | Notification.DEFAULT_LIGHTS)
+                .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(memo.getSubject())
                 .setContentText(memo.getMemo())
                 .setContentIntent(pendingIntent)
-                .setSound(
-                        Uri.parse("android.resource://"
-                                + context.getPackageName() + "/" + R.raw.alarm));
+                .setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.alarm));
 
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int ringerMode = audioManager.getRingerMode();
@@ -56,11 +50,11 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
         // マナーモードかどうかの判定
         if (ringerMode != AudioManager.RINGER_MODE_NORMAL) {
             changeRingerModeFlg = true;
-            // マナーモードの場合
+            // サイレントモード場合
             if (ringerMode == AudioManager.RINGER_MODE_SILENT) {
                 silentFlg = true;
             }
-            // サイレントモード場合
+            // マナーモードの場合
             if (ringerMode == AudioManager.RINGER_MODE_VIBRATE) {
                 vibrateFlg = true;
             }

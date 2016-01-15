@@ -18,6 +18,9 @@ import butterknife.ButterKnife;
 
 import static butterknife.ButterKnife.findById;
 
+/**
+ * メモを閲覧するFragment。
+ */
 public class ViewMemoFragment extends TextToSpeechFragment {
     public static final String TAG = ViewMemoFragment.class.getName();
 
@@ -40,12 +43,14 @@ public class ViewMemoFragment extends TextToSpeechFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Memo memo = (Memo) getArguments().getSerializable(Memo.TAG);
-        Long id = ((NavigationDrawerActivity) getActivity()).currentMemoId;
-        if (memo == null || mViewMemoViewModel.stateChanged(memo)) {
-            memo = mMemoHelper.find(id);
+        if (getArguments() != null) {
+            Memo memo = (Memo) getArguments().getSerializable(Memo.TAG);
+            Long id = ((NavigationDrawerActivity) getActivity()).currentMemoId;
+            if (memo == null || mViewMemoViewModel.stateChanged(memo)) {
+                memo = mMemoHelper.find(id);
+            }
+            mViewMemoViewModel.setMemoView(memo, !mMemoHelper.isEmpty(memo));
         }
-        mViewMemoViewModel.setMemoView(memo, !mMemoHelper.isEmpty(memo));
     }
 
     @Override

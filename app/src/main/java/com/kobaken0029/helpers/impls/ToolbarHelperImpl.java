@@ -1,5 +1,6 @@
 package com.kobaken0029.helpers.impls;
 
+import android.app.Activity;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -22,7 +23,7 @@ public class ToolbarHelperImpl implements ToolbarHelper {
 
         if (isShowMenu) {
             toolbar.inflateMenu(R.menu.main_menu);
-            toolbar.setOnMenuItemClickListener(createMenuItemClickListener( activity));
+            toolbar.setOnMenuItemClickListener(createMenuItemClickListener(activity));
         }
 
         boolean isNavigationDrawerActivity = activity instanceof NavigationDrawerActivity;
@@ -33,9 +34,7 @@ public class ToolbarHelperImpl implements ToolbarHelper {
             }
         } else {
             toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
-            if (isNavigationDrawerActivity) {
-                toolbar.setNavigationOnClickListener(createBackClickListener((NavigationDrawerActivity) activity));
-            }
+            toolbar.setNavigationOnClickListener(createBackClickListener(activity));
         }
     }
 
@@ -85,7 +84,7 @@ public class ToolbarHelperImpl implements ToolbarHelper {
         };
     }
 
-    private View.OnClickListener createBackClickListener(final NavigationDrawerActivity activity) {
+    private View.OnClickListener createBackClickListener(final Activity activity) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -11,6 +11,9 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
+/**
+ * Fragmentのベースクラスです。
+ */
 public abstract class BaseFragment extends Fragment {
     protected static long mDeletedMemoId;
 
