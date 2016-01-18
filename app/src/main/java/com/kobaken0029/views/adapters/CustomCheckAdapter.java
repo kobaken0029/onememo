@@ -17,10 +17,10 @@ import java.util.List;
 import static butterknife.ButterKnife.findById;
 
 /**
- * 設定リストのAdapterです。
+ * 設定リストのAdapter。
  */
 public class CustomCheckAdapter extends ArrayAdapter<CustomCheckData> {
-    LayoutInflater mInflater;
+    private LayoutInflater mInflater;
 
     /**
      * ホルダクラス。

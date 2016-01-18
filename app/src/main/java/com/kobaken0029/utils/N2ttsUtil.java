@@ -10,11 +10,23 @@ import android.net.Uri;
 
 import com.kobaken0029.R;
 
+/**
+ * N2TTSに関するUtil。
+ */
 public class N2ttsUtil {
+    /** パッケージ名。 */
     public static final String N2TTS_PACKAGE_NAME = "jp.kddilabs.n2tts";
+
+    /** クラス名。 */
     public static final String N2TTS_CLASS_NAME = ".TtsServiceSettings";
+
+    /** アクション名。 */
     public static final String N2TTS_ACTION = "android.intent.category.LAUNCHER";
+
+    /** Google playのURL。 */
     public static final String N2TTS_URI_GOOGLE_PLAY_STORE_JA = "https://play.google.com/store/apps/details?id=jp.kddilabs.n2tts&hl=ja";
+
+    /** フラグ。 */
     public static final int N2TTS_FLAGS = 0x10000000;
 
     /**
@@ -24,9 +36,10 @@ public class N2ttsUtil {
     }
 
     /**
-     * packageの有無をチェックします。
-     * @param packageName packageの名前
-     * @return 存在した場合、true、
+     * パッケージの有無をチェックします。
+     *
+     * @param packageName パッケージ名
+     * @return 存在した場合true
      */
     public static boolean packageCheck(String packageName, PackageManager manager) {
         try {
@@ -39,6 +52,8 @@ public class N2ttsUtil {
 
     /**
      * 音声読上げ設定画面へ遷移します。
+     *
+     * @param mContext コンテキスト
      */
     public static void settingReadVoice(final Context mContext) {
         if (N2ttsUtil.packageCheck(N2TTS_PACKAGE_NAME, mContext.getPackageManager())) {

@@ -5,30 +5,45 @@ import android.view.View;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
-
+/**
+ * FABのViewModel。
+ */
 public class FloatingActionViewModel {
-    FloatingActionsMenu floatingActionMenu;
-    FloatingActionButton storeInCreateViewFab;
-    FloatingActionButton alertFab;
-    FloatingActionButton storeFab;
-    FloatingActionButton deleteFab;
-    FloatingActionButton editFab;
-    FloatingActionButton createFab;
+    private FloatingActionsMenu floatingActionMenu;
+    private FloatingActionButton storeInCreateViewFab;
+    private FloatingActionButton alertFab;
+    private FloatingActionButton storeFab;
+    private FloatingActionButton deleteFab;
+    private FloatingActionButton editFab;
+    private FloatingActionButton createFab;
 
+    /**
+     * FAMを閉じる。
+     */
     public void collapse() {
         floatingActionMenu.collapse();
     }
 
+    /**
+     * 閲覧画面の状態にする。
+     *
+     * @param memoEmpty メモが空の場合true
+     */
     public void stateViewMemoFragment(boolean memoEmpty) {
         floatingActionMenu.setVisibility(View.VISIBLE);
         storeInCreateViewFab.setVisibility(View.GONE);
-        alertFab.setVisibility(View.GONE);
+        alertFab.setVisibility(View.VISIBLE);
         storeFab.setVisibility(View.GONE);
         deleteFab.setVisibility(memoEmpty ? View.GONE : View.VISIBLE);
         editFab.setVisibility(memoEmpty ? View.GONE : View.VISIBLE);
         createFab.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * メモ作成・編集画面の状態にする。
+     *
+     * @param newMemo 新規メモの場合true
+     */
     public void stateMemoFragment(boolean newMemo) {
         floatingActionMenu.setVisibility(newMemo ? View.GONE : View.VISIBLE);
         storeInCreateViewFab.setVisibility(newMemo ? View.VISIBLE : View.GONE);

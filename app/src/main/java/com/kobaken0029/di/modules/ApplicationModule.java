@@ -13,6 +13,9 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+/**
+ * Applicationのモジュール。
+ */
 @Module
 public class ApplicationModule {
     private final WanmemoApplication application;

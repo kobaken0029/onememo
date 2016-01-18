@@ -5,28 +5,26 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * 日付に関するUtil。
+ */
 public class DateUtil {
+    /** スラッシュ区切りのパターン。 */
     public static final String YEAR_MONTH_DAY_HOUR_MINUTE_SECOND = "yyyy/MM/dd HH:mm:ss (E)";
+
+    /** 漢字区切りのパターン。 */
     public static final String YEAR_MONTH_DAY_HOUR_MINUTE = "yyyy年MM月dd日 HH時mm分";
 
-    /**
-     * 昼
-     */
+    /** 昼。 */
     public static final int NOON = 1;
 
-    /**
-     * 夕方
-     */
+    /** 夕方。 */
     public static final int EVENING = 2;
 
-    /**
-     * 夜
-     */
+    /** 夜。*/
     public static final int NIGHT = 3;
 
-    /**
-     * 深夜
-     */
+    /** 深夜。 */
     public static final int LATE_NIGHT = 4;
 
 
@@ -114,17 +112,14 @@ public class DateUtil {
                 59);
         Date startLateNightDate = calendar.getTime();
 
-        int timeArea;
         if (now.after(startNoonDate) && now.before(startEveningDate)) {
-            timeArea = NOON;
+            return NOON;
         } else if (now.after(startEveningDate) && now.before(startNightDate)) {
-            timeArea = EVENING;
+            return EVENING;
         } else if (now.after(startNightDate) && now.before(startLateNightDate)) {
-            timeArea = NIGHT;
+            return NIGHT;
         } else {
-            timeArea = LATE_NIGHT;
+            return LATE_NIGHT;
         }
-
-        return timeArea;
     }
 }

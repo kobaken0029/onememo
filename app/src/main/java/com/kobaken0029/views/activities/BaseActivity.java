@@ -15,6 +15,9 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
+/**
+ * Activityのベースクラス。
+ */
 public class BaseActivity extends AppCompatActivity {
     @Inject
     ToolbarHelper mToolbarHelper;
@@ -37,12 +40,26 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    /**
+     * フラグメントを追加する。
+     *
+     * @param containerViewId コンテナID
+     * @param fragment        対象フラグメント
+     * @param key             キー
+     */
     public void addFragment(int containerViewId, Fragment fragment, String key) {
         getFragmentManager().beginTransaction()
                 .add(containerViewId, fragment, key)
                 .commit();
     }
 
+    /**
+     * フラグメントを置き換える。
+     *
+     * @param containerViewId コンテナID
+     * @param fragment        対象フラグメント
+     * @param key             キー
+     */
     public void replaceFragment(int containerViewId, Fragment fragment, String key) {
         getFragmentManager().beginTransaction()
                 .replace(containerViewId, fragment, key)
@@ -51,16 +68,29 @@ public class BaseActivity extends AppCompatActivity {
                 .commit();
     }
 
+    /**
+     * フラグメントを削除する。
+     *
+     * @param fragment 対象フラグメント
+     */
     public void removeFragment(Fragment fragment) {
         getFragmentManager().beginTransaction()
                 .remove(fragment)
                 .commit();
     }
 
+    /**
+     * アプリケーションコンポーネントを取得する。
+     * @return アプリケーションコンポーネント
+     */
     protected ApplicationComponent getApplicationComponent() {
         return ((WanmemoApplication) getApplication()).getApplicationComponent();
     }
 
+    /**
+     * アクティビティモジュールを取得する。
+     * @return アクティビティモジュール
+     */
     protected ActivityModule getActivityModule() {
         return new ActivityModule(this);
     }

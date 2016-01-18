@@ -4,17 +4,32 @@ import android.widget.TextView;
 
 import com.kobaken0029.models.Memo;
 
+/**
+ * メモ閲覧画面のViewModel。
+ */
 public class ViewMemoViewModel {
     private Long memoId;
     private TextView subjectView;
     private TextView memoView;
 
+    /**
+     * メモの状態が変化したかどうかを取得する。
+     *
+     * @param memo 対象メモ
+     * @return 変化していた場合true
+     */
     public boolean stateChanged(Memo memo) {
         return !memo.getId().equals(memoId)
                 || !memo.getSubject().equals(subjectView.getText().toString())
                 || !memo.getMemo().equals(memoView.getText().toString());
     }
 
+    /**
+     * 対象メモをViewにセットする。
+     *
+     * @param memo  対象メオ
+     * @param exist メモが存在する場合true
+     */
     public void setMemoView(Memo memo, boolean exist) {
         if (exist) {
             memoId = memo.getId();

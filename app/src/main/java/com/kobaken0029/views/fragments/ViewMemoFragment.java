@@ -22,6 +22,7 @@ import static butterknife.ButterKnife.findById;
  * メモを閲覧するFragment。
  */
 public class ViewMemoFragment extends TextToSpeechFragment {
+    /** タグ。 */
     public static final String TAG = ViewMemoFragment.class.getName();
 
     @Bind(R.id.subject_textView)

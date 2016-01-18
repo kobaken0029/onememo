@@ -5,16 +5,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+/**
+ * ナビゲーションドロワーのViewModel。
+ */
 public class DrawerViewModel {
-    DrawerLayout drawerLayout;
-    LinearLayout drawer;
-    RelativeLayout headerLayout;
-    ListView memoListView;
-    RelativeLayout memoListEmptyLayout;
-
-    public DrawerLayout getDrawerLayout() {
-        return drawerLayout;
-    }
+    private DrawerLayout drawerLayout;
+    private LinearLayout drawer;
+    private RelativeLayout headerLayout;
+    private ListView memoListView;
+    private RelativeLayout memoListEmptyLayout;
 
     public void modify(boolean exist) {
         drawer.removeView(memoListEmptyLayout);
@@ -25,6 +24,10 @@ public class DrawerViewModel {
         } else {
             drawer.addView(memoListEmptyLayout);
         }
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
     }
 
     public void setDrawerLayout(DrawerLayout drawerLayout) {

@@ -10,6 +10,12 @@ public class CustomCheckData {
     public CustomCheckData() {
     }
 
+    /**
+     * コンストラクタ。
+     *
+     * @param text テキスト
+     * @param checkFlag チェックボックスのフラグ
+     */
     public CustomCheckData(String text, boolean checkFlag) {
         this.text = text;
         this.checkFlag = checkFlag;

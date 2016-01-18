@@ -2,6 +2,9 @@ package com.kobaken0029.views.viewmodels;
 
 import java.util.Calendar;
 
+/**
+ * アラームセットのViewModel。
+ */
 public class SetAlarmViewModel {
     private int year;
     private int month;
@@ -9,6 +12,11 @@ public class SetAlarmViewModel {
     private int hour;
     private int minute;
 
+    /**
+     * カレンダーオブジェクトから年・月・日・時間・分を設定する。
+     *
+     * @param calendar カレンダー
+     */
     public void setAlarmTime(Calendar calendar) {
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
@@ -17,6 +25,11 @@ public class SetAlarmViewModel {
         minute = calendar.get(Calendar.MINUTE);
     }
 
+    /**
+     * 現在、設定されている年・月・日・時間・分からカレンダーオブジェクトを生成する。
+     *
+     * @return 年・月・日・時間・分で設定されたカレンダー
+     */
     public Calendar generatePostedCalendar() {
         // アラームの時間設定
         Calendar calendar = Calendar.getInstance();

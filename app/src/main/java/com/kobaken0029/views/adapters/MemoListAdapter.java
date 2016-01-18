@@ -16,12 +16,15 @@ import java.util.List;
 import static butterknife.ButterKnife.findById;
 
 /**
- * メモリストのAdapterです。
+ * メモリストのAdapter。
  */
 public class MemoListAdapter extends BaseAdapter {
     private List<Memo> memos;
     private LayoutInflater mInflater;
 
+    /**
+     * ホルダクラス。
+     */
     class ViewHolder {
         TextView subjectTextView;
         TextView lastUpdateTextView;

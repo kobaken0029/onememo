@@ -37,9 +37,10 @@ import butterknife.OnItemClick;
 import static butterknife.ButterKnife.findById;
 
 /**
- * ナビゲーションドロワー付きのActivityです。
+ * ナビゲーションドロワーが存在するActivity。
  */
 public class NavigationDrawerActivity extends BaseActivity {
+    /** タグ。*/
     public static final String TAG = NavigationDrawerActivity.class.getName();
 
     @Bind(R.id.toolbar_menu)
@@ -74,8 +75,9 @@ public class NavigationDrawerActivity extends BaseActivity {
     public Long currentMemoId;
 
     /**
-     * Fragmentを置き換える
-     * @param bundle バンドル
+     * Fragmentを置き換える。
+     *
+     * @param bundle  バンドル
      * @param newMemo 新規メモならtrue
      */
     private void replaceMemoFragment(Bundle bundle, boolean newMemo) {
@@ -89,6 +91,7 @@ public class NavigationDrawerActivity extends BaseActivity {
 
     /**
      * Fragmentを取り出す。
+     *
      * @param memo メモ
      */
     private void popBackStackToViewMemoFragment(Memo memo) {
@@ -105,6 +108,9 @@ public class NavigationDrawerActivity extends BaseActivity {
         drawerLayout.closeDrawer(GravityCompat.START);
     }
 
+    /**
+     * 新規作成ボタン押下時のコールバック。
+     */
     @OnClick(R.id.create_button)
     void onClickCreateButton() {
         Bundle bundle = new Bundle();
@@ -112,6 +118,9 @@ public class NavigationDrawerActivity extends BaseActivity {
         replaceMemoFragment(bundle, true);
     }
 
+    /**
+     * 編集ボタン押下時のコールバック。
+     */
     @OnClick(R.id.edit_button)
     void onClickEditButton() {
         Bundle bundle = new Bundle();
@@ -119,6 +128,9 @@ public class NavigationDrawerActivity extends BaseActivity {
         replaceMemoFragment(bundle, false);
     }
 
+    /**
+     * 削除ボタン押下時のコールバック。
+     */
     @OnClick(R.id.delete_button)
     void onClickDeleteButton() {
         UiUtil.showDialog(this, R.string.check_delete_message, new DialogInterface.OnClickListener() {
@@ -138,6 +150,9 @@ public class NavigationDrawerActivity extends BaseActivity {
         drawerLayout.closeDrawer(GravityCompat.START);
     }
 
+    /**
+     * 新規作成画面のFAB押下時のコールバック。
+     */
     @OnClick(R.id.store_button_in_create_view)
     void onClickStoreMemoInCreateViewButton() {
         MemoViewModel viewModel = ((MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG)).getMemoViewModel();
@@ -146,6 +161,9 @@ public class NavigationDrawerActivity extends BaseActivity {
                 viewModel.getMemoEditText().getText().toString()));
     }
 
+    /**
+     * 通知設定ボタン押下時のコールバック。
+     */
     @OnClick(R.id.alert_button)
     void onClickSetAlertButton() {
         Intent intent = new Intent(this, SetAlarmActivity.class);
@@ -154,6 +172,9 @@ public class NavigationDrawerActivity extends BaseActivity {
         mFloatingActionViewModel.collapse();
     }
 
+    /**
+     * 保存ボタン押下時のコールバック。
+     */
     @OnClick(R.id.store_button)
     void onClickStoreMemoButton() {
         MemoFragment f = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
@@ -173,6 +194,9 @@ public class NavigationDrawerActivity extends BaseActivity {
         popBackStackToViewMemoFragment(memo);
     }
 
+    /**
+     * ナビゲーションドロワー内の新規作成ボタン押下時のコールバック。
+     */
     @OnClick(R.id.drawer_create_memo)
     void onClickDrawerCreateMemo() {
         if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) == null) {
@@ -185,6 +209,12 @@ public class NavigationDrawerActivity extends BaseActivity {
         }
     }
 
+    /**
+     * メモリストのアイテム押下時のコールバック。
+     *
+     * @param parent   親View
+     * @param position 位置
+     */
     @OnItemClick(R.id.memo_list)
     void onClickItemMemoList(AdapterView<?> parent, int position) {
         currentMemoId = ((Memo) parent.getItemAtPosition(position)).getId();
@@ -213,16 +243,13 @@ public class NavigationDrawerActivity extends BaseActivity {
         bindView();
         mToolbarHelper.init(this, toolbar, R.string.read_view, false, true);
 
-        List<Memo> memos = mMemoHelper.findAll();
-        boolean notExists = !mMemoHelper.exists();
-        if (notExists) {
-            memos = new ArrayList<>();
-        }
+        // メモを全件取得
+        List<Memo> memos = mMemoHelper.exists() ? mMemoHelper.findAll() : new ArrayList<Memo>();
         mMemoListAdapter = new MemoListAdapter(this, memos);
         mListView.setAdapter(mMemoListAdapter);
 
         if (savedInstanceState == null) {
-            mFloatingActionViewModel.stateViewMemoFragment(notExists);
+            mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
 
             ViewMemoFragment f = new ViewMemoFragment();
             if (mMemoHelper.exists()) {
@@ -242,6 +269,7 @@ public class NavigationDrawerActivity extends BaseActivity {
         super.onResume();
         registerForContextMenu(findById(this, R.id.memo_list));
 
+        // 時刻に応じて、ナビゲーションドロワー内のヘッダーの背景を変える
         switch (DateUtil.checkTimeNow()) {
             case DateUtil.NOON:
                 drawerHeaderRelativeLayout.setBackgroundResource(R.drawable.school_classroom_at_noon);
@@ -266,8 +294,6 @@ public class NavigationDrawerActivity extends BaseActivity {
                 // 通知時間が設定されたメモを取得
                 Memo settingMemo = (Memo) data.getSerializableExtra(Memo.TAG);
                 mMemoHelper.update(this, settingMemo);
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-//                finish();
             }
         }
     }
@@ -284,6 +310,9 @@ public class NavigationDrawerActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+    /**
+     * ViewModelにViewをバインドする。
+     */
     private void bindView() {
         if (mDrawerViewModel == null) {
             mDrawerViewModel = new DrawerViewModel();

@@ -11,14 +11,15 @@ import android.widget.Toast;
 import com.kobaken0029.R;
 
 /**
- * Created by koba on 2015/05/30.
+ * UIに関するUtil。
  */
 public class UiUtil {
     /**
      * ダイアログを表示する。
      *
-     * @param context コンテキスト
-     * @param msgId   メッセージID
+     * @param context  コンテキスト
+     * @param msgId    メッセージID
+     * @param listener クリックリスナー
      */
     public static void showDialog(final Context context, final int msgId,
                                   final DialogInterface.OnClickListener listener) {
@@ -48,8 +49,9 @@ public class UiUtil {
     /**
      * ダイアログを表示する。
      *
-     * @param context コンテキスト
-     * @param msg     メッセージ
+     * @param context  コンテキスト
+     * @param msg      メッセージ
+     * @param listener クリックリスナー
      */
     public static void showDialog(final Context context, final String msg,
                                   final DialogInterface.OnClickListener listener) {
@@ -77,7 +79,7 @@ public class UiUtil {
     }
 
     /**
-     * トーストを表示させます
+     * トーストを表示させる。
      *
      * @param context コンテキスト
      * @param msgId   メッセージID
@@ -93,7 +95,7 @@ public class UiUtil {
     }
 
     /**
-     * トーストを表示させます
+     * トーストを表示させる。
      *
      * @param context コンテキスト
      * @param msg     メッセージ

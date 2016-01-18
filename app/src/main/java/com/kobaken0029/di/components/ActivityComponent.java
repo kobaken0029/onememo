@@ -7,6 +7,9 @@ import com.kobaken0029.di.modules.ActivityModule;
 
 import dagger.Component;
 
+/**
+ * Activityのコンポーネント。
+ */
 @PerActivity
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)
 public interface ActivityComponent {

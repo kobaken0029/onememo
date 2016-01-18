@@ -14,9 +14,6 @@ import com.kobaken0029.views.activities.NavigationDrawerActivity;
 
 public class ToolbarHelperImpl implements ToolbarHelper {
 
-    /**
-     * ツールバーを設定する。
-     */
     public void init(final BaseActivity activity, Toolbar toolbar, int titleId, boolean isShowBackArrow, boolean isShowMenu) {
         toolbar.setTitle(titleId);
         toolbar.setTitleTextColor(activity.getResources().getColor(android.R.color.white));

@@ -1,6 +1,5 @@
 package com.kobaken0029.views.fragments;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -124,12 +123,6 @@ public class SetAlarmFragment extends TextToSpeechFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = (SetAlarmActivity) activity;
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_set_alarm, container, false);
@@ -141,6 +134,7 @@ public class SetAlarmFragment extends TextToSpeechFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        activity = (SetAlarmActivity) getActivity();
         memo = (Memo) activity.getIntent().getSerializableExtra(Memo.TAG);
 
         if (memo != null) {
