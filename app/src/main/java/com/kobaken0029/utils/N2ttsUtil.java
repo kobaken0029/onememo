@@ -66,13 +66,10 @@ public class N2ttsUtil {
             new AlertDialog.Builder(mContext)
                     .setMessage(mContext.getString(R.string.n2tts_not_found_message))
                     .setPositiveButton(mContext.getResources().getString(R.string.go_play_stroe),
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Uri uri = Uri.parse(N2TTS_URI_GOOGLE_PLAY_STORE_JA);
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                                    mContext.startActivity(intent);
-                                }
+                            (dialog, which) -> {
+                                Uri uri = Uri.parse(N2TTS_URI_GOOGLE_PLAY_STORE_JA);
+                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                mContext.startActivity(intent);
                             })
                     .setNegativeButton(mContext.getResources().getString(R.string.no), null).show();
         }

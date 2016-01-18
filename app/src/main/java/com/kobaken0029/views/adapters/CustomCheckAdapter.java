@@ -61,15 +61,7 @@ public class CustomCheckAdapter extends ArrayAdapter<CustomCheckData> {
 
         final CustomCheckData data = getItem(position);
         holder.textView.setText(data.getText());
-        holder.checkBox
-                .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView,
-                                                 boolean isChecked) {
-                        data.setCheckFlag(isChecked);
-                    }
-                });
-
+        holder.checkBox.setOnCheckedChangeListener((bv, isChecked) -> data.setCheckFlag(isChecked));
         holder.checkBox.setChecked(data.isCheckFlag());
 
         return convertView;

@@ -32,7 +32,7 @@ public class FloatingActionViewModel {
     public void stateViewMemoFragment(boolean memoEmpty) {
         floatingActionMenu.setVisibility(View.VISIBLE);
         storeInCreateViewFab.setVisibility(View.GONE);
-        alertFab.setVisibility(View.VISIBLE);
+        alertFab.setVisibility(memoEmpty ? View.GONE : View.VISIBLE);
         storeFab.setVisibility(View.GONE);
         deleteFab.setVisibility(memoEmpty ? View.GONE : View.VISIBLE);
         editFab.setVisibility(memoEmpty ? View.GONE : View.VISIBLE);

@@ -48,8 +48,8 @@
     <string name="alarm_day_view">設定日: </string>
     <string name="alarm_time_view">設定時刻: </string>
     <string name="alarm_sound_view">設定音: </string>
-    <string name="is_alarm_view_yes">: する</string>
-    <string name="is_alarm_view_no">: しない</string>
+    <string name="is_alarm_view_yes">:      する</string>
+    <string name="is_alarm_view_no">:      しない</string>
     <string name="year">年</string>
     <string name="month">月</string>
     <string name="day">日</string>

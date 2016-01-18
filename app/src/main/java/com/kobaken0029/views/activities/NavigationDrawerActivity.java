@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kobaken0029.R;
@@ -40,7 +42,9 @@ import static butterknife.ButterKnife.findById;
  * ナビゲーションドロワーが存在するActivity。
  */
 public class NavigationDrawerActivity extends BaseActivity {
-    /** タグ。*/
+    /**
+     * タグ。
+     */
     public static final String TAG = NavigationDrawerActivity.class.getName();
 
     @Bind(R.id.toolbar_menu)
@@ -92,20 +96,15 @@ public class NavigationDrawerActivity extends BaseActivity {
     /**
      * Fragmentを取り出す。
      *
-     * @param memo メモ
+     * @param memoId メモID
      */
-    private void popBackStackToViewMemoFragment(Memo memo) {
-        currentMemoId = memo.getId();
-        getFragmentManager().popBackStack();
-
-        ((ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG))
-                .getViewMemoViewModel()
-                .setMemoView(mMemoHelper.find(currentMemoId), mMemoHelper.isEmpty(mMemoHelper.find(currentMemoId)));
-
+    private void popBackStackToViewMemoFragment(Long memoId) {
+        currentMemoId = memoId;
         mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
         mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
         mFloatingActionViewModel.collapse();
         drawerLayout.closeDrawer(GravityCompat.START);
+        getFragmentManager().popBackStack();
     }
 
     /**
@@ -133,16 +132,20 @@ public class NavigationDrawerActivity extends BaseActivity {
      */
     @OnClick(R.id.delete_button)
     void onClickDeleteButton() {
-        UiUtil.showDialog(this, R.string.check_delete_message, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Memo target = mMemoHelper.find(currentMemoId);
-                mMemoHelper.delete(NavigationDrawerActivity.this, target);
-                mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
-                ViewMemoFragment f = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
-                if (f != null) {
-                    mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
-                    f.getViewMemoViewModel().setMemoView(target, false);
+        UiUtil.showDialog(this, R.string.check_delete_message, (dialog, which) -> {
+            Memo deletedMemo = mMemoHelper.find(currentMemoId);
+            mMemoHelper.delete(NavigationDrawerActivity.this, deletedMemo);
+            mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
+            ViewMemoFragment f = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
+            if (f != null) {
+                mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
+                List<Memo> memos = mMemoHelper.findAll();
+                ViewMemoViewModel viewModel = f.getViewMemoViewModel();
+                if (!memos.isEmpty()) {
+                    Memo target = memos.get(0);
+                    viewModel.setMemoView(target, true);
+                } else {
+                    viewModel.setMemoView(null, false);
                 }
             }
         });
@@ -156,9 +159,10 @@ public class NavigationDrawerActivity extends BaseActivity {
     @OnClick(R.id.store_button_in_create_view)
     void onClickStoreMemoInCreateViewButton() {
         MemoViewModel viewModel = ((MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG)).getMemoViewModel();
-        popBackStackToViewMemoFragment(mMemoHelper.create(
+        Memo createdMemo = mMemoHelper.create(
                 viewModel.getSubjectEditText().getText().toString(),
-                viewModel.getMemoEditText().getText().toString()));
+                viewModel.getMemoEditText().getText().toString());
+        popBackStackToViewMemoFragment(createdMemo.getId());
     }
 
     /**
@@ -188,10 +192,10 @@ public class NavigationDrawerActivity extends BaseActivity {
         } else {
             memo.setSubject(viewModel.getSubjectEditText().getText().toString());
             memo.setMemo(viewModel.getMemoEditText().getText().toString());
-            mMemoHelper.update(NavigationDrawerActivity.this, memo);
+            memo = mMemoHelper.update(NavigationDrawerActivity.this, memo);
         }
 
-        popBackStackToViewMemoFragment(memo);
+        popBackStackToViewMemoFragment(memo.getId());
     }
 
     /**
@@ -244,7 +248,7 @@ public class NavigationDrawerActivity extends BaseActivity {
         mToolbarHelper.init(this, toolbar, R.string.read_view, false, true);
 
         // メモを全件取得
-        List<Memo> memos = mMemoHelper.exists() ? mMemoHelper.findAll() : new ArrayList<Memo>();
+        List<Memo> memos = mMemoHelper.exists() ? mMemoHelper.findAll() : new ArrayList<>();
         mMemoListAdapter = new MemoListAdapter(this, memos);
         mListView.setAdapter(mMemoListAdapter);
 
@@ -253,7 +257,10 @@ public class NavigationDrawerActivity extends BaseActivity {
 
             ViewMemoFragment f = new ViewMemoFragment();
             if (mMemoHelper.exists()) {
-                Memo memo = memos.get(0);
+                Memo memo = Stream.of(memos)
+                        .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
+                        .collect(Collectors.toList())
+                        .get(0);
                 currentMemoId = memo.getId();
 
                 Bundle bundle = new Bundle();

@@ -55,50 +55,42 @@ public class SetAlarmFragment extends TextToSpeechFragment {
 
         switch (position) {
             case LIST_ID_POST_DAY:
-                new DatePickerDialog(activity, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                          int dayOfMonth) {
-                        CustomCheckData data = checkAdapter.getItem(0);
-                        String y = String.valueOf(year);
-                        String month = String.valueOf(monthOfYear + 1);
-                        String day = String.valueOf(dayOfMonth);
-                        data.setText(activity.getString(R.string.alarm_day)
-                                + y + activity.getString(R.string.year)
-                                + month + activity.getString(R.string.month)
-                                + day + activity.getString(R.string.day));
-                        settingList.setAdapter(checkAdapter);
+                new DatePickerDialog(activity, (v, year, month, day) -> {
+                    CustomCheckData data = checkAdapter.getItem(0);
+                    String y = String.valueOf(year);
+                    String m = String.valueOf(month + 1);
+                    String d = String.valueOf(day);
+                    data.setText(activity.getString(R.string.alarm_day)
+                            + y + activity.getString(R.string.year)
+                            + m + activity.getString(R.string.month)
+                            + d + activity.getString(R.string.day));
+                    settingList.setAdapter(checkAdapter);
 
-                        alarmViewModel.setYear(year);
-                        alarmViewModel.setMonth(monthOfYear);
-                        alarmViewModel.setDay(dayOfMonth);
-                    }
+                    alarmViewModel.setYear(year);
+                    alarmViewModel.setMonth(month);
+                    alarmViewModel.setDay(day);
                 }, alarmViewModel.getYear(), alarmViewModel.getMonth(), alarmViewModel.getDay()).show();
                 break;
             case LIST_ID_POST_TIME:
-                new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay,
-                                          int minute) {
-                        CustomCheckData data = checkAdapter.getItem(1);
-                        String hour = String.valueOf(hourOfDay);
-                        String min = String.valueOf(minute);
+                new TimePickerDialog(activity, (v, hour, minute) -> {
+                    CustomCheckData data = checkAdapter.getItem(1);
+                    String h = String.valueOf(hour);
+                    String m = String.valueOf(minute);
 
-                        if (hourOfDay < 10) {
-                            hour = "0" + hour;
-                        }
-                        if (minute < 10) {
-                            min = "0" + min;
-                        }
-
-                        data.setText(activity.getString(R.string.alarm_time)
-                                + hour + activity.getString(R.string.hour)
-                                + min + activity.getString(R.string.minute));
-                        settingList.setAdapter(checkAdapter);
-
-                        alarmViewModel.setHour(hourOfDay);
-                        alarmViewModel.setMinute(minute);
+                    if (hour < 10) {
+                        h = "0" + h;
                     }
+                    if (minute < 10) {
+                        m = "0" + m;
+                    }
+
+                    data.setText(activity.getString(R.string.alarm_time)
+                            + h + activity.getString(R.string.hour)
+                            + m + activity.getString(R.string.minute));
+                    settingList.setAdapter(checkAdapter);
+
+                    alarmViewModel.setHour(hour);
+                    alarmViewModel.setMinute(minute);
                 }, alarmViewModel.getHour(), alarmViewModel.getMinute(), true).show();
                 break;
             case LIST_ID_POST:

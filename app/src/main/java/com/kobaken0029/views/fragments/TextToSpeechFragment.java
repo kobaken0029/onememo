@@ -57,15 +57,12 @@ public abstract class TextToSpeechFragment extends BaseFragment
         tts = new TextToSpeech(getActivity(), this);
 
         View view = findById(getActivity(), R.id.icon_memomiya);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView messageWindowTextView = findById(getActivity(), R.id.message_window);
-                messageWindowTextView.setText("");
-                String message = getMessage();
-                ttsSpeak(message);
-                new MyHandler(message, messageWindowTextView).sendEmptyMessage(1);
-            }
+        view.setOnClickListener(v -> {
+            TextView messageWindowTextView = findById(getActivity(), R.id.message_window);
+            messageWindowTextView.setText("");
+            String message = getMessage();
+            ttsSpeak(message);
+            new MyHandler(message, messageWindowTextView).sendEmptyMessage(1);
         });
     }
 
