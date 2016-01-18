@@ -28,6 +28,11 @@ import static butterknife.ButterKnife.findById;
  */
 public abstract class TextToSpeechFragment extends BaseFragment
         implements TextToSpeech.OnInitListener {
+
+    /** ハンドラのメッセージID */
+    private static final int HANDLER_MESSAGE_ID = 1;
+
+    private MyHandler mHandler;
     protected TextToSpeech tts;
 
     @OnClick(R.id.memomiya)
@@ -56,14 +61,20 @@ public abstract class TextToSpeechFragment extends BaseFragment
         super.onActivityCreated(savedInstanceState);
         tts = new TextToSpeech(getActivity(), this);
 
-        View view = findById(getActivity(), R.id.icon_memomiya);
-        view.setOnClickListener(v -> {
-            TextView messageWindowTextView = findById(getActivity(), R.id.message_window);
-            messageWindowTextView.setText("");
-            String message = getMessage();
-            ttsSpeak(message);
-            new MyHandler(message, messageWindowTextView).sendEmptyMessage(1);
-        });
+        if (savedInstanceState == null) {
+            View view = findById(getActivity(), R.id.icon_memomiya);
+            view.setOnClickListener(v -> {
+                TextView messageWindowTextView = findById(getActivity(), R.id.message_window);
+                messageWindowTextView.setText("");
+                String message = getMessage();
+                ttsSpeak(message);
+                if (mHandler != null) {
+                    mHandler.removeMessages(HANDLER_MESSAGE_ID);
+                }
+                mHandler = new MyHandler(message, messageWindowTextView);
+                mHandler.sendEmptyMessage(HANDLER_MESSAGE_ID);
+            });
+        }
     }
 
     @Override

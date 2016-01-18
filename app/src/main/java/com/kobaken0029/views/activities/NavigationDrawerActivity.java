@@ -1,8 +1,8 @@
 package com.kobaken0029.views.activities;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,8 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kobaken0029.R;
@@ -42,10 +40,14 @@ import static butterknife.ButterKnife.findById;
  * ナビゲーションドロワーが存在するActivity。
  */
 public class NavigationDrawerActivity extends BaseActivity {
-    /**
-     * タグ。
-     */
+    /** タグ。*/
     public static final String TAG = NavigationDrawerActivity.class.getName();
+
+    /** プリファレンスID */
+    public static final String SHARED_PREFERENCES_ID = "memo_position";
+
+    /** プリファレンスKey */
+    public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
 
     @Bind(R.id.toolbar_menu)
     Toolbar toolbar;
@@ -221,8 +223,16 @@ public class NavigationDrawerActivity extends BaseActivity {
      */
     @OnItemClick(R.id.memo_list)
     void onClickItemMemoList(AdapterView<?> parent, int position) {
+        // メモの位置をプリファレンスに保存
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, position);
+        editor.commit();
+
+        // 現在のメモIDを取得
         currentMemoId = ((Memo) parent.getItemAtPosition(position)).getId();
 
+        // メモ作成画面の場合
         if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) != null) {
             getFragmentManager().popBackStack();
         }
@@ -257,10 +267,11 @@ public class NavigationDrawerActivity extends BaseActivity {
 
             ViewMemoFragment f = new ViewMemoFragment();
             if (mMemoHelper.exists()) {
-                Memo memo = Stream.of(memos)
-                        .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
-                        .collect(Collectors.toList())
-                        .get(0);
+                // プリファレンスからメモの位置を取得
+                SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
+
+                // 位置からメモを取得
+                Memo memo = memos.get(preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0));
                 currentMemoId = memo.getId();
 
                 Bundle bundle = new Bundle();

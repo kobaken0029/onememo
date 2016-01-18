@@ -36,7 +36,7 @@ public class FloatingActionViewModel {
         storeFab.setVisibility(View.GONE);
         deleteFab.setVisibility(memoEmpty ? View.GONE : View.VISIBLE);
         editFab.setVisibility(memoEmpty ? View.GONE : View.VISIBLE);
-        createFab.setVisibility(View.VISIBLE);
+        createFab.setVisibility(memoEmpty ? View.VISIBLE : View.GONE);
     }
 
     /**
