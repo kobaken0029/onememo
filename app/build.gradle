@@ -1,10 +1,29 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.2.2'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
 
 android {
     compileSdkVersion 23
     buildToolsVersion "22.0.1"
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.pliseproject"
         minSdkVersion 14
@@ -53,4 +72,7 @@ dependencies {
 
     // Component Helper
     compile 'net.ypresto.scabbard:scabbard:0.1.0'
+
+    // Stream
+    compile 'com.annimon:stream:1.0.5'
 }

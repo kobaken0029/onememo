@@ -24,6 +24,7 @@
     <!-- navigation drawer -->
     <string name="nav_create_memo">新規作成</string>
     <string name="nav_sub_header_memo_list">メモ一覧</string>
+    <string name="nav_sub_header_memo_empty">メモがありません...</string>
 
     <!-- 閲覧画面 -->
     <string name="read_view">閲覧</string>
@@ -47,8 +48,8 @@
     <string name="alarm_day_view">設定日: </string>
     <string name="alarm_time_view">設定時刻: </string>
     <string name="alarm_sound_view">設定音: </string>
-    <string name="is_alarm_view_yes">: する</string>
-    <string name="is_alarm_view_no">: しない</string>
+    <string name="is_alarm_view_yes">:      する</string>
+    <string name="is_alarm_view_no">:      しない</string>
     <string name="year">年</string>
     <string name="month">月</string>
     <string name="day">日</string>
@@ -62,5 +63,6 @@
     <string name="voice4">いっぱいメモしてね！</string>
     <string name="voice5">呼びましたか？</string>
     <string name="voice6">いい加減にしないと！怒りますよ？</string>
+    <string name="voice7">なにがなんだかだよぉ〜</string>
 
 </resources>

@@ -26,32 +26,15 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class MemoHelperImpl implements MemoHelper {
 
-    public MemoHelperImpl() {
-    }
-
-    /**
-     * IDからメモを取得します。
-     *
-     * @param id メモID
-     * @return メモ
-     */
     public Memo find(long id) {
         return new Select().from(Memo.class)
                 .where(Condition.column(Memo.ID).eq(id)).querySingle();
     }
 
-    /**
-     * すべてのメモを取得します。
-     *
-     * @return メモ群
-     */
     public List<Memo> findAll() {
         return new Select().from(Memo.class).queryList();
     }
 
-    /**
-     * メモを作成します。
-     */
     public Memo create(String subject, String mainText) {
         String createdAt = DateUtil.convertToString(new Date());
         Memo memo = new Memo();
@@ -63,9 +46,6 @@ public class MemoHelperImpl implements MemoHelper {
         return memo;
     }
 
-    /**
-     * メモを更新します。
-     */
     public Memo update(Context mContext, Memo memo) {
         memo.setUpdateAt(DateUtil.convertToString(new Date()));
         memo.update();
@@ -90,20 +70,14 @@ public class MemoHelperImpl implements MemoHelper {
         return memo;
     }
 
-    /**
-     * メモを削除します。
-     *
-     * @param memo メモ
-     */
     public void delete(Context mContext, Memo memo) {
         memo.delete();
         UiUtil.showToast(mContext, R.string.success_delete_message);
+
+        // 通知設定を削除
         ((AlarmManager) mContext.getSystemService(ALARM_SERVICE)).cancel(getPendingIntent(mContext, memo));
     }
 
-    /**
-     * メモ群を読み込む。
-     */
     public void loadMemos(MemoListAdapter adapter, DrawerViewModel viewModel) {
         List<Memo> memos = findAll();
         adapter.setMemos(memos);
@@ -111,21 +85,10 @@ public class MemoHelperImpl implements MemoHelper {
         viewModel.modify(exists());
     }
 
-    /**
-     * メモの空判定をする。
-     *
-     * @param memo 対象メモ
-     * @return 空だったらtrue
-     */
     public boolean isEmpty(Memo memo) {
         return memo == null || memo.getId() == null;
     }
 
-    /**
-     * メモが存在するかどうか判定する。
-     *
-     * @return メモが存在したらtrue
-     */
     public boolean exists() {
         List<Memo> memos = findAll();
         return memos != null && !memos.isEmpty();
@@ -134,12 +97,13 @@ public class MemoHelperImpl implements MemoHelper {
     /**
      * アラーム時に起動するアプリケーションを登録します。
      *
-     * @param memo メモ
+     * @param mContext コンテキスト
+     * @param memo 対象メモ
      * @return 遷移先
      */
     private PendingIntent getPendingIntent(Context mContext, Memo memo) {
         Intent intent = new Intent(mContext, MyAlarmNotificationReceiver.class);
-        intent.putExtra("memo", memo);
+        intent.putExtra(Memo.TAG, memo);
         intent.setType(String.valueOf(memo.getId()));
 
         return PendingIntent.getBroadcast(mContext,

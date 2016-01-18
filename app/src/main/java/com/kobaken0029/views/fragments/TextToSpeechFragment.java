@@ -40,11 +40,11 @@ public abstract class TextToSpeechFragment extends BaseFragment
         if (memo != null) {
             StringBuilder str = new StringBuilder();
             str.append("");
-            if (TextUtils.isEmpty(memo.getSubject())) {
+            if (!TextUtils.isEmpty(memo.getSubject())) {
                 str.append(memo.getSubject());
                 str.append("。");
             }
-            if (TextUtils.isEmpty(memo.getMemo())) {
+            if (!TextUtils.isEmpty(memo.getMemo())) {
                 str.append(memo.getMemo());
             }
             ttsSpeak(str.toString());
@@ -57,15 +57,12 @@ public abstract class TextToSpeechFragment extends BaseFragment
         tts = new TextToSpeech(getActivity(), this);
 
         View view = findById(getActivity(), R.id.icon_memomiya);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView messageWindowTextView = findById(getActivity(), R.id.message_window);
-                messageWindowTextView.setText("");
-                String message = getMessage();
-                ttsSpeak(message);
-                new MyHandler(message, messageWindowTextView).sendEmptyMessage(1);
-            }
+        view.setOnClickListener(v -> {
+            TextView messageWindowTextView = findById(getActivity(), R.id.message_window);
+            messageWindowTextView.setText("");
+            String message = getMessage();
+            ttsSpeak(message);
+            new MyHandler(message, messageWindowTextView).sendEmptyMessage(1);
         });
     }
 
@@ -124,10 +121,10 @@ public abstract class TextToSpeechFragment extends BaseFragment
      * 愛萌宮さんのランダムセリフを取得する。
      */
     private String getMessage() {
-        String message = "";
+        String message;
 
         // 乱数に応じて、テキストをセット
-        switch (new Random().nextInt(6)) {
+        switch (new Random().nextInt(7)) {
             case 0:
                 message = getResources().getString(R.string.voice1);
                 break;
@@ -145,6 +142,9 @@ public abstract class TextToSpeechFragment extends BaseFragment
                 break;
             case 5:
                 message = getResources().getString(R.string.voice6);
+                break;
+            default:
+                message = getResources().getString(R.string.voice7);
                 break;
         }
 

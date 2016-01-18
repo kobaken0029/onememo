@@ -7,6 +7,9 @@ import com.kobaken0029.di.PerActivity;
 import dagger.Module;
 import dagger.Provides;
 
+/**
+ * Activityのモジュール。
+ */
 @Module
 public class ActivityModule {
     private final AppCompatActivity activity;

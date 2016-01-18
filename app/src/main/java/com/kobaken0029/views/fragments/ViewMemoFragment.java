@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.views.activities.BaseActivity;
@@ -22,6 +24,7 @@ import static butterknife.ButterKnife.findById;
  * メモを閲覧するFragment。
  */
 public class ViewMemoFragment extends TextToSpeechFragment {
+    /** タグ。 */
     public static final String TAG = ViewMemoFragment.class.getName();
 
     @Bind(R.id.subject_textView)
@@ -43,14 +46,17 @@ public class ViewMemoFragment extends TextToSpeechFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Long id;
         if (getArguments() != null) {
-            Memo memo = (Memo) getArguments().getSerializable(Memo.TAG);
-            Long id = ((NavigationDrawerActivity) getActivity()).currentMemoId;
-            if (memo == null || mViewMemoViewModel.stateChanged(memo)) {
-                memo = mMemoHelper.find(id);
-            }
-            mViewMemoViewModel.setMemoView(memo, !mMemoHelper.isEmpty(memo));
+            id = ((NavigationDrawerActivity) getActivity()).currentMemoId;
+        } else if (mMemoHelper.exists()) {
+            id = Stream.of(mMemoHelper.findAll())
+                    .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
+                    .collect(Collectors.toList()).get(0).getId();
+        } else {
+            id = 0l;
         }
+        mViewMemoViewModel.setMemoId(id);
     }
 
     @Override
@@ -58,6 +64,13 @@ public class ViewMemoFragment extends TextToSpeechFragment {
         super.onResume();
         Toolbar t = findById(getActivity(), R.id.toolbar_menu);
         mToolbarHelper.change((BaseActivity) getActivity(), t, R.string.read_view, false);
+
+        Memo memo = mMemoHelper.find(mViewMemoViewModel.getMemoId());
+        if (memo != null) {
+            mViewMemoViewModel.setMemoView(memo, !mMemoHelper.isEmpty(memo));
+        } else {
+            ((NavigationDrawerActivity) getActivity()).getDrawerViewModel().modify(false);
+        }
     }
 
     @Override

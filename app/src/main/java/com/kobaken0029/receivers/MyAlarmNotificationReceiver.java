@@ -14,11 +14,14 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 
+/**
+ * 通知のレシーバークラス。
+ */
 public class MyAlarmNotificationReceiver extends BroadcastReceiver {
-    boolean changeRingerModeFlg;
-    boolean silentFlg;
-    boolean vibrateFlg;
-    AudioManager audioManager;
+    private boolean changeRingerModeFlg;
+    private boolean silentFlg;
+    private boolean vibrateFlg;
+    private AudioManager audioManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {

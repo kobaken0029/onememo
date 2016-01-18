@@ -40,7 +40,7 @@ public class SetAlarmActivity extends BaseActivity {
     @Override
     public void finish() {
         if (postedMemo != null) {
-            saveSetting(postedMemo);
+            saveSetting();
         }
         super.finish();
     }
@@ -56,19 +56,19 @@ public class SetAlarmActivity extends BaseActivity {
     /**
      * 設定を保存する。
      */
-    public void saveSetting(Memo memo) {
+    public void saveSetting() {
         Calendar calendar = alarmViewModel.generatePostedCalendar();
 
         // 過去だったらエラーメッセージを出す
-        if (calendar.getTimeInMillis() < System.currentTimeMillis() && memo.getPostFlg() == 1) {
+        if (calendar.getTimeInMillis() < System.currentTimeMillis() && postedMemo.getPostFlg() == 1) {
             UiUtil.showToast(this, getString(R.string.error_past_date_message));
             return;
         }
 
-        memo.setPostTime(calendar.getTime());
+        postedMemo.setPostTime(calendar.getTime());
 
         Intent intent = new Intent();
-        intent.putExtra(Memo.TAG, memo);
+        intent.putExtra(Memo.TAG, postedMemo);
         setResult(Activity.RESULT_OK, intent);
     }
 

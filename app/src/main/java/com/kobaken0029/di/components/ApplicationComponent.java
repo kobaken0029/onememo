@@ -10,6 +10,9 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
+/**
+ * Applicationのコンポーネント。
+ */
 @Singleton
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {

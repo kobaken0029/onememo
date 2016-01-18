@@ -1,7 +1,5 @@
 package com.kobaken0029.views.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -13,7 +11,6 @@ import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.views.activities.BaseActivity;
 import com.kobaken0029.views.activities.NavigationDrawerActivity;
-import com.kobaken0029.views.activities.SetAlarmActivity;
 import com.kobaken0029.views.viewmodels.MemoViewModel;
 
 import butterknife.Bind;
@@ -25,6 +22,7 @@ import static butterknife.ButterKnife.findById;
  * メモを作成・編集するFragment。
  */
 public class MemoFragment extends TextToSpeechFragment {
+    /** タグ。 */
     public static final String TAG = MemoFragment.class.getName();
 
     private MemoViewModel mMemoViewModel;
@@ -35,8 +33,7 @@ public class MemoFragment extends TextToSpeechFragment {
     EditText memoEditText;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_memo, container, false);
         ButterKnife.bind(this, view);
         bindView();

@@ -8,15 +8,19 @@ import com.raizlabs.android.dbflow.annotation.Unique;
 
 import java.util.Date;
 
-
 /**
  * メモクラス。
  */
 @Table(databaseName = WanmemoDatabase.NAME, tableName = Memo.NAME)
 public class Memo extends BaseEntity {
+    /** タグ。 */
     public static final String TAG = Memo.class.getName();
-    public static final String NAME = "memos";
+
+    /** ID。 */
     public static final String ID = "id";
+
+    /** メモ。 */
+    public static final String NAME = "memos";
 
     @Column
     @Unique
