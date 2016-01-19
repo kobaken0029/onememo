@@ -2,15 +2,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@id/footer"
-        layout="@layout/footer" />
+    <DatePicker
+        android:id="@+id/date_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    <ListView
-        android:id="@+id/setting_list"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/footer"
-        android:layout_marginTop="40dp" />
+        android:layout_below="@id/date_picker"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TimePicker
+            android:id="@+id/time_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingEnd="8dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="8dp"
+            android:paddingStart="0dp" />
+
+        <LinearLayout
+            android:id="@+id/switch_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingEnd="8dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="8dp"
+            android:paddingStart="0dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@string/alarm_info"
+                android:textSize="24sp" />
+
+            <Switch
+                android:id="@+id/posted_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:checked="false" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

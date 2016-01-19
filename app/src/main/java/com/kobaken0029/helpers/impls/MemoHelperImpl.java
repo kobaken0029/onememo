@@ -46,27 +46,9 @@ public class MemoHelperImpl implements MemoHelper {
         return memo;
     }
 
-    public Memo update(Context mContext, Memo memo) {
+    public Memo update(Memo memo) {
         memo.setUpdateAt(DateUtil.convertToString(new Date()));
         memo.update();
-
-        // PendingIntentの発行
-        PendingIntent pending = getPendingIntent(mContext, memo);
-
-        // アラームをセット
-        AlarmManager am = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        if (memo.getPostFlg() == 1) {
-            SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.YEAR_MONTH_DAY_HOUR_MINUTE, Locale.JAPAN);
-            Calendar postTime = DateUtil.convertStringToCalendar(sdf.format(memo.getPostTime()));
-
-            UiUtil.showToast(mContext, String.format("%02d時%02d分に通知します。",
-                    postTime.get(Calendar.HOUR_OF_DAY),
-                    postTime.get(Calendar.MINUTE)));
-            am.set(AlarmManager.RTC_WAKEUP, postTime.getTimeInMillis(), pending);
-        } else {
-            am.cancel(pending);
-        }
-
         return memo;
     }
 
@@ -92,6 +74,26 @@ public class MemoHelperImpl implements MemoHelper {
     public boolean exists() {
         List<Memo> memos = findAll();
         return memos != null && !memos.isEmpty();
+    }
+
+    @Override
+    public void setAlarm(Context mContext, Memo memo) {
+        // PendingIntentの発行
+        PendingIntent pending = getPendingIntent(mContext, memo);
+
+        // アラームをセット
+        AlarmManager am = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        if (memo.getPostFlg() == 1) {
+            SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.YEAR_MONTH_DAY_HOUR_MINUTE, Locale.JAPAN);
+            Calendar postTime = DateUtil.convertStringToCalendar(sdf.format(memo.getPostTime()));
+
+            UiUtil.showToast(mContext, String.format("%02d時%02d分に通知します。",
+                    postTime.get(Calendar.HOUR_OF_DAY),
+                    postTime.get(Calendar.MINUTE)));
+            am.set(AlarmManager.RTC_WAKEUP, postTime.getTimeInMillis(), pending);
+        } else {
+            am.cancel(pending);
+        }
     }
 
     /**

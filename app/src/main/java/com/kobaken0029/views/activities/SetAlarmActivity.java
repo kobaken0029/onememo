@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,26 +21,37 @@ import butterknife.ButterKnife;
  * アラーム設定画面のActivityです。
  */
 public class SetAlarmActivity extends BaseActivity {
+    /** リクエストコード。 */
     public static final int SET_ALARM_ACTIVITY = 1;
 
     @Bind(R.id.toolbar_menu)
-    Toolbar toolbar;
+    Toolbar mToolbar;
 
-    private Memo postedMemo;
-    private SetAlarmViewModel alarmViewModel;
+    private SetAlarmViewModel mAlarmViewModel;
+    private Memo mPostedMemo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
         ButterKnife.bind(this);
-        mToolbarHelper.init(this, toolbar, R.string.setting_view, true, false);
-        postedMemo = (Memo) getIntent().getSerializableExtra(Memo.TAG);
+        mToolbarHelper.init(this, mToolbar, R.string.setting_view, true, false);
+        mAlarmViewModel = new SetAlarmViewModel();
+        mPostedMemo = (Memo) getIntent().getSerializableExtra(Memo.TAG);
+
+        Calendar calendar;
+        if (mPostedMemo.getPostTime() != null) {
+            calendar = Calendar.getInstance();
+            calendar.setTime(mPostedMemo.getPostTime());
+        } else {
+            calendar = Calendar.getInstance(Locale.JAPAN);
+        }
+        mAlarmViewModel.setAlarmTime(calendar);
     }
 
     @Override
     public void finish() {
-        if (postedMemo != null) {
+        if (mPostedMemo != null) {
             saveSetting();
         }
         super.finish();
@@ -57,26 +69,36 @@ public class SetAlarmActivity extends BaseActivity {
      * 設定を保存する。
      */
     public void saveSetting() {
-        Calendar calendar = alarmViewModel.generatePostedCalendar();
+        Calendar calendar = mAlarmViewModel.generatePostedCalendar();
 
         // 過去だったらエラーメッセージを出す
-        if (calendar.getTimeInMillis() < System.currentTimeMillis() && postedMemo.getPostFlg() == 1) {
+        if (calendar.getTimeInMillis() < System.currentTimeMillis() && mPostedMemo.getPostFlg() == 1) {
             UiUtil.showToast(this, getString(R.string.error_past_date_message));
             return;
+        } else {
+            mPostedMemo.setPostTime(calendar.getTime());
+            mMemoHelper.update(mPostedMemo);
+            mMemoHelper.setAlarm(getApplicationContext(), mPostedMemo);
+
+            Intent intent = new Intent();
+            intent.putExtra(Memo.TAG, mPostedMemo);
+            setResult(Activity.RESULT_OK, intent);
         }
-
-        postedMemo.setPostTime(calendar.getTime());
-
-        Intent intent = new Intent();
-        intent.putExtra(Memo.TAG, postedMemo);
-        setResult(Activity.RESULT_OK, intent);
     }
 
-    public void setPostedMemo(Memo postedMemo) {
-        this.postedMemo = postedMemo;
+    public Memo getPostedMemo() {
+        return mPostedMemo;
     }
 
-    public void setAlarmViewModel(SetAlarmViewModel alarmViewModel) {
-        this.alarmViewModel = alarmViewModel;
+    public void setPostedMemo(Memo mPostedMemo) {
+        this.mPostedMemo = mPostedMemo;
+    }
+
+    public SetAlarmViewModel getAlarmViewModel() {
+        return mAlarmViewModel;
+    }
+
+    public void setAlarmViewModel(SetAlarmViewModel mAlarmViewModel) {
+        this.mAlarmViewModel = mAlarmViewModel;
     }
 }
