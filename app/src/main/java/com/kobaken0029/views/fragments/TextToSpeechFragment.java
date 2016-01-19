@@ -41,18 +41,21 @@ public abstract class TextToSpeechFragment extends BaseFragment
             tts.stop();
         }
 
-        Memo memo = mMemoHelper.find(((NavigationDrawerActivity) getActivity()).currentMemoId);
-        if (memo != null) {
-            StringBuilder str = new StringBuilder();
-            str.append("");
-            if (!TextUtils.isEmpty(memo.getSubject())) {
-                str.append(memo.getSubject());
-                str.append("。");
+        Long id = ((NavigationDrawerActivity) getActivity()).currentMemoId;
+        if (id != null) {
+            Memo memo = mMemoHelper.find(id);
+            if (memo != null) {
+                StringBuilder str = new StringBuilder();
+                str.append("");
+                if (!TextUtils.isEmpty(memo.getSubject())) {
+                    str.append(memo.getSubject());
+                    str.append("。");
+                }
+                if (!TextUtils.isEmpty(memo.getMemo())) {
+                    str.append(memo.getMemo());
+                }
+                ttsSpeak(str.toString());
             }
-            if (!TextUtils.isEmpty(memo.getMemo())) {
-                str.append(memo.getMemo());
-            }
-            ttsSpeak(str.toString());
         }
     }
 
