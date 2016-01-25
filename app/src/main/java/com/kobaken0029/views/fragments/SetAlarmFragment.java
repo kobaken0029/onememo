@@ -1,36 +1,62 @@
 package com.kobaken0029.views.fragments;
 
-import android.os.Build;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.Switch;
-import android.widget.TimePicker;
+import android.widget.TextView;
 
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
+import com.kobaken0029.utils.DateUtil;
 import com.kobaken0029.views.activities.SetAlarmActivity;
 import com.kobaken0029.views.viewmodels.SetAlarmViewModel;
 
+import java.util.Date;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * アラームをセットするFragment。
  */
 public class SetAlarmFragment extends BaseFragment {
-    @Bind(R.id.date_picker)
-    DatePicker mDatePicker;
-    @Bind(R.id.time_picker)
-    TimePicker mTimePicker;
+    @Bind(R.id.calendar_text)
+    TextView mCalendarTextView;
+    @Bind(R.id.time_text)
+    TextView mTimeTextView;
     @Bind(R.id.posted_switch)
     Switch mSwitch;
 
     private Memo mPostedMemo;
     private SetAlarmViewModel mAlarmViewModel;
-    private SetAlarmActivity mActivity;
+
+    @OnClick(R.id.calendar_text)
+    void onClickCalendarText() {
+        SetAlarmActivity activity = (SetAlarmActivity) getActivity();
+        new DatePickerDialog(activity, (v, year, month, day) -> {
+            mAlarmViewModel.setYear(year);
+            mAlarmViewModel.setMonth(month);
+            mAlarmViewModel.setDay(day);
+            activity.setAlarmViewModel(mAlarmViewModel);
+            mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, DateUtil.getDate(year, month, day)));
+        }, mAlarmViewModel.getYear(), mAlarmViewModel.getMonth(), mAlarmViewModel.getDay()).show();
+    }
+
+    @OnClick(R.id.time_text)
+    void onClickTimeText() {
+        SetAlarmActivity activity = (SetAlarmActivity) getActivity();
+        new TimePickerDialog(activity, (v, hour, minute) -> {
+            mAlarmViewModel.setHour(hour);
+            mAlarmViewModel.setMinute(minute);
+            activity.setAlarmViewModel(mAlarmViewModel);
+            mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, DateUtil.getDate(hour, minute)));
+        }, mAlarmViewModel.getHour(), mAlarmViewModel.getMinute(), true).show();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,41 +69,29 @@ public class SetAlarmFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActivity = (SetAlarmActivity) getActivity();
         bindView();
     }
 
     @Override
     void bindView() {
-        mAlarmViewModel = mActivity.getAlarmViewModel();
-        mPostedMemo = mActivity.getPostedMemo();
+        SetAlarmActivity activity = (SetAlarmActivity) getActivity();
+        mAlarmViewModel = activity.getAlarmViewModel();
+        mPostedMemo = activity.getPostedMemo();
 
         if (mPostedMemo != null) {
-            mDatePicker.init(mAlarmViewModel.getYear(), mAlarmViewModel.getMonth(), mAlarmViewModel.getDay(),
-                    (v, year, month, day) -> {
-                        mAlarmViewModel.setYear(year);
-                        mAlarmViewModel.setMonth(month);
-                        mAlarmViewModel.setDay(day);
-                        mActivity.setAlarmViewModel(mAlarmViewModel);
-                    });
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mTimePicker.setHour(mAlarmViewModel.getHour());
-                mTimePicker.setMinute(mAlarmViewModel.getMinute());
+            if (mPostedMemo.getPostFlg() == 1) {
+                mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, mPostedMemo.getPostTime()));
+                mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, mPostedMemo.getPostTime()));
             } else {
-                mTimePicker.setCurrentHour(mAlarmViewModel.getHour());
-                mTimePicker.setCurrentMinute(mAlarmViewModel.getMinute());
+                Date now = DateUtil.getCurrentDate();
+                mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, now));
+                mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, now));
             }
-            mTimePicker.setOnTimeChangedListener((v, hourOfDay, minute) -> {
-                mAlarmViewModel.setHour(hourOfDay);
-                mAlarmViewModel.setMinute(minute);
-                mActivity.setAlarmViewModel(mAlarmViewModel);
-            });
 
             mSwitch.setChecked(mPostedMemo.getPostFlg() == 1);
             mSwitch.setOnCheckedChangeListener((bv, isChecked) -> {
                 mPostedMemo.setPostFlg(isChecked ? 1 : 0);
-                mActivity.setPostedMemo(mPostedMemo);
+                activity.setPostedMemo(mPostedMemo);
             });
         }
     }

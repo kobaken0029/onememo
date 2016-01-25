@@ -21,7 +21,9 @@ import butterknife.ButterKnife;
  * アラーム設定画面のActivityです。
  */
 public class SetAlarmActivity extends BaseActivity {
-    /** リクエストコード。 */
+    /**
+     * リクエストコード。
+     */
     public static final int SET_ALARM_ACTIVITY = 1;
 
     @Bind(R.id.toolbar_menu)
@@ -73,8 +75,7 @@ public class SetAlarmActivity extends BaseActivity {
 
         // 過去だったらエラーメッセージを出す
         if (calendar.getTimeInMillis() < System.currentTimeMillis() && mPostedMemo.getPostFlg() == 1) {
-            UiUtil.showToast(this, getString(R.string.error_past_date_message));
-            return;
+            UiUtil.showToast(getApplicationContext(), getString(R.string.error_past_date_message));
         } else {
             mPostedMemo.setPostTime(calendar.getTime());
             mMemoHelper.update(mPostedMemo);

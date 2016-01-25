@@ -34,8 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
-import static butterknife.ButterKnife.findById;
-
 /**
  * ナビゲーションドロワーが存在するActivity。
  */

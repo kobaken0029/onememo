@@ -18,7 +18,6 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,17 +25,20 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class MemoHelperImpl implements MemoHelper {
 
+    @Override
     public Memo find(long id) {
         return new Select().from(Memo.class)
                 .where(Condition.column(Memo.ID).eq(id)).querySingle();
     }
 
+    @Override
     public List<Memo> findAll() {
         return new Select().from(Memo.class).queryList();
     }
 
+    @Override
     public Memo create(String subject, String mainText) {
-        String createdAt = DateUtil.convertToString(new Date());
+        String createdAt = DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY_HOUR_MINUTE_SECOND, DateUtil.getCurrentDate());
         Memo memo = new Memo();
         memo.setSubject(subject);
         memo.setMemo(mainText);
@@ -46,12 +48,14 @@ public class MemoHelperImpl implements MemoHelper {
         return memo;
     }
 
+    @Override
     public Memo update(Memo memo) {
-        memo.setUpdateAt(DateUtil.convertToString(new Date()));
+        memo.setUpdateAt(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY_HOUR_MINUTE_SECOND, DateUtil.getCurrentDate()));
         memo.update();
         return memo;
     }
 
+    @Override
     public void delete(Context mContext, Memo memo) {
         memo.delete();
         UiUtil.showToast(mContext, R.string.success_delete_message);
@@ -60,6 +64,7 @@ public class MemoHelperImpl implements MemoHelper {
         ((AlarmManager) mContext.getSystemService(ALARM_SERVICE)).cancel(getPendingIntent(mContext, memo));
     }
 
+    @Override
     public void loadMemos(MemoListAdapter adapter, DrawerViewModel viewModel) {
         List<Memo> memos = findAll();
         adapter.setMemos(memos);
@@ -67,10 +72,12 @@ public class MemoHelperImpl implements MemoHelper {
         viewModel.modify(exists());
     }
 
+    @Override
     public boolean isEmpty(Memo memo) {
         return memo == null || memo.getId() == null;
     }
 
+    @Override
     public boolean exists() {
         List<Memo> memos = findAll();
         return memos != null && !memos.isEmpty();
@@ -100,7 +107,7 @@ public class MemoHelperImpl implements MemoHelper {
      * アラーム時に起動するアプリケーションを登録します。
      *
      * @param mContext コンテキスト
-     * @param memo 対象メモ
+     * @param memo     対象メモ
      * @return 遷移先
      */
     private PendingIntent getPendingIntent(Context mContext, Memo memo) {
