@@ -2,6 +2,7 @@ package com.kobaken0029.receivers;
 
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
+import com.kobaken0029.views.activities.NavigationDrawerActivity;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -26,9 +27,11 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Memo memo = (Memo) intent.getSerializableExtra(Memo.TAG);
+        memo.setPostFlg(0);
+        memo.update();
 
         // アラームを受け取って起動するActivityを指定
-        Intent intent2 = new Intent();
+        Intent intent2 = new Intent(context, NavigationDrawerActivity.class);
         intent2.putExtra(Memo.TAG, memo);
         intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -76,15 +79,8 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
         notificationManager.notify(R.string.app_name, builder.build());
 
         // RingerModeを元の状態に戻す
-        new Handler().postDelayed(changeRingerModeTask, 2000);
+        new Handler().postDelayed(this::restoreRingerMode, 2000);
     }
-
-    Runnable changeRingerModeTask = new Runnable() {
-        @Override
-        public void run() {
-            restoreRingerMode();
-        }
-    };
 
     /**
      * RingerModeを元の状態に戻します。

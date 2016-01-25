@@ -1,5 +1,6 @@
 package com.kobaken0029.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,8 +13,17 @@ public class DateUtil {
     /** スラッシュ区切りのパターン。 */
     public static final String YEAR_MONTH_DAY_HOUR_MINUTE_SECOND = "yyyy/MM/dd HH:mm:ss (E)";
 
+    /** スラッシュ区切りのパターン。 */
+    public static final String YEAR_MONTH_DAY_SLASH = "yyyy/MM/dd";
+
     /** 漢字区切りのパターン。 */
     public static final String YEAR_MONTH_DAY_HOUR_MINUTE = "yyyy年MM月dd日 HH時mm分";
+
+    /** 漢字区切りのパターン。 */
+    public static final String YEAR_MONTH_DAY = "yyyy年MM月dd日";
+
+    /** コロン区切りのパターン。 */
+    public static final String HOUR_MINUTE = "HH:mm";
 
     /** 昼。 */
     public static final int NOON = 1;
@@ -27,11 +37,62 @@ public class DateUtil {
     /** 深夜。 */
     public static final int LATE_NIGHT = 4;
 
-
     /**
      * コンストラクタ。
      */
     private DateUtil() {
+    }
+
+    /**
+     * 現在日時を取得する。
+     *
+     * @return 現在日時
+     */
+    public static Date getCurrentDate() {
+        return new Date();
+    }
+
+    /**
+     * 指定年月日の日時を取得する。
+     *
+     * @param year  年
+     * @param month 月
+     * @param day   日
+     * @return 日時
+     */
+    public static Date getDate(int year, int month, int day) {
+        SimpleDateFormat sdf = new SimpleDateFormat(YEAR_MONTH_DAY_SLASH, Locale.JAPAN);
+        Date date;
+
+        try {
+            date = new Date(sdf.parse(String.format("%4d/%2d/%2d", year, month + 1, day)).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = getCurrentDate();
+        }
+
+        return date;
+    }
+
+    /**
+     * 指定年月日の日時を取得する。
+     *
+     * @param hour   時間
+     * @param minute 分
+     * @return 日時
+     */
+    public static Date getDate(int hour, int minute) {
+        SimpleDateFormat sdf = new SimpleDateFormat(HOUR_MINUTE, Locale.JAPAN);
+        Date date;
+
+        try {
+            date = new Date(sdf.parse(String.format("%2d:%2d", hour, minute)).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = getCurrentDate();
+        }
+
+        return date;
     }
 
     /**
@@ -40,10 +101,8 @@ public class DateUtil {
      * @param date Date
      * @return 文字列
      */
-    public static String convertToString(Date date) {
-        return date != null
-                ? new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MINUTE_SECOND, Locale.JAPAN).format(date)
-                : "";
+    public static String convertToString(String pattern, Date date) {
+        return date != null ? new SimpleDateFormat(pattern, Locale.JAPAN).format(date) : "";
     }
 
     /**

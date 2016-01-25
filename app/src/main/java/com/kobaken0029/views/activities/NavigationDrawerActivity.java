@@ -34,8 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
-import static butterknife.ButterKnife.findById;
-
 /**
  * ナビゲーションドロワーが存在するActivity。
  */
@@ -43,10 +41,10 @@ public class NavigationDrawerActivity extends BaseActivity {
     /** タグ。*/
     public static final String TAG = NavigationDrawerActivity.class.getName();
 
-    /** プリファレンスID */
+    /** プリファレンスID。 */
     public static final String SHARED_PREFERENCES_ID = "memo_position";
 
-    /** プリファレンスKey */
+    /** プリファレンスKey。 */
     public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
 
     @Bind(R.id.toolbar_menu)
@@ -194,7 +192,7 @@ public class NavigationDrawerActivity extends BaseActivity {
         } else {
             memo.setSubject(viewModel.getSubjectEditText().getText().toString());
             memo.setMemo(viewModel.getMemoEditText().getText().toString());
-            memo = mMemoHelper.update(NavigationDrawerActivity.this, memo);
+            memo = mMemoHelper.update(memo);
         }
 
         popBackStackToViewMemoFragment(memo.getId());
@@ -267,11 +265,15 @@ public class NavigationDrawerActivity extends BaseActivity {
 
             ViewMemoFragment f = new ViewMemoFragment();
             if (mMemoHelper.exists()) {
-                // プリファレンスからメモの位置を取得
-                SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
+                // Notificationから得られたメモを取得
+                Memo memo = (Memo) getIntent().getSerializableExtra(Memo.TAG);
+                if (memo == null) {
+                    // プリファレンスからメモの位置を取得
+                    SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
 
-                // 位置からメモを取得
-                Memo memo = memos.get(preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0));
+                    // 位置からメモを取得
+                    memo = memos.get(preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0));
+                }
                 currentMemoId = memo.getId();
 
                 Bundle bundle = new Bundle();
@@ -285,7 +287,7 @@ public class NavigationDrawerActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        registerForContextMenu(findById(this, R.id.memo_list));
+        registerForContextMenu(mListView);
 
         // 時刻に応じて、ナビゲーションドロワー内のヘッダーの背景を変える
         switch (DateUtil.checkTimeNow()) {
@@ -311,7 +313,7 @@ public class NavigationDrawerActivity extends BaseActivity {
             if (resultCode == Activity.RESULT_OK) {
                 // 通知時間が設定されたメモを取得
                 Memo settingMemo = (Memo) data.getSerializableExtra(Memo.TAG);
-                mMemoHelper.update(this, settingMemo);
+                mMemoHelper.update(settingMemo);
             }
         }
     }
