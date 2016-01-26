@@ -94,7 +94,8 @@ public class MemoHelperImpl implements MemoHelper {
             SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.YEAR_MONTH_DAY_HOUR_MINUTE, Locale.JAPAN);
             Calendar postTime = DateUtil.convertStringToCalendar(sdf.format(memo.getPostTime()));
 
-            UiUtil.showToast(mContext, String.format("%02d時%02d分に通知します。",
+            UiUtil.showToast(mContext, String.format(Locale.JAPAN,
+                    "%02d時%02d分に通知します。",
                     postTime.get(Calendar.HOUR_OF_DAY),
                     postTime.get(Calendar.MINUTE)));
             am.set(AlarmManager.RTC_WAKEUP, postTime.getTimeInMillis(), pending);
@@ -112,7 +113,9 @@ public class MemoHelperImpl implements MemoHelper {
      */
     private PendingIntent getPendingIntent(Context mContext, Memo memo) {
         Intent intent = new Intent(mContext, MyAlarmNotificationReceiver.class);
-        intent.putExtra(Memo.TAG, memo);
+        intent.putExtra(Memo.ID, memo.getId());
+        intent.putExtra(Memo.SUBJECT, memo.getSubject());
+        intent.putExtra(Memo.MEMO, memo.getMemo());
         intent.setType(String.valueOf(memo.getId()));
 
         return PendingIntent.getBroadcast(mContext,

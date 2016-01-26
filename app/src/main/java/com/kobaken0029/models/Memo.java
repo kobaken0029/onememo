@@ -16,11 +16,17 @@ public class Memo extends BaseEntity {
     /** タグ。 */
     public static final String TAG = Memo.class.getName();
 
+    /** テーブル名。 */
+    public static final String NAME = "memos";
+
     /** ID。 */
     public static final String ID = "id";
 
     /** メモ。 */
-    public static final String NAME = "memos";
+    public static final String SUBJECT = "subject";
+
+    /** メモ。 */
+    public static final String MEMO = "memo";
 
     @Column
     @Unique

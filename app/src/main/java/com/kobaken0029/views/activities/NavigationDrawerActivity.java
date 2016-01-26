@@ -266,7 +266,7 @@ public class NavigationDrawerActivity extends BaseActivity {
             ViewMemoFragment f = new ViewMemoFragment();
             if (mMemoHelper.exists()) {
                 // Notificationから得られたメモを取得
-                Memo memo = (Memo) getIntent().getSerializableExtra(Memo.TAG);
+                Memo memo = mMemoHelper.find(getIntent().getLongExtra(Memo.ID, 0L));
                 if (memo == null) {
                     // プリファレンスからメモの位置を取得
                     SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
