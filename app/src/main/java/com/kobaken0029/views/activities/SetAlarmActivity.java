@@ -21,9 +21,7 @@ import butterknife.ButterKnife;
  * アラーム設定画面のActivityです。
  */
 public class SetAlarmActivity extends BaseActivity {
-    /**
-     * リクエストコード。
-     */
+    /** リクエストコード。*/
     public static final int SET_ALARM_ACTIVITY = 1;
 
     @Bind(R.id.toolbar_menu)
