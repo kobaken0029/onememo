@@ -79,9 +79,10 @@ public class SetAlarmFragment extends BaseFragment {
         mPostedMemo = activity.getPostedMemo();
 
         if (mPostedMemo != null) {
-            if (mPostedMemo.getPostFlg() == 1) {
-                mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, mPostedMemo.getPostTime()));
-                mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, mPostedMemo.getPostTime()));
+            Date postedTime = mPostedMemo.getPostTime();
+            if (postedTime != null) {
+                mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, postedTime));
+                mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, postedTime));
             } else {
                 Date now = DateUtil.getCurrentDate();
                 mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, now));
