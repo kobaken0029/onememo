@@ -28,8 +28,10 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
 
         // 通知設定をOFFにする
         Memo memo = new MemoHelperImpl().find(id);
-        memo.setPostFlg(0);
-        memo.update();
+        if (memo != null) {
+            memo.setPostFlg(0);
+            memo.update();
+        }
 
         // アラームを受け取って起動するActivityを指定
         Intent intent2 = new Intent(context, NavigationDrawerActivity.class);
