@@ -85,7 +85,7 @@ public class NavigationDrawerActivity extends BaseActivity {
      * @param newMemo 新規メモならtrue
      */
     private void replaceMemoFragment(Bundle bundle, boolean newMemo) {
-        MemoFragment f = new MemoFragment();
+        MemoFragment f = MemoFragment.newInstance();
         f.setArguments(bundle);
         replaceFragment(R.id.container, f, MemoFragment.TAG);
         mFloatingActionViewModel.stateMemoFragment(newMemo);
@@ -170,7 +170,7 @@ public class NavigationDrawerActivity extends BaseActivity {
      */
     @OnClick(R.id.alert_button)
     void onClickSetAlertButton() {
-        Intent intent = new Intent(this, SetAlarmActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SetAlarmActivity.class);
         intent.putExtra(Memo.TAG, mMemoHelper.find(currentMemoId));
         startActivityForResult(intent, SetAlarmActivity.SET_ALARM_ACTIVITY);
         mFloatingActionViewModel.collapse();
@@ -263,7 +263,7 @@ public class NavigationDrawerActivity extends BaseActivity {
         if (savedInstanceState == null) {
             mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
 
-            ViewMemoFragment f = new ViewMemoFragment();
+            ViewMemoFragment f = ViewMemoFragment.newInstance();
             if (mMemoHelper.exists()) {
                 // Notificationから得られたメモを取得
                 Memo memo = mMemoHelper.find(getIntent().getLongExtra(Memo.ID, 0L));

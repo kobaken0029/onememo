@@ -37,6 +37,15 @@ public class ViewMemoFragment extends TextToSpeechFragment {
 
     private ViewMemoViewModel mViewMemoViewModel;
 
+    /**
+     * インスタンス生成。
+     *
+     * @return ViewMemoFragmentのインスタンス
+     */
+    public static ViewMemoFragment newInstance() {
+        return new ViewMemoFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

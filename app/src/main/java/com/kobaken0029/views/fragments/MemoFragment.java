@@ -32,6 +32,15 @@ public class MemoFragment extends TextToSpeechFragment {
     @Bind(R.id.memo_editText)
     EditText memoEditText;
 
+    /**
+     * インスタンス生成。
+     *
+     * @return MemoFragmentのインスタンス
+     */
+    public static MemoFragment newInstance() {
+        return new MemoFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_memo, container, false);
