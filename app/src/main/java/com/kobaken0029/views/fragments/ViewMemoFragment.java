@@ -15,6 +15,9 @@ import com.kobaken0029.views.activities.BaseActivity;
 import com.kobaken0029.views.activities.NavigationDrawerActivity;
 import com.kobaken0029.views.viewmodels.ViewMemoViewModel;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -54,7 +57,7 @@ public class ViewMemoFragment extends TextToSpeechFragment {
                     .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
                     .collect(Collectors.toList()).get(0).getId();
         } else {
-            id = 0l;
+            id = 0L;
         }
         mViewMemoViewModel.setMemoId(id);
     }

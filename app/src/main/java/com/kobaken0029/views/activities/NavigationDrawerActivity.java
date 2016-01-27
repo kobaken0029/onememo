@@ -268,11 +268,17 @@ public class NavigationDrawerActivity extends BaseActivity {
                 // Notificationから得られたメモを取得
                 Memo memo = mMemoHelper.find(getIntent().getLongExtra(Memo.ID, 0L));
                 if (memo == null) {
-                    // プリファレンスからメモの位置を取得
+                    // プリファレンスを取得
                     SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
 
+                    // プリファレンスからメモの位置を取得
+                    int position = preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0);
+                    if (position >= memos.size()) {
+                        position = memos.size() - 1;
+                    }
+
                     // 位置からメモを取得
-                    memo = memos.get(preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0));
+                    memo = memos.get(position);
                 }
                 currentMemoId = memo.getId();
 
