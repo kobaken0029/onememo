@@ -2,7 +2,6 @@ package com.kobaken0029.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -65,7 +64,7 @@ public class N2ttsUtil {
         } else {
             new AlertDialog.Builder(mContext)
                     .setMessage(mContext.getString(R.string.n2tts_not_found_message))
-                    .setPositiveButton(mContext.getResources().getString(R.string.go_play_stroe),
+                    .setPositiveButton(mContext.getResources().getString(R.string.go_play_store),
                             (dialog, which) -> {
                                 Uri uri = Uri.parse(N2TTS_URI_GOOGLE_PLAY_STORE_JA);
                                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);

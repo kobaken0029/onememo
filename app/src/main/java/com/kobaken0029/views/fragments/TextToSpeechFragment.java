@@ -1,114 +1,111 @@
 package com.kobaken0029.views.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.tts.TextToSpeech;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.kobaken0029.R;
-import com.kobaken0029.models.Memo;
 import com.kobaken0029.utils.N2ttsUtil;
 import com.kobaken0029.utils.UiUtil;
-import com.kobaken0029.views.activities.NavigationDrawerActivity;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
-
-import butterknife.OnClick;
 
 import static butterknife.ButterKnife.findById;
 
 /**
  * TextToSpeechを使ったBaseFragment。
  */
-public abstract class TextToSpeechFragment extends BaseFragment
-        implements TextToSpeech.OnInitListener {
+public abstract class TextToSpeechFragment extends BaseFragment {
 
     /** ハンドラのメッセージID */
     private static final int HANDLER_MESSAGE_ID = 1;
 
-    private MyHandler mHandler;
-    protected TextToSpeech tts;
+    /** プリファレンスID。 */
+    private static final String SHARED_PREFERENCES_VOICE_SWITCH_ID = "voice_switch";
 
-    @OnClick(R.id.memomiya)
-    void onClickMemomiya() {
-        if (tts.isSpeaking()) {
-            tts.stop();
-        }
+    /** プリファレンスKEY。 */
+    private static final String SHARED_PREFERENCES_VOICE_SWITCH_KEY = "voice_switch_key";
 
-        Long id = ((NavigationDrawerActivity) getActivity()).currentMemoId;
-        if (id != null) {
-            Memo memo = mMemoHelper.find(id);
-            if (memo != null) {
-                StringBuilder str = new StringBuilder();
-                str.append("");
-                if (!TextUtils.isEmpty(memo.getSubject())) {
-                    str.append(memo.getSubject());
-                    str.append("。");
-                }
-                if (!TextUtils.isEmpty(memo.getMemo())) {
-                    str.append(memo.getMemo());
-                }
-                ttsSpeak(str.toString());
-            }
+    private Handler mHandler;
+    protected TextToSpeech mTextToSpeech;
+
+    /**
+     * TextToSpeechの初期化リスナー。
+     */
+    private TextToSpeech.OnInitListener mInitListener = status -> {
+        if (status == TextToSpeech.SUCCESS && mTextToSpeech != null) {
+            mTextToSpeech.setPitch(1.0f);
+            mTextToSpeech.setSpeechRate(1.0f);
+            mTextToSpeech.setLanguage(Locale.JAPAN);
         }
-    }
+    };
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        tts = new TextToSpeech(getActivity(), this);
+        mTextToSpeech = new TextToSpeech(getActivity(), mInitListener);
 
         if (savedInstanceState == null) {
             View view = findById(getActivity(), R.id.icon_memomiya);
-            view.setOnClickListener(v -> {
-                TextView messageWindowTextView = findById(getActivity(), R.id.message_window);
-                messageWindowTextView.setText("");
-                String message = getMessage();
-                ttsSpeak(message);
-                if (mHandler != null) {
-                    mHandler.removeMessages(HANDLER_MESSAGE_ID);
-                }
-                mHandler = new MyHandler(message, messageWindowTextView);
-                mHandler.sendEmptyMessage(HANDLER_MESSAGE_ID);
-            });
+            if (view != null) {
+                view.setOnClickListener(v -> {
+                    TextView messageWindowTextView = findById(getActivity(), R.id.message_window);
+                    messageWindowTextView.setText("");
+                    String message = getMessage();
+                    ttsSpeak(message);
+                    if (mHandler != null) {
+                        mHandler.removeMessages(HANDLER_MESSAGE_ID);
+                    }
+                    mHandler = new MyHandler(message, messageWindowTextView);
+                    mHandler.sendEmptyMessage(HANDLER_MESSAGE_ID);
+                });
+                view.setOnLongClickListener(v -> {
+                    // プリファレンスを取得
+                    SharedPreferences preferences = getSharedPreferences();
+
+                    // 音声再生するかどうかを取得
+                    boolean flg = isPlayVoice(preferences);
+
+                    // 音声再生を切り替え
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, !flg);
+                    editor.commit();
+
+                    // トーストを表示
+                    UiUtil.showToast(
+                            getActivity(),
+                            getString(R.string.nav_play_voice_switch_message, flg ? "OFF" : "ON")
+                    );
+
+                    return false;
+                });
+            }
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (tts == null) {
-            tts = new TextToSpeech(getActivity(), this);
+        if (mTextToSpeech == null) {
+            mTextToSpeech = new TextToSpeech(getActivity(), mInitListener);
         }
     }
 
     @Override
     public void onPause() {
+        if (mTextToSpeech != null) {
+            mTextToSpeech.shutdown();
+            mTextToSpeech = null;
+        }
         super.onPause();
-        if (tts != null) {
-            tts.shutdown();
-            tts = null;
-        }
-    }
-
-    @Override
-    public void onInit(int status) {
-        if (status == TextToSpeech.SUCCESS) {
-            float pitch = 1.0f;
-            float rate = 1.0f;
-            Locale locale = Locale.JAPAN;
-
-            tts = tts == null ? new TextToSpeech(getActivity(), this) : tts;
-            tts.setPitch(pitch);
-            tts.setSpeechRate(rate);
-            tts.setLanguage(locale);
-        }
     }
 
     /**
@@ -116,15 +113,17 @@ public abstract class TextToSpeechFragment extends BaseFragment
      *
      * @param text 読み上げるテキスト
      */
-    private void ttsSpeak(String text) {
+    protected void ttsSpeak(String text) {
         if (N2ttsUtil.packageCheck(N2ttsUtil.N2TTS_PACKAGE_NAME, getActivity().getPackageManager())) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-            } else {
-                String UTTERANCE_ID = "SPEECH";
-                HashMap<String, String> ttsParam = new HashMap<>();
-                ttsParam.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, UTTERANCE_ID);
-                tts.speak(text, TextToSpeech.QUEUE_FLUSH, ttsParam);
+            if (isPlayVoice(getSharedPreferences())) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mTextToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+                } else {
+                    String UTTERANCE_ID = "SPEECH";
+                    HashMap<String, String> ttsParam = new HashMap<>();
+                    ttsParam.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, UTTERANCE_ID);
+                    mTextToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, ttsParam);
+                }
             }
         } else {
             UiUtil.showToast(getActivity(), getString(R.string.n2tts_not_found_message));
@@ -163,6 +162,25 @@ public abstract class TextToSpeechFragment extends BaseFragment
         }
 
         return message;
+    }
+
+    /**
+     * プリファレンスを取得する。
+     *
+     * @return SharedPreferences
+     */
+    private SharedPreferences getSharedPreferences() {
+        return getActivity().getSharedPreferences(SHARED_PREFERENCES_VOICE_SWITCH_ID, Context.MODE_PRIVATE);
+    }
+
+    /**
+     * 音声を再生するかどうかをプリファレンスから取得する。
+     *
+     * @param preferences SharedPreferences
+     * @return 音声を再生する場合true
+     */
+    private boolean isPlayVoice(SharedPreferences preferences) {
+        return preferences.getBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, true);
     }
 
     @Override
