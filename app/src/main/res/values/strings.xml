@@ -3,13 +3,14 @@
 
     <!-- 共通 -->
     <string name="app_name">一週間メモリーズ。</string>
+    <string name="memomiya">愛萌宮さん</string>
     <string name="check_delete_message">本当に消してもいいですか？</string>
     <string name="success_delete_message">削除に成功しました！</string>
     <string name="determine">決定</string>
     <string name="refresh">更新</string>
     <string name="finish">終了</string>
     <string name="voice_setting">音声読み上げ設定</string>
-    <string name="go_play_stroe">Playストアへ</string>
+    <string name="go_play_store">Playストアへ</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
     <string name="cancel">キャンセル</string>
@@ -25,6 +26,7 @@
     <string name="nav_create_memo">新規作成</string>
     <string name="nav_sub_header_memo_list">メモ一覧</string>
     <string name="nav_sub_header_memo_empty">メモがありません...</string>
+    <string name="nav_play_voice_switch_message">音声再生を%1$sにしました。</string>
 
     <!-- 閲覧画面 -->
     <string name="read_view">閲覧</string>
@@ -38,7 +40,7 @@
     <string name="setting">設定</string>
 
     <!-- 設定画面 -->
-    <string name="setting_view">設定</string>
+    <string name="setting_view">通知設定</string>
     <string name="error_past_date_message">通知時間が過去になっています</string>
     <string name="alarm_info">通知</string>
     <string name="alarm_day">通知日</string>
