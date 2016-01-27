@@ -35,7 +35,7 @@
             style="@style/NavigationDrawerHeaderMainText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/simple_pink"
+            android:background="@drawable/text_window_background"
             android:gravity="start|center"
             android:paddingLeft="24dp"
             android:paddingRight="24dp" />
