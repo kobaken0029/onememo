@@ -64,7 +64,7 @@ public class SetAlarmFragment extends TextToSpeechFragment {
             mAlarmViewModel.setMonth(month);
             mAlarmViewModel.setDay(day);
             activity.setAlarmViewModel(mAlarmViewModel);
-            mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, DateUtil.getDate(year, month, day)));
+            setCalendarText(mCalendarTextView, DateUtil.YEAR_MONTH_DAY, DateUtil.getDate(year, month, day));
         }, mAlarmViewModel.getYear(), mAlarmViewModel.getMonth(), mAlarmViewModel.getDay()).show();
     }
 
@@ -124,12 +124,11 @@ public class SetAlarmFragment extends TextToSpeechFragment {
         if (mPostedMemo != null) {
             Date postedTime = mPostedMemo.getPostTime();
             if (postedTime != null) {
-                mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, postedTime));
+                setCalendarText(mCalendarTextView, DateUtil.YEAR_MONTH_DAY, postedTime);
                 mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, postedTime));
             } else {
-                Date now = DateUtil.getCurrentDate();
-                mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, now));
-                mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, now));
+                mCalendarTextView.setText(getString(R.string.today));
+                mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, DateUtil.getCurrentDate()));
             }
 
             mSwitch.setChecked(mPostedMemo.getPostFlg() == 1);
@@ -137,6 +136,21 @@ public class SetAlarmFragment extends TextToSpeechFragment {
                 mPostedMemo.setPostFlg(isChecked ? 1 : 0);
                 activity.setPostedMemo(mPostedMemo);
             });
+        }
+    }
+
+    /**
+     * 通知時刻をセットする。
+     *
+     * @param textView 対象View
+     * @param pattern パターン
+     * @param postedTime 通知時刻
+     */
+    private void setCalendarText(TextView textView, String pattern, Date postedTime) {
+        if (DateUtil.isToday(postedTime)) {
+            textView.setText(getString(R.string.today));
+        } else {
+            textView.setText(DateUtil.convertToString(pattern, postedTime));
         }
     }
 }

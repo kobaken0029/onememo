@@ -53,6 +53,18 @@ public class DateUtil {
     }
 
     /**
+     * 今日かどうか判定する。
+     *
+     * @param date 対象日時
+     * @return 今日の場合true
+     */
+    public static boolean isToday(Date date) {
+        if (date == null) return false;
+        SimpleDateFormat dateFormat = new SimpleDateFormat(YEAR_MONTH_DAY, Locale.JAPAN);
+        return dateFormat.format(date).compareTo(dateFormat.format(new Date())) == 0;
+    }
+
+    /**
      * 指定年月日の日時を取得する。
      *
      * @param year  年
@@ -63,14 +75,12 @@ public class DateUtil {
     public static Date getDate(int year, int month, int day) {
         SimpleDateFormat sdf = new SimpleDateFormat(YEAR_MONTH_DAY_SLASH, Locale.JAPAN);
         Date date;
-
         try {
             date = new Date(sdf.parse(String.format(Locale.JAPAN, "%4d/%2d/%2d", year, month + 1, day)).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
             date = getCurrentDate();
         }
-
         return date;
     }
 
@@ -84,14 +94,12 @@ public class DateUtil {
     public static Date getDate(int hour, int minute) {
         SimpleDateFormat sdf = new SimpleDateFormat(HOUR_MINUTE, Locale.JAPAN);
         Date date;
-
         try {
             date = new Date(sdf.parse(String.format(Locale.JAPAN, "%2d:%2d", hour, minute)).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
             date = getCurrentDate();
         }
-
         return date;
     }
 
@@ -102,7 +110,12 @@ public class DateUtil {
      * @return 文字列
      */
     public static String convertToString(String pattern, Date date) {
-        return date != null ? new SimpleDateFormat(pattern, Locale.JAPAN).format(date) : "";
+        String result = "";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.JAPAN);
+        if (date != null) {
+            result = dateFormat.format(date);
+        }
+        return result;
     }
 
     /**
@@ -114,17 +127,14 @@ public class DateUtil {
     public static Calendar convertStringToCalendar(String data) {
         SimpleDateFormat sdf = new SimpleDateFormat(YEAR_MONTH_DAY_HOUR_MINUTE, Locale.JAPAN);
         Date date = null;
-
         if (data == null) {
             return Calendar.getInstance();
         }
-
         try {
             date = new Date(sdf.parse(data).getTime());
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal;
