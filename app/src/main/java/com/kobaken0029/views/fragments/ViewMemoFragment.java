@@ -2,6 +2,7 @@ package com.kobaken0029.views.fragments;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,9 @@ import com.kobaken0029.views.activities.BaseActivity;
 import com.kobaken0029.views.activities.NavigationDrawerActivity;
 import com.kobaken0029.views.viewmodels.ViewMemoViewModel;
 
-import java.util.Collections;
-import java.util.Comparator;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static butterknife.ButterKnife.findById;
 
@@ -44,6 +43,30 @@ public class ViewMemoFragment extends TextToSpeechFragment {
      */
     public static ViewMemoFragment newInstance() {
         return new ViewMemoFragment();
+    }
+
+    @OnClick(R.id.memomiya)
+    void onClickMemomiya() {
+        if (mTextToSpeech.isSpeaking()) {
+            mTextToSpeech.stop();
+        }
+
+        Long id = mViewMemoViewModel.getMemoId();
+        if (id != null) {
+            Memo memo = mMemoHelper.find(id);
+            if (memo != null) {
+                StringBuilder str = new StringBuilder();
+                str.append("");
+                if (!TextUtils.isEmpty(memo.getSubject())) {
+                    str.append(memo.getSubject());
+                    str.append("。");
+                }
+                if (!TextUtils.isEmpty(memo.getMemo())) {
+                    str.append(memo.getMemo());
+                }
+                ttsSpeak(str.toString());
+            }
+        }
     }
 
     @Override

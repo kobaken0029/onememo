@@ -1,18 +1,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color">
+    android:background="@drawable/school_corridor_at_morning">
 
-    <include
-        android:id="@+id/posted_switch_layout"
-        layout="@layout/row_posted_switch" />
-
-    <include
-        android:id="@+id/posted_date_layout"
-        layout="@layout/row_posted_date"
+    <LinearLayout
+        android:id="@+id/timer_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/posted_switch_layout"
-        android:layout_marginTop="8dp" />
+        android:layout_height="150dp"
+        android:background="@drawable/text_window_background"
+        android:orientation="vertical"
+        android:padding="16dp">
 
+        <include
+            android:id="@+id/posted_switch_layout"
+            layout="@layout/row_posted_switch" />
+
+        <include
+            android:id="@+id/posted_date_layout"
+            layout="@layout/row_posted_date" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/memomiya"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timer_container"
+        android:contentDescription="@string/memomiya"
+        android:src="@drawable/memomiya_standing" />
 </RelativeLayout>

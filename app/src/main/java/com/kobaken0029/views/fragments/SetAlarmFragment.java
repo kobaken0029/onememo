@@ -20,11 +20,12 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 /**
  * アラームをセットするFragment。
  */
-public class SetAlarmFragment extends BaseFragment {
+public class SetAlarmFragment extends TextToSpeechFragment {
     @Bind(R.id.calendar_text)
     TextView mCalendarTextView;
     @Bind(R.id.time_text)
@@ -34,6 +35,23 @@ public class SetAlarmFragment extends BaseFragment {
 
     private Memo mPostedMemo;
     private SetAlarmViewModel mAlarmViewModel;
+    private String mMessage;
+
+    @OnLongClick(R.id.memomiya)
+    boolean onLongClickMemomiya() {
+        mMessage = getString(R.string.voice_set_alerm_long_tap);
+        return false;
+    }
+
+    @OnClick(R.id.memomiya)
+    void onClickMemomiya() {
+        if (mTextToSpeech.isSpeaking()) {
+            mTextToSpeech.stop();
+        }
+
+        ttsSpeak(mMessage);
+        mMessage = getString(R.string.voice_set_alerm);
+    }
 
     @OnClick(R.id.calendar_text)
     void onClickCalendarText() {
@@ -70,6 +88,7 @@ public class SetAlarmFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         bindView();
+        mMessage = getString(R.string.voice_set_alerm);
     }
 
     @Override
