@@ -42,7 +42,7 @@ public class SetAlarmFragment extends TextToSpeechFragment {
 
     @OnLongClick(R.id.memomiya)
     boolean onLongClickMemomiya() {
-        mMessage = getString(R.string.voice_set_alerm_long_tap);
+        mMessage = getString(R.string.voice_set_alarm_long_tap);
         return false;
     }
 
@@ -53,7 +53,7 @@ public class SetAlarmFragment extends TextToSpeechFragment {
         }
 
         ttsSpeak(mMessage);
-        mMessage = getString(R.string.voice_set_alerm);
+        mMessage = getString(R.string.voice_set_alarm);
     }
 
     @OnClick(R.id.calendar_text)
@@ -91,7 +91,7 @@ public class SetAlarmFragment extends TextToSpeechFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         bindView();
-        mMessage = getString(R.string.voice_set_alerm);
+        mMessage = getString(R.string.voice_set_alarm);
     }
 
     @Override

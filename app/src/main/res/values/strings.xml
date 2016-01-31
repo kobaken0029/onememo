@@ -59,6 +59,8 @@
     <string name="day">日</string>
     <string name="hour">時</string>
     <string name="minute">分</string>
+    <string name="today">今日</string>
+    <string name="tomorrow">明日</string>
 
     <!-- 愛萌宮さんセリフ集 -->
     <string name="voice1">く、、くすぐったい、、、</string>
@@ -68,7 +70,7 @@
     <string name="voice5">呼びましたか？</string>
     <string name="voice6">いい加減にしないと！怒りますよ？</string>
     <string name="voice7">忘れないように、メモしないと・・・</string>
-    <string name="voice_set_alerm">通知日を設定してください。</string>
-    <string name="voice_set_alerm_long_tap">そ、、、そんなにベタベタ触らないでください。。恥ずかしいですぅ・・・</string>
+    <string name="voice_set_alarm">通知日を設定してください。</string>
+    <string name="voice_set_alarm_long_tap">そ、、、そんなにベタベタ触らないでください。。恥ずかしいですぅ・・・</string>
 
 </resources>
