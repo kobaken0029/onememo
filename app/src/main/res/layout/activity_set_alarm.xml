@@ -4,11 +4,6 @@
     android:background="@color/background_color"
     android:orientation="vertical">
 
-    <!-- toolbar -->
-    <include
-        android:id="@+id/toolbar_menu"
-        layout="@layout/toolbar" />
-
     <!-- contents -->
     <FrameLayout
         android:id="@+id/container"

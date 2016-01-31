@@ -8,13 +8,11 @@ import com.kobaken0029.views.viewmodels.SetAlarmViewModel;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -24,9 +22,6 @@ public class SetAlarmActivity extends BaseActivity {
     /** リクエストコード。*/
     public static final int SET_ALARM_ACTIVITY = 1;
 
-    @Bind(R.id.toolbar_menu)
-    Toolbar mToolbar;
-
     private SetAlarmViewModel mAlarmViewModel;
     private Memo mPostedMemo;
 
@@ -35,7 +30,6 @@ public class SetAlarmActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
         ButterKnife.bind(this);
-        mToolbarHelper.init(this, mToolbar, R.string.setting_view, true, false);
         mAlarmViewModel = new SetAlarmViewModel();
         mPostedMemo = (Memo) getIntent().getSerializableExtra(Memo.TAG);
 

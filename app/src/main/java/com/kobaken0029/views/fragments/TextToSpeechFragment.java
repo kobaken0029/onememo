@@ -72,18 +72,19 @@ public abstract class TextToSpeechFragment extends BaseFragment {
                     SharedPreferences preferences = getSharedPreferences();
 
                     // 音声再生するかどうかを取得
-                    boolean flg = isPlayVoice(preferences);
+                    boolean isPlayVoice = !canPlayVoice(preferences);
 
                     // 音声再生を切り替え
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, !flg);
+                    editor.putBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, isPlayVoice);
                     editor.commit();
 
+                    String formatArg = isPlayVoice
+                            ? getString(R.string.nav_play_voice_switch_on)
+                            : getString(R.string.nav_play_voice_switch_off);
+
                     // トーストを表示
-                    UiUtil.showToast(
-                            getActivity(),
-                            getString(R.string.nav_play_voice_switch_message, flg ? "OFF" : "ON")
-                    );
+                    UiUtil.showToast(getActivity(), getString(R.string.nav_play_voice_switch_message, formatArg));
 
                     return false;
                 });
@@ -115,7 +116,7 @@ public abstract class TextToSpeechFragment extends BaseFragment {
      */
     protected void ttsSpeak(String text) {
         if (N2ttsUtil.packageCheck(N2ttsUtil.N2TTS_PACKAGE_NAME, getActivity().getPackageManager())) {
-            if (isPlayVoice(getSharedPreferences())) {
+            if (canPlayVoice(getSharedPreferences())) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     mTextToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
                 } else {
@@ -177,9 +178,9 @@ public abstract class TextToSpeechFragment extends BaseFragment {
      * 音声を再生するかどうかをプリファレンスから取得する。
      *
      * @param preferences SharedPreferences
-     * @return 音声を再生する場合true
+     * @return 音声を再生出来る場合true
      */
-    private boolean isPlayVoice(SharedPreferences preferences) {
+    private boolean canPlayVoice(SharedPreferences preferences) {
         return preferences.getBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, true);
     }
 
