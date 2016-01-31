@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -26,6 +27,8 @@ import butterknife.OnLongClick;
  * アラームをセットするFragment。
  */
 public class SetAlarmFragment extends TextToSpeechFragment {
+    @Bind(R.id.set_alarm_layout)
+    RelativeLayout mAlarmLayout;
     @Bind(R.id.calendar_text)
     TextView mCalendarTextView;
     @Bind(R.id.time_text)
@@ -89,6 +92,27 @@ public class SetAlarmFragment extends TextToSpeechFragment {
         super.onActivityCreated(savedInstanceState);
         bindView();
         mMessage = getString(R.string.voice_set_alerm);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // 時刻に応じて、ナビゲーションドロワー内のヘッダーの背景を変える
+        switch (DateUtil.checkTimeNow()) {
+            case DateUtil.NOON:
+                mAlarmLayout.setBackgroundResource(R.drawable.school_corridor_at_noon);
+                break;
+            case DateUtil.EVENING:
+                mAlarmLayout.setBackgroundResource(R.drawable.school_corridor_at_evening);
+                break;
+            case DateUtil.NIGHT:
+                mAlarmLayout.setBackgroundResource(R.drawable.school_corridor_at_night);
+                break;
+            case DateUtil.LATE_NIGHT:
+                mAlarmLayout.setBackgroundResource(R.drawable.school_corridor_at_last_night);
+                break;
+        }
     }
 
     @Override

@@ -1,7 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/set_alarm_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/school_corridor_at_morning">
+    tools:background="@drawable/school_corridor_at_noon">
 
     <LinearLayout
         android:id="@+id/timer_container"
