@@ -65,7 +65,7 @@ public class DateUtil {
         Date date;
 
         try {
-            date = new Date(sdf.parse(String.format("%4d/%2d/%2d", year, month + 1, day)).getTime());
+            date = new Date(sdf.parse(String.format(Locale.JAPAN, "%4d/%2d/%2d", year, month + 1, day)).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
             date = getCurrentDate();
@@ -86,7 +86,7 @@ public class DateUtil {
         Date date;
 
         try {
-            date = new Date(sdf.parse(String.format("%2d:%2d", hour, minute)).getTime());
+            date = new Date(sdf.parse(String.format(Locale.JAPAN, "%2d:%2d", hour, minute)).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
             date = getCurrentDate();
