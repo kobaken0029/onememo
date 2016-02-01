@@ -67,7 +67,7 @@ public class MemoListAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.row, null);
+            convertView = mInflater.inflate(R.layout.row_memo_list, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {

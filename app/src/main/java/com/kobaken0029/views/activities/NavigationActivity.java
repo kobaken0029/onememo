@@ -35,11 +35,11 @@ import butterknife.OnClick;
 import butterknife.OnItemClick;
 
 /**
- * ナビゲーションドロワーが存在するActivity。
+ * NavigationViewが存在するActivity。
  */
-public class NavigationDrawerActivity extends BaseActivity {
+public class NavigationActivity extends BaseActivity {
     /** タグ。*/
-    public static final String TAG = NavigationDrawerActivity.class.getName();
+    public static final String TAG = NavigationActivity.class.getName();
 
     /** プリファレンスID。 */
     public static final String SHARED_PREFERENCES_ID = "memo_position";
@@ -75,6 +75,7 @@ public class NavigationDrawerActivity extends BaseActivity {
 
     private DrawerViewModel mDrawerViewModel;
     private FloatingActionViewModel mFloatingActionViewModel;
+
     private MemoListAdapter mMemoListAdapter;
     public Long currentMemoId;
 
@@ -134,7 +135,7 @@ public class NavigationDrawerActivity extends BaseActivity {
     void onClickDeleteButton() {
         UiUtil.showDialog(this, R.string.check_delete_message, (dialog, which) -> {
             Memo deletedMemo = mMemoHelper.find(currentMemoId);
-            mMemoHelper.delete(NavigationDrawerActivity.this, deletedMemo);
+            mMemoHelper.delete(NavigationActivity.this, deletedMemo);
             mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
             ViewMemoFragment f = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
             if (f != null) {
@@ -250,7 +251,7 @@ public class NavigationDrawerActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation_drawer);
+        setContentView(R.layout.activity_navigation);
         ButterKnife.bind(this);
         bindView();
         mToolbarHelper.init(this, toolbar, R.string.read_view, false, true);

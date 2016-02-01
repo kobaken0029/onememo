@@ -13,7 +13,7 @@ import com.annimon.stream.Stream;
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.views.activities.BaseActivity;
-import com.kobaken0029.views.activities.NavigationDrawerActivity;
+import com.kobaken0029.views.activities.NavigationActivity;
 import com.kobaken0029.views.viewmodels.ViewMemoViewModel;
 
 import butterknife.Bind;
@@ -83,7 +83,7 @@ public class ViewMemoFragment extends TextToSpeechFragment {
         super.onActivityCreated(savedInstanceState);
         Long id;
         if (getArguments() != null) {
-            id = ((NavigationDrawerActivity) getActivity()).currentMemoId;
+            id = ((NavigationActivity) getActivity()).currentMemoId;
         } else if (mMemoHelper.exists()) {
             id = Stream.of(mMemoHelper.findAll())
                     .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
@@ -104,7 +104,7 @@ public class ViewMemoFragment extends TextToSpeechFragment {
         if (memo != null) {
             mViewMemoViewModel.setMemoView(memo, !mMemoHelper.isEmpty(memo));
         } else {
-            ((NavigationDrawerActivity) getActivity()).getDrawerViewModel().modify(false);
+            ((NavigationActivity) getActivity()).getDrawerViewModel().modify(false);
         }
     }
 
