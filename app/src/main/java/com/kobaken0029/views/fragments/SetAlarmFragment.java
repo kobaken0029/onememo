@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -26,6 +27,8 @@ import butterknife.OnLongClick;
  * アラームをセットするFragment。
  */
 public class SetAlarmFragment extends TextToSpeechFragment {
+    @Bind(R.id.set_alarm_layout)
+    RelativeLayout mAlarmLayout;
     @Bind(R.id.calendar_text)
     TextView mCalendarTextView;
     @Bind(R.id.time_text)
@@ -39,7 +42,7 @@ public class SetAlarmFragment extends TextToSpeechFragment {
 
     @OnLongClick(R.id.memomiya)
     boolean onLongClickMemomiya() {
-        mMessage = getString(R.string.voice_set_alerm_long_tap);
+        mMessage = getString(R.string.voice_set_alarm_long_tap);
         return false;
     }
 
@@ -50,7 +53,7 @@ public class SetAlarmFragment extends TextToSpeechFragment {
         }
 
         ttsSpeak(mMessage);
-        mMessage = getString(R.string.voice_set_alerm);
+        mMessage = getString(R.string.voice_set_alarm);
     }
 
     @OnClick(R.id.calendar_text)
@@ -61,7 +64,7 @@ public class SetAlarmFragment extends TextToSpeechFragment {
             mAlarmViewModel.setMonth(month);
             mAlarmViewModel.setDay(day);
             activity.setAlarmViewModel(mAlarmViewModel);
-            mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, DateUtil.getDate(year, month, day)));
+            setCalendarText(mCalendarTextView, DateUtil.YEAR_MONTH_DAY, DateUtil.getDate(year, month, day));
         }, mAlarmViewModel.getYear(), mAlarmViewModel.getMonth(), mAlarmViewModel.getDay()).show();
     }
 
@@ -88,7 +91,28 @@ public class SetAlarmFragment extends TextToSpeechFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         bindView();
-        mMessage = getString(R.string.voice_set_alerm);
+        mMessage = getString(R.string.voice_set_alarm);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // 時刻に応じて、ナビゲーションドロワー内のヘッダーの背景を変える
+        switch (DateUtil.checkTimeNow()) {
+            case DateUtil.NOON:
+                mAlarmLayout.setBackgroundResource(R.drawable.school_corridor_at_noon);
+                break;
+            case DateUtil.EVENING:
+                mAlarmLayout.setBackgroundResource(R.drawable.school_corridor_at_evening);
+                break;
+            case DateUtil.NIGHT:
+                mAlarmLayout.setBackgroundResource(R.drawable.school_corridor_at_night);
+                break;
+            case DateUtil.LATE_NIGHT:
+                mAlarmLayout.setBackgroundResource(R.drawable.school_corridor_at_last_night);
+                break;
+        }
     }
 
     @Override
@@ -100,12 +124,11 @@ public class SetAlarmFragment extends TextToSpeechFragment {
         if (mPostedMemo != null) {
             Date postedTime = mPostedMemo.getPostTime();
             if (postedTime != null) {
-                mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, postedTime));
+                setCalendarText(mCalendarTextView, DateUtil.YEAR_MONTH_DAY, postedTime);
                 mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, postedTime));
             } else {
-                Date now = DateUtil.getCurrentDate();
-                mCalendarTextView.setText(DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY, now));
-                mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, now));
+                mCalendarTextView.setText(getString(R.string.today));
+                mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, DateUtil.getCurrentDate()));
             }
 
             mSwitch.setChecked(mPostedMemo.getPostFlg() == 1);
@@ -113,6 +136,21 @@ public class SetAlarmFragment extends TextToSpeechFragment {
                 mPostedMemo.setPostFlg(isChecked ? 1 : 0);
                 activity.setPostedMemo(mPostedMemo);
             });
+        }
+    }
+
+    /**
+     * 通知時刻をセットする。
+     *
+     * @param textView 対象View
+     * @param pattern パターン
+     * @param postedTime 通知時刻
+     */
+    private void setCalendarText(TextView textView, String pattern, Date postedTime) {
+        if (DateUtil.isToday(postedTime)) {
+            textView.setText(getString(R.string.today));
+        } else {
+            textView.setText(DateUtil.convertToString(pattern, postedTime));
         }
     }
 }
