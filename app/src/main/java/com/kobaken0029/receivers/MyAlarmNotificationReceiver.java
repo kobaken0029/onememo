@@ -22,7 +22,7 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Long id = intent.getLongExtra(Memo.ID, 0L);
+        long id = intent.getLongExtra(Memo.ID, 0L);
         String subject = intent.getStringExtra(Memo.SUBJECT);
         String contentText = intent.getStringExtra(Memo.MEMO);
 

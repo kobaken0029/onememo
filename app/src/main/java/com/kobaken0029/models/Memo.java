@@ -31,7 +31,7 @@ public class Memo extends BaseEntity {
     @Column
     @Unique
     @PrimaryKey(autoincrement = true)
-    Long id;
+    long id;
     @Column
     String subject;
     @Column
