@@ -13,7 +13,7 @@ import com.annimon.stream.Stream;
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.views.activities.BaseActivity;
-import com.kobaken0029.views.activities.NavigationDrawerActivity;
+import com.kobaken0029.views.activities.NavigationActivity;
 import com.kobaken0029.views.viewmodels.ViewMemoViewModel;
 
 import butterknife.Bind;
@@ -51,21 +51,18 @@ public class ViewMemoFragment extends TextToSpeechFragment {
             mTextToSpeech.stop();
         }
 
-        Long id = mViewMemoViewModel.getMemoId();
-        if (id != null) {
-            Memo memo = mMemoHelper.find(id);
-            if (memo != null) {
-                StringBuilder str = new StringBuilder();
-                str.append("");
-                if (!TextUtils.isEmpty(memo.getSubject())) {
-                    str.append(memo.getSubject());
-                    str.append("。");
-                }
-                if (!TextUtils.isEmpty(memo.getMemo())) {
-                    str.append(memo.getMemo());
-                }
-                ttsSpeak(str.toString());
+        Memo memo = mMemoHelper.find(mViewMemoViewModel.getMemoId());
+        if (memo != null) {
+            StringBuilder str = new StringBuilder();
+            str.append("");
+            if (!TextUtils.isEmpty(memo.getSubject())) {
+                str.append(memo.getSubject());
+                str.append("。");
             }
+            if (!TextUtils.isEmpty(memo.getMemo())) {
+                str.append(memo.getMemo());
+            }
+            ttsSpeak(str.toString());
         }
     }
 
@@ -81,9 +78,9 @@ public class ViewMemoFragment extends TextToSpeechFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Long id;
+        long id;
         if (getArguments() != null) {
-            id = ((NavigationDrawerActivity) getActivity()).currentMemoId;
+            id = ((NavigationActivity) getActivity()).currentMemoId;
         } else if (mMemoHelper.exists()) {
             id = Stream.of(mMemoHelper.findAll())
                     .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
@@ -104,7 +101,7 @@ public class ViewMemoFragment extends TextToSpeechFragment {
         if (memo != null) {
             mViewMemoViewModel.setMemoView(memo, !mMemoHelper.isEmpty(memo));
         } else {
-            ((NavigationDrawerActivity) getActivity()).getDrawerViewModel().modify(false);
+            ((NavigationActivity) getActivity()).getDrawerViewModel().modify(false);
         }
     }
 

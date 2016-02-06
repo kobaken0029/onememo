@@ -3,7 +3,7 @@ package com.kobaken0029.receivers;
 import com.kobaken0029.R;
 import com.kobaken0029.helpers.impls.MemoHelperImpl;
 import com.kobaken0029.models.Memo;
-import com.kobaken0029.views.activities.NavigationDrawerActivity;
+import com.kobaken0029.views.activities.NavigationActivity;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -22,7 +22,7 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Long id = intent.getLongExtra(Memo.ID, 0L);
+        long id = intent.getLongExtra(Memo.ID, 0L);
         String subject = intent.getStringExtra(Memo.SUBJECT);
         String contentText = intent.getStringExtra(Memo.MEMO);
 
@@ -34,7 +34,7 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
         }
 
         // アラームを受け取って起動するActivityを指定
-        Intent intent2 = new Intent(context, NavigationDrawerActivity.class);
+        Intent intent2 = new Intent(context, NavigationActivity.class);
         intent2.putExtra(Memo.ID, id);
         intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

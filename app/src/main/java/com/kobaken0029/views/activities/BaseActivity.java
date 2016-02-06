@@ -27,9 +27,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            getApplicationComponent().inject(this);
-        }
+        getApplicationComponent().inject(this);
     }
 
     @Override

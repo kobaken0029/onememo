@@ -28,5 +28,5 @@
     </RelativeLayout>
 
     <!-- nav drawer -->
-    <include layout="@layout/drawer_layout" />
+    <include layout="@layout/drawer_view" />
 </android.support.v4.widget.DrawerLayout>

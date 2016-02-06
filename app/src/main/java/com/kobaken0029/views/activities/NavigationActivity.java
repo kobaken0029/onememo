@@ -35,16 +35,22 @@ import butterknife.OnClick;
 import butterknife.OnItemClick;
 
 /**
- * ナビゲーションドロワーが存在するActivity。
+ * NavigationViewが存在するActivity。
  */
-public class NavigationDrawerActivity extends BaseActivity {
-    /** タグ。*/
-    public static final String TAG = NavigationDrawerActivity.class.getName();
+public class NavigationActivity extends BaseActivity {
+    /**
+     * タグ。
+     */
+    public static final String TAG = NavigationActivity.class.getName();
 
-    /** プリファレンスID。 */
+    /**
+     * プリファレンスID。
+     */
     public static final String SHARED_PREFERENCES_ID = "memo_position";
 
-    /** プリファレンスKey。 */
+    /**
+     * プリファレンスKey。
+     */
     public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
 
     @Bind(R.id.toolbar_menu)
@@ -75,8 +81,9 @@ public class NavigationDrawerActivity extends BaseActivity {
 
     private DrawerViewModel mDrawerViewModel;
     private FloatingActionViewModel mFloatingActionViewModel;
+
     private MemoListAdapter mMemoListAdapter;
-    public Long currentMemoId;
+    public long currentMemoId;
 
     /**
      * Fragmentを置き換える。
@@ -98,7 +105,7 @@ public class NavigationDrawerActivity extends BaseActivity {
      *
      * @param memoId メモID
      */
-    private void popBackStackToViewMemoFragment(Long memoId) {
+    private void popBackStackToViewMemoFragment(long memoId) {
         currentMemoId = memoId;
         mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
         mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
@@ -134,7 +141,7 @@ public class NavigationDrawerActivity extends BaseActivity {
     void onClickDeleteButton() {
         UiUtil.showDialog(this, R.string.check_delete_message, (dialog, which) -> {
             Memo deletedMemo = mMemoHelper.find(currentMemoId);
-            mMemoHelper.delete(NavigationDrawerActivity.this, deletedMemo);
+            mMemoHelper.delete(NavigationActivity.this, deletedMemo);
             mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
             ViewMemoFragment f = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
             if (f != null) {
@@ -250,7 +257,7 @@ public class NavigationDrawerActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation_drawer);
+        setContentView(R.layout.activity_navigation);
         ButterKnife.bind(this);
         bindView();
         mToolbarHelper.init(this, toolbar, R.string.read_view, false, true);
@@ -260,32 +267,33 @@ public class NavigationDrawerActivity extends BaseActivity {
         mMemoListAdapter = new MemoListAdapter(this, memos);
         mListView.setAdapter(mMemoListAdapter);
 
-        if (savedInstanceState == null) {
-            mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
+        mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
 
-            ViewMemoFragment f = ViewMemoFragment.newInstance();
-            if (mMemoHelper.exists()) {
-                // Notificationから得られたメモを取得
-                Memo memo = mMemoHelper.find(getIntent().getLongExtra(Memo.ID, 0L));
-                if (memo == null) {
-                    // プリファレンスを取得
-                    SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
+        ViewMemoFragment f = ViewMemoFragment.newInstance();
+        if (mMemoHelper.exists()) {
+            // Notificationから得られたメモを取得
+            Memo memo = mMemoHelper.find(getIntent().getLongExtra(Memo.ID, 0L));
+            if (memo == null) {
+                // プリファレンスを取得
+                SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
 
-                    // プリファレンスからメモの位置を取得
-                    int position = preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0);
-                    if (position >= memos.size()) {
-                        position = memos.size() - 1;
-                    }
-
-                    // 位置からメモを取得
-                    memo = memos.get(position);
+                // プリファレンスからメモの位置を取得
+                int position = preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0);
+                if (position >= memos.size()) {
+                    position = memos.size() - 1;
                 }
-                currentMemoId = memo.getId();
 
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(Memo.TAG, memo);
-                f.setArguments(bundle);
+                // 位置からメモを取得
+                memo = memos.get(position);
             }
+            currentMemoId = memo.getId();
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Memo.TAG, memo);
+            f.setArguments(bundle);
+        }
+
+        if (savedInstanceState == null) {
             addFragment(R.id.container, f, ViewMemoFragment.TAG);
         }
     }

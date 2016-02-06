@@ -10,7 +10,7 @@ import com.kobaken0029.R;
 import com.kobaken0029.helpers.ToolbarHelper;
 import com.kobaken0029.utils.N2ttsUtil;
 import com.kobaken0029.views.activities.BaseActivity;
-import com.kobaken0029.views.activities.NavigationDrawerActivity;
+import com.kobaken0029.views.activities.NavigationActivity;
 
 public class ToolbarHelperImpl implements ToolbarHelper {
 
@@ -23,11 +23,11 @@ public class ToolbarHelperImpl implements ToolbarHelper {
             toolbar.setOnMenuItemClickListener(createMenuItemClickListener(activity));
         }
 
-        boolean isNavigationDrawerActivity = activity instanceof NavigationDrawerActivity;
+        boolean isNavigationDrawerActivity = activity instanceof NavigationActivity;
         if (!isShowBackArrow) {
             toolbar.setNavigationIcon(R.drawable.ic_action_navigation_menu);
             if (isNavigationDrawerActivity) {
-                toolbar.setNavigationOnClickListener(createMenuClickListener((NavigationDrawerActivity) activity));
+                toolbar.setNavigationOnClickListener(createMenuClickListener((NavigationActivity) activity));
             }
         } else {
             toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
@@ -38,16 +38,16 @@ public class ToolbarHelperImpl implements ToolbarHelper {
     public void change(final BaseActivity activity, Toolbar toolbar, int titleId, boolean isShowBackArrow) {
         toolbar.setTitle(titleId);
 
-        boolean isNavigationDrawerActivity = activity instanceof NavigationDrawerActivity;
+        boolean isNavigationDrawerActivity = activity instanceof NavigationActivity;
         if (!isShowBackArrow) {
             toolbar.setNavigationIcon(R.drawable.ic_action_navigation_menu);
             if (isNavigationDrawerActivity) {
-                toolbar.setNavigationOnClickListener(createMenuClickListener((NavigationDrawerActivity) activity));
+                toolbar.setNavigationOnClickListener(createMenuClickListener((NavigationActivity) activity));
             }
         } else {
             toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
             if (isNavigationDrawerActivity) {
-                toolbar.setNavigationOnClickListener(createBackClickListener((NavigationDrawerActivity) activity));
+                toolbar.setNavigationOnClickListener(createBackClickListener((NavigationActivity) activity));
             }
         }
     }
@@ -69,7 +69,7 @@ public class ToolbarHelperImpl implements ToolbarHelper {
         };
     }
 
-    private View.OnClickListener createMenuClickListener(final NavigationDrawerActivity activity) {
+    private View.OnClickListener createMenuClickListener(final NavigationActivity activity) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {

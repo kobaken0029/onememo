@@ -10,7 +10,7 @@ import android.widget.EditText;
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.views.activities.BaseActivity;
-import com.kobaken0029.views.activities.NavigationDrawerActivity;
+import com.kobaken0029.views.activities.NavigationActivity;
 import com.kobaken0029.views.viewmodels.MemoViewModel;
 
 import butterknife.Bind;
@@ -56,7 +56,7 @@ public class MemoFragment extends TextToSpeechFragment {
         // メモを取得
         Memo memo = (Memo) getArguments().getSerializable(Memo.TAG);
         if (!mMemoHelper.isEmpty(memo)) {
-            ((NavigationDrawerActivity) getActivity()).currentMemoId = memo.getId();
+            ((NavigationActivity) getActivity()).currentMemoId = memo.getId();
         }
 
         // メモをViewに設定
@@ -73,7 +73,7 @@ public class MemoFragment extends TextToSpeechFragment {
     @Override
     public void onStop() {
         super.onStop();
-        ((NavigationDrawerActivity) getActivity()).getFloatingActionViewModel()
+        ((NavigationActivity) getActivity()).getFloatingActionViewModel()
                 .getFloatingActionMenu()
                 .setVisibility(View.VISIBLE);
     }
