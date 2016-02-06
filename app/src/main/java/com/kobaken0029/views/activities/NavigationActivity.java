@@ -38,13 +38,19 @@ import butterknife.OnItemClick;
  * NavigationViewが存在するActivity。
  */
 public class NavigationActivity extends BaseActivity {
-    /** タグ。*/
+    /**
+     * タグ。
+     */
     public static final String TAG = NavigationActivity.class.getName();
 
-    /** プリファレンスID。 */
+    /**
+     * プリファレンスID。
+     */
     public static final String SHARED_PREFERENCES_ID = "memo_position";
 
-    /** プリファレンスKey。 */
+    /**
+     * プリファレンスKey。
+     */
     public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
 
     @Bind(R.id.toolbar_menu)
@@ -77,7 +83,7 @@ public class NavigationActivity extends BaseActivity {
     private FloatingActionViewModel mFloatingActionViewModel;
 
     private MemoListAdapter mMemoListAdapter;
-    public Long currentMemoId;
+    public long currentMemoId;
 
     /**
      * Fragmentを置き換える。
@@ -99,7 +105,7 @@ public class NavigationActivity extends BaseActivity {
      *
      * @param memoId メモID
      */
-    private void popBackStackToViewMemoFragment(Long memoId) {
+    private void popBackStackToViewMemoFragment(long memoId) {
         currentMemoId = memoId;
         mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
         mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
@@ -261,32 +267,33 @@ public class NavigationActivity extends BaseActivity {
         mMemoListAdapter = new MemoListAdapter(this, memos);
         mListView.setAdapter(mMemoListAdapter);
 
-        if (savedInstanceState == null) {
-            mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
+        mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
 
-            ViewMemoFragment f = ViewMemoFragment.newInstance();
-            if (mMemoHelper.exists()) {
-                // Notificationから得られたメモを取得
-                Memo memo = mMemoHelper.find(getIntent().getLongExtra(Memo.ID, 0L));
-                if (memo == null) {
-                    // プリファレンスを取得
-                    SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
+        ViewMemoFragment f = ViewMemoFragment.newInstance();
+        if (mMemoHelper.exists()) {
+            // Notificationから得られたメモを取得
+            Memo memo = mMemoHelper.find(getIntent().getLongExtra(Memo.ID, 0L));
+            if (memo == null) {
+                // プリファレンスを取得
+                SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
 
-                    // プリファレンスからメモの位置を取得
-                    int position = preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0);
-                    if (position >= memos.size()) {
-                        position = memos.size() - 1;
-                    }
-
-                    // 位置からメモを取得
-                    memo = memos.get(position);
+                // プリファレンスからメモの位置を取得
+                int position = preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0);
+                if (position >= memos.size()) {
+                    position = memos.size() - 1;
                 }
-                currentMemoId = memo.getId();
 
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(Memo.TAG, memo);
-                f.setArguments(bundle);
+                // 位置からメモを取得
+                memo = memos.get(position);
             }
+            currentMemoId = memo.getId();
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Memo.TAG, memo);
+            f.setArguments(bundle);
+        }
+
+        if (savedInstanceState == null) {
             addFragment(R.id.container, f, ViewMemoFragment.TAG);
         }
     }

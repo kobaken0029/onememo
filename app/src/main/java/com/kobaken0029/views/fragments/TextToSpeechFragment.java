@@ -25,13 +25,19 @@ import static butterknife.ButterKnife.findById;
  */
 public abstract class TextToSpeechFragment extends BaseFragment {
 
-    /** ハンドラのメッセージID */
+    /**
+     * ハンドラのメッセージID
+     */
     private static final int HANDLER_MESSAGE_ID = 1;
 
-    /** プリファレンスID。 */
+    /**
+     * プリファレンスID。
+     */
     private static final String SHARED_PREFERENCES_VOICE_SWITCH_ID = "voice_switch";
 
-    /** プリファレンスKEY。 */
+    /**
+     * プリファレンスKEY。
+     */
     private static final String SHARED_PREFERENCES_VOICE_SWITCH_KEY = "voice_switch_key";
 
     private Handler mHandler;
@@ -53,42 +59,40 @@ public abstract class TextToSpeechFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mTextToSpeech = new TextToSpeech(getActivity(), mInitListener);
 
-        if (savedInstanceState == null) {
-            View view = findById(getActivity(), R.id.icon_memomiya);
-            if (view != null) {
-                view.setOnClickListener(v -> {
-                    TextView messageWindowTextView = findById(getActivity(), R.id.message_window);
-                    messageWindowTextView.setText("");
-                    String message = getMessage();
-                    ttsSpeak(message);
-                    if (mHandler != null) {
-                        mHandler.removeMessages(HANDLER_MESSAGE_ID);
-                    }
-                    mHandler = new MyHandler(message, messageWindowTextView);
-                    mHandler.sendEmptyMessage(HANDLER_MESSAGE_ID);
-                });
-                view.setOnLongClickListener(v -> {
-                    // プリファレンスを取得
-                    SharedPreferences preferences = getSharedPreferences();
+        View view = findById(getActivity(), R.id.icon_memomiya);
+        if (view != null) {
+            view.setOnClickListener(v -> {
+                TextView messageWindowTextView = findById(getActivity(), R.id.message_window);
+                messageWindowTextView.setText("");
+                String message = getMessage();
+                ttsSpeak(message);
+                if (mHandler != null) {
+                    mHandler.removeMessages(HANDLER_MESSAGE_ID);
+                }
+                mHandler = new MyHandler(message, messageWindowTextView);
+                mHandler.sendEmptyMessage(HANDLER_MESSAGE_ID);
+            });
+            view.setOnLongClickListener(v -> {
+                // プリファレンスを取得
+                SharedPreferences preferences = getSharedPreferences();
 
-                    // 音声再生するかどうかを取得
-                    boolean isPlayVoice = !canPlayVoice(preferences);
+                // 音声再生するかどうかを取得
+                boolean isPlayVoice = !canPlayVoice(preferences);
 
-                    // 音声再生を切り替え
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, isPlayVoice);
-                    editor.commit();
+                // 音声再生を切り替え
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, isPlayVoice);
+                editor.commit();
 
-                    String formatArg = isPlayVoice
-                            ? getString(R.string.nav_play_voice_switch_on)
-                            : getString(R.string.nav_play_voice_switch_off);
+                String formatArg = isPlayVoice
+                        ? getString(R.string.nav_play_voice_switch_on)
+                        : getString(R.string.nav_play_voice_switch_off);
 
-                    // トーストを表示
-                    UiUtil.showToast(getActivity(), getString(R.string.nav_play_voice_switch_message, formatArg));
+                // トーストを表示
+                UiUtil.showToast(getActivity(), getString(R.string.nav_play_voice_switch_message, formatArg));
 
-                    return false;
-                });
-            }
+                return false;
+            });
         }
     }
 

@@ -8,7 +8,7 @@ import com.kobaken0029.models.Memo;
  * メモ閲覧画面のViewModel。
  */
 public class ViewMemoViewModel {
-    private Long memoId;
+    private long memoId;
     private TextView subjectView;
     private TextView memoView;
 
@@ -41,11 +41,11 @@ public class ViewMemoViewModel {
         }
     }
 
-    public Long getMemoId() {
+    public long getMemoId() {
         return memoId;
     }
 
-    public void setMemoId(Long memoId) {
+    public void setMemoId(long memoId) {
         this.memoId = memoId;
     }
 

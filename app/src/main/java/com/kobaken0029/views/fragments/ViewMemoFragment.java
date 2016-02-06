@@ -51,21 +51,18 @@ public class ViewMemoFragment extends TextToSpeechFragment {
             mTextToSpeech.stop();
         }
 
-        Long id = mViewMemoViewModel.getMemoId();
-        if (id != null) {
-            Memo memo = mMemoHelper.find(id);
-            if (memo != null) {
-                StringBuilder str = new StringBuilder();
-                str.append("");
-                if (!TextUtils.isEmpty(memo.getSubject())) {
-                    str.append(memo.getSubject());
-                    str.append("。");
-                }
-                if (!TextUtils.isEmpty(memo.getMemo())) {
-                    str.append(memo.getMemo());
-                }
-                ttsSpeak(str.toString());
+        Memo memo = mMemoHelper.find(mViewMemoViewModel.getMemoId());
+        if (memo != null) {
+            StringBuilder str = new StringBuilder();
+            str.append("");
+            if (!TextUtils.isEmpty(memo.getSubject())) {
+                str.append(memo.getSubject());
+                str.append("。");
             }
+            if (!TextUtils.isEmpty(memo.getMemo())) {
+                str.append(memo.getMemo());
+            }
+            ttsSpeak(str.toString());
         }
     }
 
@@ -81,7 +78,7 @@ public class ViewMemoFragment extends TextToSpeechFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Long id;
+        long id;
         if (getArguments() != null) {
             id = ((NavigationActivity) getActivity()).currentMemoId;
         } else if (mMemoHelper.exists()) {
