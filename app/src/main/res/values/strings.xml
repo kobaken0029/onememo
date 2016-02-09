@@ -2,7 +2,7 @@
 <resources>
 
     <!-- 共通 -->
-    <string name="app_name">一週間メモリーズ。</string>
+    <string name="app_name">わんメモ</string>
     <string name="memomiya">愛萌宮さん</string>
     <string name="check_delete_message">本当に消してもいいですか？</string>
     <string name="success_delete_message">削除に成功しました！</string>
