@@ -108,6 +108,19 @@
     <style name="NavigationDrawerMenuMainText">
         <item name="android:textSize">@dimen/text_drawer</item>
         <item name="android:textColor">@color/navigation_drawer_menu_main_text</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">@dimen/navigation_drawer_main_margin_right</item>
+        <item name="android:layout_marginLeft">@dimen/navigation_drawer_main_margin_left</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <style name="SearchText" parent="NavigationDrawerMenuMainText">
+        <item name="android:hint">@string/nav_search_memo_hint</item>
+        <item name="android:inputType">text</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColorHint">@color/sub_text</item>
+        <item name="android:textSize">10sp</item>
     </style>
 
     <style name="NavigationDrawerSubHeaderText">

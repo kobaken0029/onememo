@@ -37,6 +37,15 @@ public class MemoHelperImpl implements MemoHelper {
     }
 
     @Override
+    public List<Memo> findByMemoOrSubject(String word) {
+        word = "%" + word.replaceAll("%", "\\\\%").replaceAll("_", "\\\\_") + "%";
+        return new Select().from(Memo.class)
+                .where(Condition.column(Memo.MEMO).like(word))
+                .or(Condition.column(Memo.SUBJECT).like(word))
+                .queryList();
+    }
+
+    @Override
     public Memo create(String subject, String mainText) {
         String createdAt = DateUtil.convertToString(DateUtil.YEAR_MONTH_DAY_HOUR_MINUTE_SECOND, DateUtil.getCurrentDate());
         Memo memo = new Memo();
@@ -68,13 +77,12 @@ public class MemoHelperImpl implements MemoHelper {
     public void loadMemos(MemoListAdapter adapter, DrawerViewModel viewModel) {
         List<Memo> memos = findAll();
         adapter.setMemos(memos);
-        adapter.notifyDataSetChanged();
         viewModel.modify(exists());
     }
 
     @Override
     public boolean isEmpty(Memo memo) {
-        return memo == null || memo.getId() == null;
+        return memo == null || memo.getId() == 0;
     }
 
     @Override

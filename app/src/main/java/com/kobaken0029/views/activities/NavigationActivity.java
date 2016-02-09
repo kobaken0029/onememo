@@ -1,13 +1,19 @@
 package com.kobaken0029.views.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -59,6 +65,8 @@ public class NavigationActivity extends BaseActivity {
     DrawerLayout drawerLayout;
     @Bind(R.id.drawer_header_layout)
     RelativeLayout drawerHeaderRelativeLayout;
+    @Bind(R.id.search_text)
+    EditText drawerSearchMemoEditText;
     @Bind(R.id.memo_list)
     ListView mListView;
     @Bind(R.id.drawer)
@@ -301,7 +309,6 @@ public class NavigationActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        registerForContextMenu(mListView);
 
         // 時刻に応じて、ナビゲーションドロワー内のヘッダーの背景を変える
         switch (DateUtil.checkTimeNow()) {
@@ -367,6 +374,43 @@ public class NavigationActivity extends BaseActivity {
             mFloatingActionViewModel.setEditFab(mEditFab);
             mFloatingActionViewModel.setCreateFab(mCreateFab);
         }
+
+        drawerSearchMemoEditText.setOnKeyListener((v, code, e) -> {
+            if ((e.getAction() == KeyEvent.ACTION_DOWN) && (code == KeyEvent.KEYCODE_ENTER)) {
+                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(
+                                drawerSearchMemoEditText.getWindowToken(),
+                                InputMethodManager.RESULT_UNCHANGED_SHOWN
+                        );
+
+                return true;
+            }
+            return false;
+        });
+
+        drawerSearchMemoEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                search(s.toString());
+            }
+        });
+    }
+
+    /**
+     * メモ本文、件名で部分一致でメモを検索してリストに適用する。
+     */
+    private void search(String target) {
+        List<Memo> searchedMemos = mMemoHelper.findByMemoOrSubject(target);
+        mMemoListAdapter.setMemos(searchedMemos);
+        mDrawerViewModel.modify(!searchedMemos.isEmpty());
     }
 
     public DrawerViewModel getDrawerViewModel() {

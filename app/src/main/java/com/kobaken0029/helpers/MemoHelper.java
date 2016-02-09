@@ -28,6 +28,14 @@ public interface MemoHelper {
     List<Memo> findAll();
 
     /**
+     * メモ本文と件名からメモを取得する。
+     *
+     * @param target 検索対象
+     * @return メモ群
+     */
+    List<Memo> findByMemoOrSubject(String target);
+
+    /**
      * メモを作成する。
      *
      * @param subject  件名

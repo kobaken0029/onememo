@@ -85,5 +85,6 @@ public class MemoListAdapter extends BaseAdapter {
 
     public void setMemos(List<Memo> memos) {
         this.memos = new ArrayList<>(memos);
+        this.notifyDataSetChanged();
     }
 }

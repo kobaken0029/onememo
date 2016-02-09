@@ -55,9 +55,6 @@ public class MemoFragment extends TextToSpeechFragment {
 
         // メモを取得
         Memo memo = (Memo) getArguments().getSerializable(Memo.TAG);
-        if (!mMemoHelper.isEmpty(memo)) {
-            ((NavigationActivity) getActivity()).currentMemoId = memo.getId();
-        }
 
         // メモをViewに設定
         mMemoViewModel.setMemoView(memo, !mMemoHelper.isEmpty(memo));
