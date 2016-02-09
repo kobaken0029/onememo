@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -227,14 +229,6 @@ public class NavigationActivity extends BaseActivity {
     }
 
     /**
-     * ナビゲーションドロワー内の検索ボタン押下時のコールバック。
-     */
-    @OnClick(R.id.drawer_search_memo)
-    void onClickDrawerSearchMemo() {
-        search();
-    }
-
-    /**
      * メモリストのアイテム押下時のコールバック。
      *
      * @param parent   親View
@@ -389,19 +383,32 @@ public class NavigationActivity extends BaseActivity {
                                 InputMethodManager.RESULT_UNCHANGED_SHOWN
                         );
 
-                search();
-
                 return true;
             }
             return false;
+        });
+
+        drawerSearchMemoEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                search(s.toString());
+            }
         });
     }
 
     /**
      * メモ本文、件名で部分一致でメモを検索してリストに適用する。
      */
-    private void search() {
-        List<Memo> searchedMemos = mMemoHelper.findByMemoOrSubject(drawerSearchMemoEditText.getText().toString());
+    private void search(String target) {
+        List<Memo> searchedMemos = mMemoHelper.findByMemoOrSubject(target);
         mMemoListAdapter.setMemos(searchedMemos);
         mDrawerViewModel.modify(!searchedMemos.isEmpty());
     }
