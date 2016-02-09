@@ -1,17 +1,24 @@
 package com.kobaken0029.views.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.annimon.stream.Stream;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kobaken0029.R;
@@ -38,19 +45,13 @@ import butterknife.OnItemClick;
  * NavigationViewが存在するActivity。
  */
 public class NavigationActivity extends BaseActivity {
-    /**
-     * タグ。
-     */
+    /** タグ。*/
     public static final String TAG = NavigationActivity.class.getName();
 
-    /**
-     * プリファレンスID。
-     */
+    /** プリファレンスID。*/
     public static final String SHARED_PREFERENCES_ID = "memo_position";
 
-    /**
-     * プリファレンスKey。
-     */
+    /** プリファレンスKey。*/
     public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
 
     @Bind(R.id.toolbar_menu)
@@ -59,6 +60,8 @@ public class NavigationActivity extends BaseActivity {
     DrawerLayout drawerLayout;
     @Bind(R.id.drawer_header_layout)
     RelativeLayout drawerHeaderRelativeLayout;
+    @Bind(R.id.search_text)
+    EditText drawerSearchMemoEditText;
     @Bind(R.id.memo_list)
     ListView mListView;
     @Bind(R.id.drawer)
@@ -221,6 +224,14 @@ public class NavigationActivity extends BaseActivity {
     }
 
     /**
+     * ナビゲーションドロワー内の検索ボタン押下時のコールバック。
+     */
+    @OnClick(R.id.drawer_search_memo)
+    void onClickDrawerSearchMemo() {
+        search();
+    }
+
+    /**
      * メモリストのアイテム押下時のコールバック。
      *
      * @param parent   親View
@@ -301,7 +312,6 @@ public class NavigationActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        registerForContextMenu(mListView);
 
         // 時刻に応じて、ナビゲーションドロワー内のヘッダーの背景を変える
         switch (DateUtil.checkTimeNow()) {
@@ -367,6 +377,28 @@ public class NavigationActivity extends BaseActivity {
             mFloatingActionViewModel.setEditFab(mEditFab);
             mFloatingActionViewModel.setCreateFab(mCreateFab);
         }
+
+        drawerSearchMemoEditText.setOnKeyListener((v, code, e) -> {
+            if ((e.getAction() == KeyEvent.ACTION_DOWN) && (code == KeyEvent.KEYCODE_ENTER)) {
+                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(
+                                drawerSearchMemoEditText.getWindowToken(),
+                                InputMethodManager.RESULT_UNCHANGED_SHOWN
+                        );
+
+                search();
+
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void search() {
+        String searchWord = "%" + drawerSearchMemoEditText.getText() + "%";
+        List<Memo> searchedMemos = mMemoHelper.findByMemoOrSubject(searchWord);
+        mMemoListAdapter.setMemos(searchedMemos);
+        mDrawerViewModel.modify(!searchedMemos.isEmpty());
     }
 
     public DrawerViewModel getDrawerViewModel() {
