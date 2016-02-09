@@ -10,7 +10,11 @@
 
     <include
         android:id="@+id/drawer_create_memo"
-        layout="@layout/drawer_menu" />
+        layout="@layout/drawer_menu_create" />
+
+    <include
+        android:id="@+id/drawer_search_memo"
+        layout="@layout/drawer_menu_search" />
 
     <include layout="@layout/drawer_divider" />
 

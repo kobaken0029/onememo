@@ -21,12 +21,5 @@
         style="@style/NavigationDrawerMenuMainText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="72dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="72dp"
-        android:gravity="center_vertical"
-        android:text="@string/nav_create_memo"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:text="@string/nav_create_memo" />
 </RelativeLayout>
