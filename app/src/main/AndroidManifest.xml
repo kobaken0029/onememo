@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.kobaken0029.WanmemoApplication"
+        android:name=".WanmemoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -29,12 +29,12 @@
         </activity>
 
         <activity
-            android:name="com.kobaken0029.views.activities.SetAlarmActivity"
+            android:name=".views.activities.SetAlarmActivity"
             android:label="@string/setting_view"
             android:screenOrientation="portrait" />
 
         <receiver
-            android:name="com.kobaken0029.receivers.MyAlarmNotificationReceiver"
+            android:name=".receivers.MyAlarmNotificationReceiver"
             android:process=":remote" />
     </application>
 
