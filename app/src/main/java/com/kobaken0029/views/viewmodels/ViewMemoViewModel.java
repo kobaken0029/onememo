@@ -19,7 +19,7 @@ public class ViewMemoViewModel {
      * @return 変化していた場合true
      */
     public boolean stateChanged(Memo memo) {
-        return !memo.getId().equals(memoId)
+        return memo.getId() != memoId
                 || !memo.getSubject().equals(subjectView.getText().toString())
                 || !memo.getMemo().equals(memoView.getText().toString());
     }

@@ -70,11 +70,11 @@ public class Memo extends BaseEntity {
         this.setUpdateAt(updateAt);
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

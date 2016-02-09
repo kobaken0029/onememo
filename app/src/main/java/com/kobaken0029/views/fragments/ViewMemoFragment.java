@@ -83,7 +83,7 @@ public class ViewMemoFragment extends TextToSpeechFragment {
             id = ((NavigationActivity) getActivity()).currentMemoId;
         } else if (mMemoHelper.exists()) {
             id = Stream.of(mMemoHelper.findAll())
-                    .sorted((o1, o2) -> o2.getId().compareTo(o1.getId()))
+                    .sorted((o1, o2) -> (int) (o2.getId() - o1.getId()))
                     .collect(Collectors.toList()).get(0).getId();
         } else {
             id = 0L;
