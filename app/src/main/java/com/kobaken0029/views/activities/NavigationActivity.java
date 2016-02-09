@@ -392,8 +392,7 @@ public class NavigationActivity extends BaseActivity {
     }
 
     private void search() {
-        String searchWord = "%" + drawerSearchMemoEditText.getText() + "%";
-        List<Memo> searchedMemos = mMemoHelper.findByMemoOrSubject(searchWord);
+        List<Memo> searchedMemos = mMemoHelper.findByMemoOrSubject(drawerSearchMemoEditText.getText().toString());
         mMemoListAdapter.setMemos(searchedMemos);
         mDrawerViewModel.modify(!searchedMemos.isEmpty());
     }
