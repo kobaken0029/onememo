@@ -38,7 +38,7 @@ public class MemoHelperImpl implements MemoHelper {
 
     @Override
     public List<Memo> findByMemoOrSubject(String word) {
-        word = "%" + word + "%";
+        word = "%" + word.replaceAll("%", "\\\\%").replaceAll("_", "\\\\_") + "%";
         return new Select().from(Memo.class)
                 .where(Condition.column(Memo.MEMO).like(word))
                 .or(Condition.column(Memo.SUBJECT).like(word))
