@@ -42,13 +42,19 @@ import butterknife.OnItemClick;
  * NavigationViewが存在するActivity。
  */
 public class NavigationActivity extends BaseActivity {
-    /** タグ。*/
+    /**
+     * タグ。
+     */
     public static final String TAG = NavigationActivity.class.getName();
 
-    /** プリファレンスID。*/
+    /**
+     * プリファレンスID。
+     */
     public static final String SHARED_PREFERENCES_ID = "memo_position";
 
-    /** プリファレンスKey。*/
+    /**
+     * プリファレンスKey。
+     */
     public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
 
     @Bind(R.id.toolbar_menu)
@@ -391,6 +397,9 @@ public class NavigationActivity extends BaseActivity {
         });
     }
 
+    /**
+     * メモ本文、件名で部分一致でメモを検索してリストに適用する。
+     */
     private void search() {
         List<Memo> searchedMemos = mMemoHelper.findByMemoOrSubject(drawerSearchMemoEditText.getText().toString());
         mMemoListAdapter.setMemos(searchedMemos);
