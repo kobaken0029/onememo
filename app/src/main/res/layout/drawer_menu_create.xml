@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/menu_text"
         style="@style/NavigationDrawerMenuMainText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/nav_create_memo" />
 </RelativeLayout>
