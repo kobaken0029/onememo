@@ -44,19 +44,13 @@ import butterknife.OnItemClick;
  * NavigationViewが存在するActivity。
  */
 public class NavigationActivity extends BaseActivity {
-    /**
-     * タグ。
-     */
+    /** タグ。*/
     public static final String TAG = NavigationActivity.class.getName();
 
-    /**
-     * プリファレンスID。
-     */
+    /** プリファレンスID。*/
     public static final String SHARED_PREFERENCES_ID = "memo_position";
 
-    /**
-     * プリファレンスKey。
-     */
+    /** プリファレンスKey。*/
     public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
 
     @Bind(R.id.toolbar_menu)
