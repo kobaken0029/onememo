@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -21,16 +22,19 @@ import android.widget.RelativeLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kobaken0029.R;
+import com.kobaken0029.interfaces.ViewMemoHandler;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.utils.DateUtil;
+import com.kobaken0029.utils.N2ttsUtil;
 import com.kobaken0029.utils.UiUtil;
+import com.kobaken0029.interfaces.NavigationOnClickListener;
+import com.kobaken0029.interfaces.OnMenuItemClickListener;
 import com.kobaken0029.views.adapters.MemoListAdapter;
 import com.kobaken0029.views.fragments.MemoFragment;
 import com.kobaken0029.views.fragments.ViewMemoFragment;
 import com.kobaken0029.views.viewmodels.DrawerViewModel;
 import com.kobaken0029.views.viewmodels.FloatingActionViewModel;
 import com.kobaken0029.views.viewmodels.MemoViewModel;
-import com.kobaken0029.views.viewmodels.ViewMemoViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +47,15 @@ import butterknife.OnItemClick;
 /**
  * NavigationViewが存在するActivity。
  */
-public class NavigationActivity extends BaseActivity {
-    /** タグ。*/
+public class NavigationActivity extends BaseActivity
+        implements NavigationOnClickListener, OnMenuItemClickListener, ViewMemoFragment.NavigationActivityHandler {
+    /** タグ。 */
     public static final String TAG = NavigationActivity.class.getName();
 
-    /** プリファレンスID。*/
+    /** プリファレンスID。 */
     public static final String SHARED_PREFERENCES_ID = "memo_position";
 
-    /** プリファレンスKey。*/
+    /** プリファレンスKey。 */
     public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
 
     @Bind(R.id.toolbar_menu)
@@ -83,6 +88,8 @@ public class NavigationActivity extends BaseActivity {
 
     private DrawerViewModel mDrawerViewModel;
     private FloatingActionViewModel mFloatingActionViewModel;
+
+    private ViewMemoHandler mViewMemoHandler;
 
     private MemoListAdapter mMemoListAdapter;
     public long currentMemoId;
@@ -145,17 +152,16 @@ public class NavigationActivity extends BaseActivity {
             Memo deletedMemo = mMemoHelper.find(currentMemoId);
             mMemoHelper.delete(NavigationActivity.this, deletedMemo);
             mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
-            ViewMemoFragment f = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
-            if (f != null) {
+            ViewMemoFragment viewMemoFragment = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
+            if (viewMemoFragment != null) {
                 mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
-                List<Memo> memos = mMemoHelper.findAll();
-                ViewMemoViewModel viewModel = f.getViewMemoViewModel();
-                if (!memos.isEmpty()) {
-                    Memo target = memos.get(0);
-                    viewModel.setMemoView(target, true);
-                } else {
-                    viewModel.setMemoView(null, false);
+
+                if (mViewMemoHandler == null) {
+                    mViewMemoHandler = viewMemoFragment;
                 }
+
+                List<Memo> memos = mMemoHelper.findAll();
+                mViewMemoHandler.onClickedDeleteButton(memos);
             }
         });
         mFloatingActionViewModel.collapse();
@@ -244,11 +250,12 @@ public class NavigationActivity extends BaseActivity {
             getFragmentManager().popBackStack();
         }
 
-        ViewMemoFragment f = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
-        if (f != null) {
-            ViewMemoViewModel viewModel = f.getViewMemoViewModel();
-            Memo memo = mMemoHelper.find(currentMemoId);
-            viewModel.setMemoView(memo, true);
+        ViewMemoFragment viewMemoFragment = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
+        if (viewMemoFragment != null) {
+            if (mViewMemoHandler == null) {
+                mViewMemoHandler = viewMemoFragment;
+            }
+            mViewMemoHandler.onClickedItemMemoList(mMemoHelper.find(currentMemoId));
         }
 
         mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
@@ -407,7 +414,26 @@ public class NavigationActivity extends BaseActivity {
         mDrawerViewModel.modify(!searchedMemos.isEmpty());
     }
 
-    public DrawerViewModel getDrawerViewModel() {
-        return mDrawerViewModel;
+    @Override
+    public void onClicked() {
+        mDrawerViewModel.getDrawerLayout().openDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public boolean onMenuItemClicked(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.menu_setting:
+                N2ttsUtil.settingReadVoice(this);
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void drawerViewModify() {
+        mDrawerViewModel.modify(false);
     }
 }
