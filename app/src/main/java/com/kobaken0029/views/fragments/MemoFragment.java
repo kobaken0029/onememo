@@ -68,14 +68,6 @@ public class MemoFragment extends TextToSpeechFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        ((NavigationActivity) getActivity()).getFloatingActionViewModel()
-                .getFloatingActionMenu()
-                .setVisibility(View.VISIBLE);
-    }
-
-    @Override
     void bindView() {
         if (mMemoViewModel == null) {
             mMemoViewModel = new MemoViewModel();
