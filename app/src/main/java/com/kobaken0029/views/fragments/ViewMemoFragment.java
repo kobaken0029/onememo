@@ -11,10 +11,13 @@ import android.widget.TextView;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.kobaken0029.R;
+import com.kobaken0029.interfaces.ViewMemoHandler;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.views.activities.BaseActivity;
 import com.kobaken0029.views.activities.NavigationActivity;
 import com.kobaken0029.views.viewmodels.ViewMemoViewModel;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,7 +28,7 @@ import static butterknife.ButterKnife.findById;
 /**
  * メモを閲覧するFragment。
  */
-public class ViewMemoFragment extends TextToSpeechFragment {
+public class ViewMemoFragment extends TextToSpeechFragment implements ViewMemoHandler {
     /** タグ。 */
     public static final String TAG = ViewMemoFragment.class.getName();
 
@@ -35,6 +38,12 @@ public class ViewMemoFragment extends TextToSpeechFragment {
     public TextView memoView;
 
     private ViewMemoViewModel mViewMemoViewModel;
+
+    private NavigationActivityHandler handler;
+
+    public interface NavigationActivityHandler {
+        void drawerViewModify();
+    }
 
     /**
      * インスタンス生成。
@@ -89,6 +98,9 @@ public class ViewMemoFragment extends TextToSpeechFragment {
             id = 0L;
         }
         mViewMemoViewModel.setMemoId(id);
+        if (getActivity() instanceof NavigationActivityHandler) {
+            handler = (NavigationActivityHandler) getActivity();
+        }
     }
 
     @Override
@@ -99,9 +111,11 @@ public class ViewMemoFragment extends TextToSpeechFragment {
 
         Memo memo = mMemoHelper.find(mViewMemoViewModel.getMemoId());
         if (memo != null) {
-            mViewMemoViewModel.setMemoView(memo, !mMemoHelper.isEmpty(memo));
+            mViewMemoViewModel.updateMemoView(memo, !mMemoHelper.isEmpty(memo));
         } else {
-            ((NavigationActivity) getActivity()).getDrawerViewModel().modify(false);
+            if (handler != null) {
+                handler.drawerViewModify();
+            }
         }
     }
 
@@ -114,7 +128,18 @@ public class ViewMemoFragment extends TextToSpeechFragment {
         mViewMemoViewModel.setMemoView(memoView);
     }
 
-    public ViewMemoViewModel getViewMemoViewModel() {
-        return mViewMemoViewModel;
+    @Override
+    public void onClickedDeleteButton(List<Memo> memos) {
+        if (!memos.isEmpty()) {
+            Memo target = memos.get(0);
+            mViewMemoViewModel.updateMemoView(target, true);
+        } else {
+            mViewMemoViewModel.updateMemoView(null, false);
+        }
+    }
+
+    @Override
+    public void onClickedItemMemoList(Memo memo) {
+        mViewMemoViewModel.updateMemoView(memo, true);
     }
 }

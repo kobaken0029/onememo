@@ -30,7 +30,7 @@ public class ViewMemoViewModel {
      * @param memo  対象メオ
      * @param exist メモが存在する場合true
      */
-    public void setMemoView(Memo memo, boolean exist) {
+    public void updateMemoView(Memo memo, boolean exist) {
         if (exist) {
             memoId = memo.getId();
             subjectView.setText(memo.getSubject());
