@@ -410,8 +410,4 @@ public class NavigationActivity extends BaseActivity {
     public DrawerViewModel getDrawerViewModel() {
         return mDrawerViewModel;
     }
-
-    public FloatingActionViewModel getFloatingActionViewModel() {
-        return mFloatingActionViewModel;
-    }
 }
