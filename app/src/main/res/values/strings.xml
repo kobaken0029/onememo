@@ -40,7 +40,7 @@
     <!-- 作成・編集画面 -->
     <string name="create_view">メモ作成</string>
     <string name="store">保存</string>
-    <string name="setting">設定</string>
+    <string name="push_setting">通知</string>
 
     <!-- 設定画面 -->
     <string name="setting_view">通知設定</string>
