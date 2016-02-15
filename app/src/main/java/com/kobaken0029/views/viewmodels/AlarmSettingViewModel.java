@@ -5,7 +5,7 @@ import java.util.Calendar;
 /**
  * アラームセットのViewModel。
  */
-public class SetAlarmViewModel {
+public class AlarmSettingViewModel {
     private int year;
     private int month;
     private int day;
