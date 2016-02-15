@@ -15,8 +15,6 @@ import butterknife.ButterKnife;
  * Fragmentのベースクラス。
  */
 public abstract class BaseFragment extends Fragment {
-    protected static long mDeletedMemoId;
-
     @Inject
     ToolbarHelper mToolbarHelper;
     @Inject
@@ -46,8 +44,4 @@ public abstract class BaseFragment extends Fragment {
     }
 
     abstract void bindView();
-
-    public long getDeletedMemoId() {
-        return mDeletedMemoId;
-    }
 }

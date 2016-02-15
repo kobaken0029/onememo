@@ -84,7 +84,7 @@ public class MemoFragment extends TextToSpeechFragment implements MemoHandler {
 
     @Override
     public Memo saveMemo(Memo target) {
-        if (mMemoHelper.isEmpty(target) || target.getId() == getDeletedMemoId()) {
+        if (mMemoHelper.isEmpty(target)) {
             target = mMemoHelper.create(
                     mMemoViewModel.getSubjectEditText().getText().toString(),
                     mMemoViewModel.getMemoEditText().getText().toString());
