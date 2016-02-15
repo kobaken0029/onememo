@@ -5,8 +5,8 @@ import com.raizlabs.android.dbflow.annotation.Database;
 /**
  * ワンメモのデータベースクラス。
  */
-@Database(name = WanmemoDatabase.NAME, version = WanmemoDatabase.VERSION)
-public class WanmemoDatabase {
+@Database(name = OneMemoDatabase.NAME, version = OneMemoDatabase.VERSION)
+public class OneMemoDatabase {
     /** データベース名 */
     public static final String NAME = "test_wanmemo";
 

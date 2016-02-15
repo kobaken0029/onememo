@@ -10,11 +10,11 @@ import android.widget.RemoteViews;
 
 import com.kobaken0029.R;
 import com.kobaken0029.models.Memo;
-import com.kobaken0029.services.WanmemoWidgetService;
+import com.kobaken0029.services.OneMemoWidgetService;
 import com.kobaken0029.views.activities.NavigationActivity;
 import com.kobaken0029.views.fragments.MemoFragment;
 
-public class WanmemoWidgetProvider extends AppWidgetProvider {
+public class OneMemoWidgetProvider extends AppWidgetProvider {
     public static final String ACTION_UPDATE = "com.kobaken0029.android_appwidget.ACTION_UPDATE";
     private static final String ACTION_ITEM_CLICK = "com.kobaken0029.android_appwidget.ACTION_ITEM_CLICK";
     private static final String ACTION_CLICK = "com.kobaken0029.android_appwidget.ACTION_CLICK";
@@ -32,7 +32,7 @@ public class WanmemoWidgetProvider extends AppWidgetProvider {
                 remoteViews.setOnClickPendingIntent(R.id.header_text, activityPendingIntent);
 
                 // 新規作成アイコン
-                Intent clickIntent = new Intent(context, WanmemoWidgetProvider.class);
+                Intent clickIntent = new Intent(context, OneMemoWidgetProvider.class);
                 clickIntent.setAction(ACTION_CLICK);
                 PendingIntent createMemoPendingIntent = PendingIntent.getBroadcast(
                         context,
@@ -43,10 +43,10 @@ public class WanmemoWidgetProvider extends AppWidgetProvider {
                 remoteViews.setOnClickPendingIntent(R.id.icon_container, createMemoPendingIntent);
 
                 // リスト
-                Intent widgetServiceIntent = new Intent(context, WanmemoWidgetService.class);
+                Intent widgetServiceIntent = new Intent(context, OneMemoWidgetService.class);
                 remoteViews.setRemoteAdapter(R.id.memo_list, widgetServiceIntent);
 
-                Intent itemClickIntent = new Intent(context, WanmemoWidgetProvider.class);
+                Intent itemClickIntent = new Intent(context, OneMemoWidgetProvider.class);
                 itemClickIntent.setAction(ACTION_ITEM_CLICK);
                 PendingIntent itemClickPendingIntent = PendingIntent.getBroadcast(
                         context,
@@ -78,7 +78,7 @@ public class WanmemoWidgetProvider extends AppWidgetProvider {
                 break;
             case ACTION_UPDATE:
                 AppWidgetManager manager = AppWidgetManager.getInstance(context);
-                ComponentName myWidget = new ComponentName(context, WanmemoWidgetProvider.class);
+                ComponentName myWidget = new ComponentName(context, OneMemoWidgetProvider.class);
                 int[] appWidgetIds = manager.getAppWidgetIds(myWidget);
                 manager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.memo_list);
                 break;

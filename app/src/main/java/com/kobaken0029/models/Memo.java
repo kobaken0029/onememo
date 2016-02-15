@@ -1,6 +1,6 @@
 package com.kobaken0029.models;
 
-import com.kobaken0029.models.db.WanmemoDatabase;
+import com.kobaken0029.models.db.OneMemoDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * メモクラス。
  */
-@Table(databaseName = WanmemoDatabase.NAME, tableName = Memo.NAME)
+@Table(databaseName = OneMemoDatabase.NAME, tableName = Memo.NAME)
 public class Memo extends BaseEntity {
     /** タグ。 */
     public static final String TAG = Memo.class.getName();
