@@ -1,6 +1,7 @@
 package com.kobaken0029.views.activities;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,6 +36,7 @@ import com.kobaken0029.views.fragments.ViewMemoFragment;
 import com.kobaken0029.views.viewmodels.DrawerViewModel;
 import com.kobaken0029.views.viewmodels.FloatingActionViewModel;
 import com.kobaken0029.views.viewmodels.MemoViewModel;
+import com.kobaken0029.views.widget.WanmemoWidgetProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,13 +126,20 @@ public class NavigationActivity extends BaseActivity
     }
 
     /**
+     * 新規作成画面に遷移する。
+     */
+    private void showMemoFragment(boolean newMemo) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Memo.TAG, newMemo ? new Memo() : mMemoHelper.find(currentMemoId));
+        replaceMemoFragment(bundle, newMemo);
+    }
+
+    /**
      * 新規作成ボタン押下時のコールバック。
      */
     @OnClick(R.id.create_button)
     void onClickCreateButton() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Memo.TAG, new Memo());
-        replaceMemoFragment(bundle, true);
+        showMemoFragment(true);
     }
 
     /**
@@ -138,9 +147,7 @@ public class NavigationActivity extends BaseActivity
      */
     @OnClick(R.id.edit_button)
     void onClickEditButton() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Memo.TAG, mMemoHelper.find(currentMemoId));
-        replaceMemoFragment(bundle, false);
+        showMemoFragment(false);
     }
 
     /**
@@ -163,6 +170,7 @@ public class NavigationActivity extends BaseActivity
                 List<Memo> memos = mMemoHelper.findAll();
                 mViewMemoHandler.onClickedDeleteButton(memos);
             }
+            updateAppWidget();
         });
         mFloatingActionViewModel.collapse();
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -178,6 +186,7 @@ public class NavigationActivity extends BaseActivity
                 viewModel.getSubjectEditText().getText().toString(),
                 viewModel.getMemoEditText().getText().toString());
         popBackStackToViewMemoFragment(createdMemo.getId());
+        updateAppWidget();
     }
 
     /**
@@ -211,6 +220,7 @@ public class NavigationActivity extends BaseActivity
         }
 
         popBackStackToViewMemoFragment(memo.getId());
+        updateAppWidget();
     }
 
     /**
@@ -219,9 +229,7 @@ public class NavigationActivity extends BaseActivity
     @OnClick(R.id.drawer_create_memo)
     void onClickDrawerCreateMemo() {
         if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) == null) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(Memo.TAG, new Memo());
-            replaceMemoFragment(bundle, true);
+            showMemoFragment(true);
         } else {
             mFloatingActionMenu.collapse();
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -278,10 +286,11 @@ public class NavigationActivity extends BaseActivity
 
         mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
 
-        ViewMemoFragment f = ViewMemoFragment.newInstance();
+        Intent intent = getIntent();
+        ViewMemoFragment viewMemoFragment = ViewMemoFragment.newInstance();
         if (mMemoHelper.exists()) {
             // Notificationから得られたメモを取得
-            Memo memo = mMemoHelper.find(getIntent().getLongExtra(Memo.ID, 0L));
+            Memo memo = mMemoHelper.find(intent.getLongExtra(Memo.ID, 0L));
             if (memo == null) {
                 // プリファレンスを取得
                 SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
@@ -299,11 +308,14 @@ public class NavigationActivity extends BaseActivity
 
             Bundle bundle = new Bundle();
             bundle.putSerializable(Memo.TAG, memo);
-            f.setArguments(bundle);
+            viewMemoFragment.setArguments(bundle);
         }
 
         if (savedInstanceState == null) {
-            addFragment(R.id.container, f, ViewMemoFragment.TAG);
+            addFragment(R.id.container, viewMemoFragment, ViewMemoFragment.TAG);
+            if (intent.getBooleanExtra(MemoFragment.TAG, false)) {
+                showMemoFragment(true);
+            }
         }
     }
 
@@ -412,6 +424,19 @@ public class NavigationActivity extends BaseActivity
         List<Memo> searchedMemos = mMemoHelper.findByMemoOrSubject(target);
         mMemoListAdapter.setMemos(searchedMemos);
         mDrawerViewModel.modify(!searchedMemos.isEmpty());
+    }
+
+    /**
+     * Widgetを更新する。
+     */
+    private void updateAppWidget() {
+        Intent intent = new Intent(getApplicationContext(), WanmemoWidgetProvider.class);
+        intent.setAction(WanmemoWidgetProvider.ACTION_UPDATE);
+        try {
+            PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT).send();
+        } catch (PendingIntent.CanceledException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
