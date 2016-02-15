@@ -8,13 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.annimon.stream.Collectors;
-import com.annimon.stream.Stream;
 import com.kobaken0029.R;
 import com.kobaken0029.interfaces.ViewMemoHandler;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.views.activities.BaseActivity;
-import com.kobaken0029.views.activities.NavigationActivity;
 import com.kobaken0029.views.viewmodels.ViewMemoViewModel;
 
 import java.util.List;
@@ -33,16 +30,17 @@ public class ViewMemoFragment extends TextToSpeechFragment implements ViewMemoHa
     public static final String TAG = ViewMemoFragment.class.getName();
 
     @Bind(R.id.subject_textView)
-    public TextView subjectView;
+    TextView subjectView;
     @Bind(R.id.memo_textView)
-    public TextView memoView;
+    TextView memoView;
 
     private ViewMemoViewModel mViewMemoViewModel;
 
     private NavigationActivityHandler handler;
 
     public interface NavigationActivityHandler {
-        void drawerViewModify();
+        void modifyDrawerView();
+        long getSelectedMemoId(Bundle bundle);
     }
 
     /**
@@ -51,7 +49,21 @@ public class ViewMemoFragment extends TextToSpeechFragment implements ViewMemoHa
      * @return ViewMemoFragmentのインスタンス
      */
     public static ViewMemoFragment newInstance() {
-        return new ViewMemoFragment();
+        return newInstance(null);
+    }
+
+    /**
+     * インスタンス生成。
+     *
+     * @param memo メモ
+     * @return ViewMemoFragmentのインスタンス
+     */
+    public static ViewMemoFragment newInstance(Memo memo) {
+        ViewMemoFragment fragment = new ViewMemoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Memo.TAG, memo);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @OnClick(R.id.memomiya)
@@ -87,20 +99,11 @@ public class ViewMemoFragment extends TextToSpeechFragment implements ViewMemoHa
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        long id;
-        if (getArguments() != null) {
-            id = ((NavigationActivity) getActivity()).currentMemoId;
-        } else if (mMemoHelper.exists()) {
-            id = Stream.of(mMemoHelper.findAll())
-                    .sorted((o1, o2) -> (int) (o2.getId() - o1.getId()))
-                    .collect(Collectors.toList()).get(0).getId();
-        } else {
-            id = 0L;
+        if (!(getActivity() instanceof NavigationActivityHandler)) {
+            throw new ClassCastException();
         }
-        mViewMemoViewModel.setMemoId(id);
-        if (getActivity() instanceof NavigationActivityHandler) {
-            handler = (NavigationActivityHandler) getActivity();
-        }
+        handler = (NavigationActivityHandler) getActivity();
+        mViewMemoViewModel.setMemoId(handler.getSelectedMemoId(getArguments()));
     }
 
     @Override
@@ -114,7 +117,7 @@ public class ViewMemoFragment extends TextToSpeechFragment implements ViewMemoHa
             mViewMemoViewModel.updateMemoView(memo, !mMemoHelper.isEmpty(memo));
         } else {
             if (handler != null) {
-                handler.drawerViewModify();
+                handler.modifyDrawerView();
             }
         }
     }

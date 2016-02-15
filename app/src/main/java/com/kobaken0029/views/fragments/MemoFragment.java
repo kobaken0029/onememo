@@ -1,6 +1,7 @@
 package com.kobaken0029.views.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.kobaken0029.R;
+import com.kobaken0029.interfaces.MemoHandler;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.views.activities.BaseActivity;
-import com.kobaken0029.views.activities.NavigationActivity;
 import com.kobaken0029.views.viewmodels.MemoViewModel;
 
 import butterknife.Bind;
@@ -21,7 +22,7 @@ import static butterknife.ButterKnife.findById;
 /**
  * メモを作成・編集するFragment。
  */
-public class MemoFragment extends TextToSpeechFragment {
+public class MemoFragment extends TextToSpeechFragment implements MemoHandler {
     /** タグ。 */
     public static final String TAG = MemoFragment.class.getName();
 
@@ -35,10 +36,15 @@ public class MemoFragment extends TextToSpeechFragment {
     /**
      * インスタンス生成。
      *
+     * @param memo メモ
      * @return MemoFragmentのインスタンス
      */
-    public static MemoFragment newInstance() {
-        return new MemoFragment();
+    public static MemoFragment newInstance(@NonNull Memo memo) {
+        MemoFragment fragment = new MemoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Memo.TAG, memo);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -76,7 +82,17 @@ public class MemoFragment extends TextToSpeechFragment {
         mMemoViewModel.setMemoEditText(memoEditText);
     }
 
-    public MemoViewModel getMemoViewModel() {
-        return mMemoViewModel;
+    @Override
+    public Memo saveMemo(Memo target) {
+        if (mMemoHelper.isEmpty(target) || target.getId() == getDeletedMemoId()) {
+            target = mMemoHelper.create(
+                    mMemoViewModel.getSubjectEditText().getText().toString(),
+                    mMemoViewModel.getMemoEditText().getText().toString());
+        } else {
+            target.setSubject(mMemoViewModel.getSubjectEditText().getText().toString());
+            target.setMemo(mMemoViewModel.getMemoEditText().getText().toString());
+            target = mMemoHelper.update(target);
+        }
+        return target;
     }
 }

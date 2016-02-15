@@ -20,9 +20,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kobaken0029.R;
+import com.kobaken0029.interfaces.MemoHandler;
 import com.kobaken0029.interfaces.ViewMemoHandler;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.utils.DateUtil;
@@ -35,7 +38,6 @@ import com.kobaken0029.views.fragments.MemoFragment;
 import com.kobaken0029.views.fragments.ViewMemoFragment;
 import com.kobaken0029.views.viewmodels.DrawerViewModel;
 import com.kobaken0029.views.viewmodels.FloatingActionViewModel;
-import com.kobaken0029.views.viewmodels.MemoViewModel;
 import com.kobaken0029.views.widget.OneMemoWidgetProvider;
 
 import java.util.ArrayList;
@@ -88,28 +90,14 @@ public class NavigationActivity extends BaseActivity
     @Bind(R.id.create_button)
     FloatingActionButton mCreateFab;
 
+    private long mCurrentMemoId;
+    private MemoListAdapter mMemoListAdapter;
+
     private DrawerViewModel mDrawerViewModel;
     private FloatingActionViewModel mFloatingActionViewModel;
 
     private ViewMemoHandler mViewMemoHandler;
-
-    private MemoListAdapter mMemoListAdapter;
-    public long currentMemoId;
-
-    /**
-     * Fragmentを置き換える。
-     *
-     * @param bundle  バンドル
-     * @param newMemo 新規メモならtrue
-     */
-    private void replaceMemoFragment(Bundle bundle, boolean newMemo) {
-        MemoFragment f = MemoFragment.newInstance();
-        f.setArguments(bundle);
-        replaceFragment(R.id.container, f, MemoFragment.TAG);
-        mFloatingActionViewModel.stateMemoFragment(newMemo);
-        mFloatingActionViewModel.collapse();
-        drawerLayout.closeDrawer(GravityCompat.START);
-    }
+    private MemoHandler mMemoHandler;
 
     /**
      * Fragmentを取り出す。
@@ -117,7 +105,7 @@ public class NavigationActivity extends BaseActivity
      * @param memoId メモID
      */
     private void popBackStackToViewMemoFragment(long memoId) {
-        currentMemoId = memoId;
+        mCurrentMemoId = memoId;
         mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
         mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
         mFloatingActionViewModel.collapse();
@@ -126,12 +114,14 @@ public class NavigationActivity extends BaseActivity
     }
 
     /**
-     * 新規作成画面に遷移する。
+     * メモ作成画面に遷移する。
      */
     private void showMemoFragment(boolean newMemo) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Memo.TAG, newMemo ? new Memo() : mMemoHelper.find(currentMemoId));
-        replaceMemoFragment(bundle, newMemo);
+        MemoFragment fragment = MemoFragment.newInstance(newMemo ? new Memo() : mMemoHelper.find(mCurrentMemoId));
+        replaceFragment(R.id.container, fragment, MemoFragment.TAG);
+        mFloatingActionViewModel.stateMemoFragment(newMemo);
+        mFloatingActionViewModel.collapse();
+        drawerLayout.closeDrawer(GravityCompat.START);
     }
 
     /**
@@ -156,7 +146,7 @@ public class NavigationActivity extends BaseActivity
     @OnClick(R.id.delete_button)
     void onClickDeleteButton() {
         UiUtil.showDialog(this, R.string.check_delete_message, (dialog, which) -> {
-            Memo deletedMemo = mMemoHelper.find(currentMemoId);
+            Memo deletedMemo = mMemoHelper.find(mCurrentMemoId);
             mMemoHelper.delete(NavigationActivity.this, deletedMemo);
             mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
             ViewMemoFragment viewMemoFragment = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
@@ -166,9 +156,7 @@ public class NavigationActivity extends BaseActivity
                 if (mViewMemoHandler == null) {
                     mViewMemoHandler = viewMemoFragment;
                 }
-
-                List<Memo> memos = mMemoHelper.findAll();
-                mViewMemoHandler.onClickedDeleteButton(memos);
+                mViewMemoHandler.onClickedDeleteButton(mMemoHelper.findAll());
             }
             updateAppWidget();
         });
@@ -181,10 +169,10 @@ public class NavigationActivity extends BaseActivity
      */
     @OnClick(R.id.store_button_in_create_view)
     void onClickStoreMemoInCreateViewButton() {
-        MemoViewModel viewModel = ((MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG)).getMemoViewModel();
-        Memo createdMemo = mMemoHelper.create(
-                viewModel.getSubjectEditText().getText().toString(),
-                viewModel.getMemoEditText().getText().toString());
+        if (mMemoHandler == null) {
+            mMemoHandler = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
+        }
+        Memo createdMemo = mMemoHandler.saveMemo(new Memo());
         popBackStackToViewMemoFragment(createdMemo.getId());
         updateAppWidget();
     }
@@ -194,9 +182,10 @@ public class NavigationActivity extends BaseActivity
      */
     @OnClick(R.id.alert_button)
     void onClickSetAlertButton() {
-        Intent intent = new Intent(getApplicationContext(), SetAlarmActivity.class);
-        intent.putExtra(Memo.TAG, mMemoHelper.find(currentMemoId));
-        startActivityForResult(intent, SetAlarmActivity.SET_ALARM_ACTIVITY);
+        startActivityForResult(
+                SetAlarmActivity.createIntent(this, mMemoHelper.find(mCurrentMemoId)),
+                SetAlarmActivity.SET_ALARM_ACTIVITY
+        );
         mFloatingActionViewModel.collapse();
     }
 
@@ -205,20 +194,10 @@ public class NavigationActivity extends BaseActivity
      */
     @OnClick(R.id.store_button)
     void onClickStoreMemoButton() {
-        MemoFragment f = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
-        MemoViewModel viewModel = f.getMemoViewModel();
-
-        Memo memo = mMemoHelper.find(currentMemoId);
-        if (mMemoHelper.isEmpty(memo) || memo.getId() == f.getDeletedMemoId()) {
-            memo = mMemoHelper.create(
-                    viewModel.getSubjectEditText().getText().toString(),
-                    viewModel.getMemoEditText().getText().toString());
-        } else {
-            memo.setSubject(viewModel.getSubjectEditText().getText().toString());
-            memo.setMemo(viewModel.getMemoEditText().getText().toString());
-            memo = mMemoHelper.update(memo);
+        if (mMemoHandler == null) {
+            mMemoHandler = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
         }
-
+        Memo memo = mMemoHandler.saveMemo(mMemoHelper.find(mCurrentMemoId));
         popBackStackToViewMemoFragment(memo.getId());
         updateAppWidget();
     }
@@ -251,7 +230,7 @@ public class NavigationActivity extends BaseActivity
         editor.commit();
 
         // 現在のメモIDを取得
-        currentMemoId = ((Memo) parent.getItemAtPosition(position)).getId();
+        mCurrentMemoId = ((Memo) parent.getItemAtPosition(position)).getId();
 
         // メモ作成画面の場合
         if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) != null) {
@@ -263,7 +242,7 @@ public class NavigationActivity extends BaseActivity
             if (mViewMemoHandler == null) {
                 mViewMemoHandler = viewMemoFragment;
             }
-            mViewMemoHandler.onClickedItemMemoList(mMemoHelper.find(currentMemoId));
+            mViewMemoHandler.onClickedItemMemoList(mMemoHelper.find(mCurrentMemoId));
         }
 
         mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
@@ -284,10 +263,8 @@ public class NavigationActivity extends BaseActivity
         mMemoListAdapter = new MemoListAdapter(this, memos);
         mListView.setAdapter(mMemoListAdapter);
 
-        mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
-
         Intent intent = getIntent();
-        ViewMemoFragment viewMemoFragment = ViewMemoFragment.newInstance();
+        ViewMemoFragment viewMemoFragment;
         if (mMemoHelper.exists()) {
             // Notificationから得られたメモを取得
             Memo memo = mMemoHelper.find(intent.getLongExtra(Memo.ID, 0L));
@@ -304,11 +281,10 @@ public class NavigationActivity extends BaseActivity
                 // 位置からメモを取得
                 memo = memos.get(position);
             }
-            currentMemoId = memo.getId();
-
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(Memo.TAG, memo);
-            viewMemoFragment.setArguments(bundle);
+            mCurrentMemoId = memo.getId();
+            viewMemoFragment = ViewMemoFragment.newInstance(memo);
+        } else {
+            viewMemoFragment = ViewMemoFragment.newInstance();
         }
 
         if (savedInstanceState == null) {
@@ -387,6 +363,7 @@ public class NavigationActivity extends BaseActivity
             mFloatingActionViewModel.setEditFab(mEditFab);
             mFloatingActionViewModel.setCreateFab(mCreateFab);
         }
+        mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
 
         drawerSearchMemoEditText.setOnKeyListener((v, code, e) -> {
             if ((e.getAction() == KeyEvent.ACTION_DOWN) && (code == KeyEvent.KEYCODE_ENTER)) {
@@ -458,7 +435,22 @@ public class NavigationActivity extends BaseActivity
     }
 
     @Override
-    public void drawerViewModify() {
+    public void modifyDrawerView() {
         mDrawerViewModel.modify(false);
+    }
+
+    @Override
+    public long getSelectedMemoId(Bundle bundle) {
+        long id;
+        if (bundle != null) {
+            id = mCurrentMemoId;
+        } else if (mMemoHelper.exists()) {
+            id = Stream.of(mMemoHelper.findAll())
+                    .sorted((o1, o2) -> (int) (o2.getId() - o1.getId()))
+                    .collect(Collectors.toList()).get(0).getId();
+        } else {
+            id = 0L;
+        }
+        return id;
     }
 }

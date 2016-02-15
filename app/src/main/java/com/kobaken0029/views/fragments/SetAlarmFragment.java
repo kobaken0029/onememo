@@ -1,7 +1,9 @@
 package com.kobaken0029.views.fragments;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +13,16 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.kobaken0029.R;
+import com.kobaken0029.interfaces.SetAlarmHandler;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.utils.DateUtil;
+import com.kobaken0029.utils.UiUtil;
 import com.kobaken0029.views.activities.SetAlarmActivity;
 import com.kobaken0029.views.viewmodels.SetAlarmViewModel;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,7 +32,7 @@ import butterknife.OnLongClick;
 /**
  * アラームをセットするFragment。
  */
-public class SetAlarmFragment extends TextToSpeechFragment {
+public class SetAlarmFragment extends TextToSpeechFragment implements SetAlarmHandler {
     @Bind(R.id.set_alarm_layout)
     RelativeLayout mAlarmLayout;
     @Bind(R.id.calendar_text)
@@ -63,7 +69,6 @@ public class SetAlarmFragment extends TextToSpeechFragment {
             mAlarmViewModel.setYear(year);
             mAlarmViewModel.setMonth(month);
             mAlarmViewModel.setDay(day);
-            activity.setAlarmViewModel(mAlarmViewModel);
             setCalendarText(mCalendarTextView, DateUtil.YEAR_MONTH_DAY, DateUtil.getDate(year, month, day));
         }, mAlarmViewModel.getYear(), mAlarmViewModel.getMonth(), mAlarmViewModel.getDay()).show();
     }
@@ -74,7 +79,6 @@ public class SetAlarmFragment extends TextToSpeechFragment {
         new TimePickerDialog(activity, (v, hour, minute) -> {
             mAlarmViewModel.setHour(hour);
             mAlarmViewModel.setMinute(minute);
-            activity.setAlarmViewModel(mAlarmViewModel);
             mTimeTextView.setText(DateUtil.convertToString(DateUtil.HOUR_MINUTE, DateUtil.getDate(hour, minute)));
         }, mAlarmViewModel.getHour(), mAlarmViewModel.getMinute(), true).show();
     }
@@ -98,7 +102,7 @@ public class SetAlarmFragment extends TextToSpeechFragment {
     public void onResume() {
         super.onResume();
 
-        // 時刻に応じて、ナビゲーションドロワー内のヘッダーの背景を変える
+        // 時刻に応じて背景を変える
         switch (DateUtil.checkTimeNow()) {
             case DateUtil.NOON:
                 mAlarmLayout.setBackgroundResource(R.drawable.school_corridor_at_noon);
@@ -117,9 +121,18 @@ public class SetAlarmFragment extends TextToSpeechFragment {
 
     @Override
     void bindView() {
-        SetAlarmActivity activity = (SetAlarmActivity) getActivity();
-        mAlarmViewModel = activity.getAlarmViewModel();
-        mPostedMemo = activity.getPostedMemo();
+        if (mAlarmViewModel == null) {
+            mAlarmViewModel = new SetAlarmViewModel();
+        }
+
+        Calendar calendar;
+        if (mPostedMemo.getPostTime() != null) {
+            calendar = Calendar.getInstance();
+            calendar.setTime(mPostedMemo.getPostTime());
+        } else {
+            calendar = Calendar.getInstance(Locale.JAPAN);
+        }
+        mAlarmViewModel.setAlarmTime(calendar);
 
         if (mPostedMemo != null) {
             Date postedTime = mPostedMemo.getPostTime();
@@ -134,7 +147,6 @@ public class SetAlarmFragment extends TextToSpeechFragment {
             mSwitch.setChecked(mPostedMemo.getPostFlg() == 1);
             mSwitch.setOnCheckedChangeListener((bv, isChecked) -> {
                 mPostedMemo.setPostFlg(isChecked ? 1 : 0);
-                activity.setPostedMemo(mPostedMemo);
             });
         }
     }
@@ -151,6 +163,31 @@ public class SetAlarmFragment extends TextToSpeechFragment {
             textView.setText(getString(R.string.today));
         } else {
             textView.setText(DateUtil.convertToString(pattern, postedTime));
+        }
+    }
+
+    @Override
+    public void setPostedMemo(Memo target) {
+        mPostedMemo = target;
+    }
+
+    @Override
+    public void saveSetting() {
+        if (mPostedMemo != null) {
+            Calendar calendar = mAlarmViewModel.generatePostedCalendar();
+
+            // 過去だったらエラーメッセージを出す
+            if (calendar.getTimeInMillis() < System.currentTimeMillis() && mPostedMemo.getPostFlg() == 1) {
+                UiUtil.showToast(getActivity(), getString(R.string.error_past_date_message));
+            } else {
+                mPostedMemo.setPostTime(calendar.getTime());
+                mMemoHelper.update(mPostedMemo);
+                mMemoHelper.setAlarm(getActivity(), mPostedMemo);
+
+                Intent intent = new Intent();
+                intent.putExtra(Memo.TAG, mPostedMemo);
+                getActivity().setResult(Activity.RESULT_OK, intent);
+            }
         }
     }
 }

@@ -1,19 +1,14 @@
 package com.kobaken0029.views.activities;
 
 import com.kobaken0029.R;
+import com.kobaken0029.interfaces.SetAlarmHandler;
 import com.kobaken0029.models.Memo;
-import com.kobaken0029.utils.UiUtil;
-import com.kobaken0029.views.viewmodels.SetAlarmViewModel;
+import com.kobaken0029.views.fragments.SetAlarmFragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
-
-import java.util.Calendar;
-import java.util.Locale;
-
-import butterknife.ButterKnife;
+import android.support.annotation.NonNull;
 
 /**
  * アラーム設定画面のActivityです。
@@ -22,76 +17,29 @@ public class SetAlarmActivity extends BaseActivity {
     /** リクエストコード。*/
     public static final int SET_ALARM_ACTIVITY = 1;
 
-    private SetAlarmViewModel mAlarmViewModel;
-    private Memo mPostedMemo;
+    private SetAlarmHandler mHandler;
+
+    public static Intent createIntent(Context context, @NonNull Memo postedMemo) {
+        Intent intent = new Intent(context, SetAlarmActivity.class);
+        intent.putExtra(Memo.TAG, postedMemo);
+        return intent;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
-        ButterKnife.bind(this);
-        mAlarmViewModel = new SetAlarmViewModel();
-        mPostedMemo = (Memo) getIntent().getSerializableExtra(Memo.TAG);
-
-        Calendar calendar;
-        if (mPostedMemo.getPostTime() != null) {
-            calendar = Calendar.getInstance();
-            calendar.setTime(mPostedMemo.getPostTime());
-        } else {
-            calendar = Calendar.getInstance(Locale.JAPAN);
-        }
-        mAlarmViewModel.setAlarmTime(calendar);
+        Memo postedMemo = (Memo) getIntent().getSerializableExtra(Memo.TAG);
+        mHandler = (SetAlarmFragment) getFragmentManager().findFragmentById(R.id.set_alarm_fragment);
+        mHandler.setPostedMemo(postedMemo);
     }
 
     @Override
     public void finish() {
-        if (mPostedMemo != null) {
-            saveSetting();
+        if (mHandler == null) {
+            mHandler = (SetAlarmFragment) getFragmentManager().findFragmentById(R.id.set_alarm_fragment);
         }
+        mHandler.saveSetting();
         super.finish();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * 設定を保存する。
-     */
-    public void saveSetting() {
-        Calendar calendar = mAlarmViewModel.generatePostedCalendar();
-
-        // 過去だったらエラーメッセージを出す
-        if (calendar.getTimeInMillis() < System.currentTimeMillis() && mPostedMemo.getPostFlg() == 1) {
-            UiUtil.showToast(getApplicationContext(), getString(R.string.error_past_date_message));
-        } else {
-            mPostedMemo.setPostTime(calendar.getTime());
-            mMemoHelper.update(mPostedMemo);
-            mMemoHelper.setAlarm(getApplicationContext(), mPostedMemo);
-
-            Intent intent = new Intent();
-            intent.putExtra(Memo.TAG, mPostedMemo);
-            setResult(Activity.RESULT_OK, intent);
-        }
-    }
-
-    public Memo getPostedMemo() {
-        return mPostedMemo;
-    }
-
-    public void setPostedMemo(Memo mPostedMemo) {
-        this.mPostedMemo = mPostedMemo;
-    }
-
-    public SetAlarmViewModel getAlarmViewModel() {
-        return mAlarmViewModel;
-    }
-
-    public void setAlarmViewModel(SetAlarmViewModel mAlarmViewModel) {
-        this.mAlarmViewModel = mAlarmViewModel;
     }
 }
