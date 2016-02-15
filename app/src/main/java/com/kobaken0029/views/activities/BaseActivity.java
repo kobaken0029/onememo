@@ -5,7 +5,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.kobaken0029.WanmemoApplication;
+import com.kobaken0029.OneMemoApplication;
 import com.kobaken0029.di.components.ApplicationComponent;
 import com.kobaken0029.di.modules.ActivityModule;
 import com.kobaken0029.helpers.MemoHelper;
@@ -82,7 +82,7 @@ public class BaseActivity extends AppCompatActivity {
      * @return アプリケーションコンポーネント
      */
     protected ApplicationComponent getApplicationComponent() {
-        return ((WanmemoApplication) getApplication()).getApplicationComponent();
+        return ((OneMemoApplication) getApplication()).getApplicationComponent();
     }
 
     /**

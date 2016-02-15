@@ -7,7 +7,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 import android.app.Application;
 
-public class WanmemoApplication extends Application {
+public class OneMemoApplication extends Application {
 
     private ApplicationComponent applicationComponent;
 

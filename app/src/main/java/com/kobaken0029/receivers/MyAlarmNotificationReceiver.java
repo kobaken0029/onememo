@@ -44,7 +44,7 @@ public class MyAlarmNotificationReceiver extends BroadcastReceiver {
         // notificationの設定
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.wanmemo_notification_icon)
+                .setSmallIcon(R.drawable.one_memo_notification_icon)
                 .setColor(Color.rgb(79, 55, 48))
                 .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
                 .setWhen(System.currentTimeMillis())

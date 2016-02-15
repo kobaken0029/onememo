@@ -36,7 +36,7 @@ import com.kobaken0029.views.fragments.ViewMemoFragment;
 import com.kobaken0029.views.viewmodels.DrawerViewModel;
 import com.kobaken0029.views.viewmodels.FloatingActionViewModel;
 import com.kobaken0029.views.viewmodels.MemoViewModel;
-import com.kobaken0029.views.widget.WanmemoWidgetProvider;
+import com.kobaken0029.views.widget.OneMemoWidgetProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -430,8 +430,8 @@ public class NavigationActivity extends BaseActivity
      * Widgetを更新する。
      */
     private void updateAppWidget() {
-        Intent intent = new Intent(getApplicationContext(), WanmemoWidgetProvider.class);
-        intent.setAction(WanmemoWidgetProvider.ACTION_UPDATE);
+        Intent intent = new Intent(getApplicationContext(), OneMemoWidgetProvider.class);
+        intent.setAction(OneMemoWidgetProvider.ACTION_UPDATE);
         try {
             PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT).send();
         } catch (PendingIntent.CanceledException e) {

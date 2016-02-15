@@ -3,7 +3,7 @@ package com.kobaken0029.views.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 
-import com.kobaken0029.WanmemoApplication;
+import com.kobaken0029.OneMemoApplication;
 import com.kobaken0029.helpers.MemoHelper;
 import com.kobaken0029.helpers.ToolbarHelper;
 
@@ -42,7 +42,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     private void initializeInjector() {
-        ((WanmemoApplication) getActivity().getApplication()).getApplicationComponent().inject(this);
+        ((OneMemoApplication) getActivity().getApplication()).getApplicationComponent().inject(this);
     }
 
     abstract void bindView();

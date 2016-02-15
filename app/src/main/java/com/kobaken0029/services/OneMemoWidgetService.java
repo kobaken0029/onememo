@@ -12,14 +12,14 @@ import com.kobaken0029.utils.DateUtil;
 
 import java.util.List;
 
-public class WanmemoWidgetService extends RemoteViewsService {
+public class OneMemoWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new WanmemoWidgetFactory();
+        return new OneMemoWidgetFactory();
     }
 
-    private class WanmemoWidgetFactory implements RemoteViewsFactory {
+    private class OneMemoWidgetFactory implements RemoteViewsFactory {
         private MemoHelper memoHelper;
         private List<Memo> memos;
 
