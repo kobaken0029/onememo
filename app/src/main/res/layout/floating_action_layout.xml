@@ -32,9 +32,9 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/main_color"
             fab:fab_colorPressed="@color/sub_color"
-            fab:fab_icon="@drawable/ic_action_action_settings"
+            fab:fab_icon="@drawable/ic_action_social_notifications"
             fab:fab_size="mini"
-            fab:fab_title="@string/setting" />
+            fab:fab_title="@string/push_setting" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/store_button"
