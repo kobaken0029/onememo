@@ -22,6 +22,9 @@ public class DateUtil {
     /** 漢字区切りのパターン。 */
     public static final String YEAR_MONTH_DAY = "yyyy年MM月dd日";
 
+    /** 漢字区切りのパターン。 */
+    public static final String MONTH_DAY = "M月d日";
+
     /** コロン区切りのパターン。 */
     public static final String HOUR_MINUTE = "HH:mm";
 
@@ -31,15 +34,13 @@ public class DateUtil {
     /** 夕方。 */
     public static final int EVENING = 2;
 
-    /** 夜。*/
+    /** 夜。 */
     public static final int NIGHT = 3;
 
     /** 深夜。 */
     public static final int LATE_NIGHT = 4;
 
-    /**
-     * コンストラクタ。
-     */
+    /** コンストラクタ。 */
     private DateUtil() {
     }
 
@@ -106,6 +107,7 @@ public class DateUtil {
     /**
      * Dateから文字列に変換します。
      *
+     * @param pattern パターン
      * @param date Date
      * @return 文字列
      */
@@ -114,6 +116,26 @@ public class DateUtil {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.JAPAN);
         if (date != null) {
             result = dateFormat.format(date);
+        }
+        return result;
+    }
+
+    /**
+     * 文字列からDateに変換します。
+     *
+     * @param pattern パターン
+     * @param date 文字列
+     * @return Date
+     */
+    public static Date convertStringToDate(String pattern, String date) {
+        Date result = null;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.JAPAN);
+            if (date != null) {
+                result = dateFormat.parse(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return result;
     }
