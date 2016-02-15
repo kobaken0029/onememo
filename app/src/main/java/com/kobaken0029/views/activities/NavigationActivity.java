@@ -83,17 +83,17 @@ public class NavigationActivity extends BaseActivity
 
     @Bind(R.id.multiple_actions)
     FloatingActionsMenu mFloatingActionMenu;
-    @Bind(R.id.store_button_in_create_view)
+    @Bind(R.id.save_button_in_create_view)
     FloatingActionButton mStoreInCreateViewFab;
-    @Bind(R.id.alert_button)
+    @Bind(R.id.go_to_alarm_setting_button)
     FloatingActionButton mAlertFab;
-    @Bind(R.id.store_button)
+    @Bind(R.id.save_button)
     FloatingActionButton mStoreFab;
     @Bind(R.id.delete_button)
     FloatingActionButton mDeleteFab;
-    @Bind(R.id.edit_button)
+    @Bind(R.id.go_to_edit_button)
     FloatingActionButton mEditFab;
-    @Bind(R.id.create_button)
+    @Bind(R.id.go_to_create_button)
     FloatingActionButton mCreateFab;
 
     private long mCurrentMemoId;
@@ -151,7 +151,7 @@ public class NavigationActivity extends BaseActivity
     /**
      * 新規作成ボタン押下時のコールバック。
      */
-    @OnClick(R.id.create_button)
+    @OnClick(R.id.go_to_create_button)
     void onClickCreateButton() {
         showMemoFragment(MEMO_NEW);
     }
@@ -159,7 +159,7 @@ public class NavigationActivity extends BaseActivity
     /**
      * 編集ボタン押下時のコールバック。
      */
-    @OnClick(R.id.edit_button)
+    @OnClick(R.id.go_to_edit_button)
     void onClickEditButton() {
         showMemoFragment(MEMO_EXISTING);
     }
@@ -188,7 +188,7 @@ public class NavigationActivity extends BaseActivity
     /**
      * 新規作成画面のFAB押下時のコールバック。
      */
-    @OnClick(R.id.store_button_in_create_view)
+    @OnClick(R.id.save_button_in_create_view)
     void onClickStoreMemoInCreateViewButton() {
         onClickStoreButton(MEMO_NEW);
     }
@@ -196,7 +196,7 @@ public class NavigationActivity extends BaseActivity
     /**
      * 保存ボタン押下時のコールバック。
      */
-    @OnClick(R.id.store_button)
+    @OnClick(R.id.save_button)
     void onClickStoreMemoButton() {
         onClickStoreButton(MEMO_EXISTING);
     }
@@ -204,7 +204,7 @@ public class NavigationActivity extends BaseActivity
     /**
      * 通知設定ボタン押下時のコールバック。
      */
-    @OnClick(R.id.alert_button)
+    @OnClick(R.id.go_to_alarm_setting_button)
     void onClickSetAlertButton() {
         startActivityForResult(
                 AlarmSettingActivity.createIntent(this, mMemoHelper.find(mCurrentMemoId)),

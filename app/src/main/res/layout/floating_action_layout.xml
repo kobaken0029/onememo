@@ -7,7 +7,7 @@
     android:layout_alignParentRight="true">
 
     <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/store_button_in_create_view"
+        android:id="@+id/save_button_in_create_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
@@ -27,7 +27,7 @@
         fab:fab_labelStyle="@style/menu_labels_style">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/alert_button"
+            android:id="@+id/go_to_alarm_setting_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/main_color"
@@ -37,7 +37,7 @@
             fab:fab_title="@string/push_setting" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/store_button"
+            android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/main_color"
@@ -57,7 +57,7 @@
             fab:fab_title="@string/delete" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/edit_button"
+            android:id="@+id/go_to_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/main_color"
@@ -67,7 +67,7 @@
             fab:fab_title="@string/edit" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/create_button"
+            android:id="@+id/go_to_create_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/main_color"
