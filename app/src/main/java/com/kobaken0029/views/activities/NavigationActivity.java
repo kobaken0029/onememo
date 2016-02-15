@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +41,8 @@ import com.kobaken0029.views.viewmodels.DrawerViewModel;
 import com.kobaken0029.views.viewmodels.FloatingActionViewModel;
 import com.kobaken0029.views.widget.OneMemoWidgetProvider;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +64,9 @@ public class NavigationActivity extends BaseActivity
 
     /** プリファレンスKey。 */
     public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
+
+    private static final int MEMO_NEW = 0;
+    private static final int MEMO_EXISTING = 1;
 
     @Bind(R.id.toolbar_menu)
     Toolbar toolbar;
@@ -97,7 +103,10 @@ public class NavigationActivity extends BaseActivity
     private FloatingActionViewModel mFloatingActionViewModel;
 
     private ViewMemoHandler mViewMemoHandler;
-    private MemoHandler mMemoHandler;
+
+    @IntDef({MEMO_NEW, MEMO_EXISTING})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface MemoState {}
 
     /**
      * Fragmentを取り出す。
@@ -115,13 +124,28 @@ public class NavigationActivity extends BaseActivity
 
     /**
      * メモ作成画面に遷移する。
+     *
+     * @param state メモの状態
      */
-    private void showMemoFragment(boolean newMemo) {
-        MemoFragment fragment = MemoFragment.newInstance(newMemo ? new Memo() : mMemoHelper.find(mCurrentMemoId));
+    private void showMemoFragment(@MemoState int state) {
+        Memo memo = state == MEMO_NEW ? new Memo() : mMemoHelper.find(mCurrentMemoId);
+        MemoFragment fragment = MemoFragment.newInstance(memo);
         replaceFragment(R.id.container, fragment, MemoFragment.TAG);
-        mFloatingActionViewModel.stateMemoFragment(newMemo);
+        mFloatingActionViewModel.stateMemoFragment(state == MEMO_NEW);
         mFloatingActionViewModel.collapse();
         drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    /**
+     * メモ保存ボタン押下時のコールバック。
+     *
+     * @param state メモの状態
+     */
+    private void onClickStoreButton(@MemoState int state) {
+        MemoHandler memoHandler = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
+        Memo memo = memoHandler.saveMemo(state == MEMO_NEW ? new Memo() : mMemoHelper.find(mCurrentMemoId));
+        popBackStackToViewMemoFragment(memo.getId());
+        updateAppWidget();
     }
 
     /**
@@ -129,7 +153,7 @@ public class NavigationActivity extends BaseActivity
      */
     @OnClick(R.id.create_button)
     void onClickCreateButton() {
-        showMemoFragment(true);
+        showMemoFragment(MEMO_NEW);
     }
 
     /**
@@ -137,7 +161,7 @@ public class NavigationActivity extends BaseActivity
      */
     @OnClick(R.id.edit_button)
     void onClickEditButton() {
-        showMemoFragment(false);
+        showMemoFragment(MEMO_EXISTING);
     }
 
     /**
@@ -169,12 +193,15 @@ public class NavigationActivity extends BaseActivity
      */
     @OnClick(R.id.store_button_in_create_view)
     void onClickStoreMemoInCreateViewButton() {
-        if (mMemoHandler == null) {
-            mMemoHandler = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
-        }
-        Memo createdMemo = mMemoHandler.saveMemo(new Memo());
-        popBackStackToViewMemoFragment(createdMemo.getId());
-        updateAppWidget();
+        onClickStoreButton(MEMO_NEW);
+    }
+
+    /**
+     * 保存ボタン押下時のコールバック。
+     */
+    @OnClick(R.id.store_button)
+    void onClickStoreMemoButton() {
+        onClickStoreButton(MEMO_EXISTING);
     }
 
     /**
@@ -190,25 +217,12 @@ public class NavigationActivity extends BaseActivity
     }
 
     /**
-     * 保存ボタン押下時のコールバック。
-     */
-    @OnClick(R.id.store_button)
-    void onClickStoreMemoButton() {
-        if (mMemoHandler == null) {
-            mMemoHandler = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
-        }
-        Memo memo = mMemoHandler.saveMemo(mMemoHelper.find(mCurrentMemoId));
-        popBackStackToViewMemoFragment(memo.getId());
-        updateAppWidget();
-    }
-
-    /**
      * ナビゲーションドロワー内の新規作成ボタン押下時のコールバック。
      */
     @OnClick(R.id.drawer_create_memo)
     void onClickDrawerCreateMemo() {
         if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) == null) {
-            showMemoFragment(true);
+            showMemoFragment(MEMO_NEW);
         } else {
             mFloatingActionMenu.collapse();
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -290,7 +304,7 @@ public class NavigationActivity extends BaseActivity
         if (savedInstanceState == null) {
             addFragment(R.id.container, viewMemoFragment, ViewMemoFragment.TAG);
             if (intent.getBooleanExtra(MemoFragment.TAG, false)) {
-                showMemoFragment(true);
+                showMemoFragment(MEMO_NEW);
             }
         }
     }
