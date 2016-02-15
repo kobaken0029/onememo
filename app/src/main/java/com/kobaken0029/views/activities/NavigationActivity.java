@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +41,8 @@ import com.kobaken0029.views.viewmodels.DrawerViewModel;
 import com.kobaken0029.views.viewmodels.FloatingActionViewModel;
 import com.kobaken0029.views.widget.OneMemoWidgetProvider;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +65,9 @@ public class NavigationActivity extends BaseActivity
     /** プリファレンスKey。 */
     public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
 
+    private static final int MEMO_NEW = 0;
+    private static final int MEMO_EXISTING = 1;
+
     @Bind(R.id.toolbar_menu)
     Toolbar toolbar;
     @Bind(R.id.drawer_layout)
@@ -77,17 +83,17 @@ public class NavigationActivity extends BaseActivity
 
     @Bind(R.id.multiple_actions)
     FloatingActionsMenu mFloatingActionMenu;
-    @Bind(R.id.store_button_in_create_view)
+    @Bind(R.id.save_button_in_create_view)
     FloatingActionButton mStoreInCreateViewFab;
-    @Bind(R.id.alert_button)
+    @Bind(R.id.go_to_alarm_setting_button)
     FloatingActionButton mAlertFab;
-    @Bind(R.id.store_button)
+    @Bind(R.id.save_button)
     FloatingActionButton mStoreFab;
     @Bind(R.id.delete_button)
     FloatingActionButton mDeleteFab;
-    @Bind(R.id.edit_button)
+    @Bind(R.id.go_to_edit_button)
     FloatingActionButton mEditFab;
-    @Bind(R.id.create_button)
+    @Bind(R.id.go_to_create_button)
     FloatingActionButton mCreateFab;
 
     private long mCurrentMemoId;
@@ -97,7 +103,10 @@ public class NavigationActivity extends BaseActivity
     private FloatingActionViewModel mFloatingActionViewModel;
 
     private ViewMemoHandler mViewMemoHandler;
-    private MemoHandler mMemoHandler;
+
+    @IntDef({MEMO_NEW, MEMO_EXISTING})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface MemoState {}
 
     /**
      * Fragmentを取り出す。
@@ -115,29 +124,44 @@ public class NavigationActivity extends BaseActivity
 
     /**
      * メモ作成画面に遷移する。
+     *
+     * @param state メモの状態
      */
-    private void showMemoFragment(boolean newMemo) {
-        MemoFragment fragment = MemoFragment.newInstance(newMemo ? new Memo() : mMemoHelper.find(mCurrentMemoId));
+    private void showMemoFragment(@MemoState int state) {
+        Memo memo = state == MEMO_NEW ? new Memo() : mMemoHelper.find(mCurrentMemoId);
+        MemoFragment fragment = MemoFragment.newInstance(memo);
         replaceFragment(R.id.container, fragment, MemoFragment.TAG);
-        mFloatingActionViewModel.stateMemoFragment(newMemo);
+        mFloatingActionViewModel.stateMemoFragment(state == MEMO_NEW);
         mFloatingActionViewModel.collapse();
         drawerLayout.closeDrawer(GravityCompat.START);
     }
 
     /**
+     * メモ保存ボタン押下時のコールバック。
+     *
+     * @param state メモの状態
+     */
+    private void onClickStoreButton(@MemoState int state) {
+        MemoHandler memoHandler = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
+        Memo memo = memoHandler.saveMemo(state == MEMO_NEW ? new Memo() : mMemoHelper.find(mCurrentMemoId));
+        popBackStackToViewMemoFragment(memo.getId());
+        updateAppWidget();
+    }
+
+    /**
      * 新規作成ボタン押下時のコールバック。
      */
-    @OnClick(R.id.create_button)
+    @OnClick(R.id.go_to_create_button)
     void onClickCreateButton() {
-        showMemoFragment(true);
+        showMemoFragment(MEMO_NEW);
     }
 
     /**
      * 編集ボタン押下時のコールバック。
      */
-    @OnClick(R.id.edit_button)
+    @OnClick(R.id.go_to_edit_button)
     void onClickEditButton() {
-        showMemoFragment(false);
+        showMemoFragment(MEMO_EXISTING);
     }
 
     /**
@@ -149,15 +173,12 @@ public class NavigationActivity extends BaseActivity
             Memo deletedMemo = mMemoHelper.find(mCurrentMemoId);
             mMemoHelper.delete(NavigationActivity.this, deletedMemo);
             mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
-            ViewMemoFragment viewMemoFragment = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
-            if (viewMemoFragment != null) {
-                mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
+            mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
 
-                if (mViewMemoHandler == null) {
-                    mViewMemoHandler = viewMemoFragment;
-                }
-                mViewMemoHandler.onClickedDeleteButton(mMemoHelper.findAll());
+            if (mViewMemoHandler == null) {
+                mViewMemoHandler = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
             }
+            mViewMemoHandler.onClickedDeleteButton(mMemoHelper.findAll());
             updateAppWidget();
         });
         mFloatingActionViewModel.collapse();
@@ -167,20 +188,23 @@ public class NavigationActivity extends BaseActivity
     /**
      * 新規作成画面のFAB押下時のコールバック。
      */
-    @OnClick(R.id.store_button_in_create_view)
+    @OnClick(R.id.save_button_in_create_view)
     void onClickStoreMemoInCreateViewButton() {
-        if (mMemoHandler == null) {
-            mMemoHandler = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
-        }
-        Memo createdMemo = mMemoHandler.saveMemo(new Memo());
-        popBackStackToViewMemoFragment(createdMemo.getId());
-        updateAppWidget();
+        onClickStoreButton(MEMO_NEW);
+    }
+
+    /**
+     * 保存ボタン押下時のコールバック。
+     */
+    @OnClick(R.id.save_button)
+    void onClickStoreMemoButton() {
+        onClickStoreButton(MEMO_EXISTING);
     }
 
     /**
      * 通知設定ボタン押下時のコールバック。
      */
-    @OnClick(R.id.alert_button)
+    @OnClick(R.id.go_to_alarm_setting_button)
     void onClickSetAlertButton() {
         startActivityForResult(
                 AlarmSettingActivity.createIntent(this, mMemoHelper.find(mCurrentMemoId)),
@@ -190,25 +214,12 @@ public class NavigationActivity extends BaseActivity
     }
 
     /**
-     * 保存ボタン押下時のコールバック。
-     */
-    @OnClick(R.id.store_button)
-    void onClickStoreMemoButton() {
-        if (mMemoHandler == null) {
-            mMemoHandler = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
-        }
-        Memo memo = mMemoHandler.saveMemo(mMemoHelper.find(mCurrentMemoId));
-        popBackStackToViewMemoFragment(memo.getId());
-        updateAppWidget();
-    }
-
-    /**
      * ナビゲーションドロワー内の新規作成ボタン押下時のコールバック。
      */
     @OnClick(R.id.drawer_create_memo)
     void onClickDrawerCreateMemo() {
         if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) == null) {
-            showMemoFragment(true);
+            showMemoFragment(MEMO_NEW);
         } else {
             mFloatingActionMenu.collapse();
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -224,10 +235,7 @@ public class NavigationActivity extends BaseActivity
     @OnItemClick(R.id.memo_list)
     void onClickItemMemoList(AdapterView<?> parent, int position) {
         // メモの位置をプリファレンスに保存
-        SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, position);
-        editor.commit();
+        savePositionToSharedPreferences(position);
 
         // 現在のメモIDを取得
         mCurrentMemoId = ((Memo) parent.getItemAtPosition(position)).getId();
@@ -269,11 +277,8 @@ public class NavigationActivity extends BaseActivity
             // Notificationから得られたメモを取得
             Memo memo = mMemoHelper.find(intent.getLongExtra(Memo.ID, 0L));
             if (memo == null) {
-                // プリファレンスを取得
-                SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
-
                 // プリファレンスからメモの位置を取得
-                int position = preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0);
+                int position = getPosition();
                 if (position >= memos.size()) {
                     position = memos.size() - 1;
                 }
@@ -290,7 +295,7 @@ public class NavigationActivity extends BaseActivity
         if (savedInstanceState == null) {
             addFragment(R.id.container, viewMemoFragment, ViewMemoFragment.TAG);
             if (intent.getBooleanExtra(MemoFragment.TAG, false)) {
-                showMemoFragment(true);
+                showMemoFragment(MEMO_NEW);
             }
         }
     }
@@ -414,6 +419,28 @@ public class NavigationActivity extends BaseActivity
         } catch (PendingIntent.CanceledException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * メモの位置をSharedPreferencesに保存する。
+     *
+     * @param position メモの位置
+     */
+    private void savePositionToSharedPreferences(int position) {
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, position);
+        editor.commit();
+    }
+
+    /**
+     * メモの位置をSharedPreferencesから取得する。
+     *
+     * @return メモの位置
+     */
+    private int getPosition() {
+        return getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE)
+                .getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0);
     }
 
     @Override

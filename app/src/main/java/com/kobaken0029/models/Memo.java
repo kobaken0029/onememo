@@ -61,7 +61,7 @@ public class Memo extends BaseEntity {
      */
     public Memo(long id, String subject, String memo, Date postTime, int postFlg,
                 String createAt, String updateAt) {
-        setId(id);
+        this.setId(id);
         this.setSubject(subject);
         this.setMemo(memo);
         this.setPostTime(postTime);
