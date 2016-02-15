@@ -13,12 +13,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.kobaken0029.R;
-import com.kobaken0029.interfaces.SetAlarmHandler;
+import com.kobaken0029.interfaces.AlarmSettingHandler;
 import com.kobaken0029.models.Memo;
 import com.kobaken0029.utils.DateUtil;
 import com.kobaken0029.utils.UiUtil;
-import com.kobaken0029.views.activities.SetAlarmActivity;
-import com.kobaken0029.views.viewmodels.SetAlarmViewModel;
+import com.kobaken0029.views.activities.AlarmSettingActivity;
+import com.kobaken0029.views.viewmodels.AlarmSettingViewModel;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -32,8 +32,8 @@ import butterknife.OnLongClick;
 /**
  * アラームをセットするFragment。
  */
-public class SetAlarmFragment extends TextToSpeechFragment implements SetAlarmHandler {
-    @Bind(R.id.set_alarm_layout)
+public class AlarmSettingFragment extends TextToSpeechFragment implements AlarmSettingHandler {
+    @Bind(R.id.alarm_setting_layout)
     RelativeLayout mAlarmLayout;
     @Bind(R.id.calendar_text)
     TextView mCalendarTextView;
@@ -43,7 +43,7 @@ public class SetAlarmFragment extends TextToSpeechFragment implements SetAlarmHa
     Switch mSwitch;
 
     private Memo mPostedMemo;
-    private SetAlarmViewModel mAlarmViewModel;
+    private AlarmSettingViewModel mAlarmViewModel;
     private String mMessage;
 
     @OnLongClick(R.id.memomiya)
@@ -64,7 +64,7 @@ public class SetAlarmFragment extends TextToSpeechFragment implements SetAlarmHa
 
     @OnClick(R.id.calendar_text)
     void onClickCalendarText() {
-        SetAlarmActivity activity = (SetAlarmActivity) getActivity();
+        AlarmSettingActivity activity = (AlarmSettingActivity) getActivity();
         new DatePickerDialog(activity, (v, year, month, day) -> {
             mAlarmViewModel.setYear(year);
             mAlarmViewModel.setMonth(month);
@@ -75,7 +75,7 @@ public class SetAlarmFragment extends TextToSpeechFragment implements SetAlarmHa
 
     @OnClick(R.id.time_text)
     void onClickTimeText() {
-        SetAlarmActivity activity = (SetAlarmActivity) getActivity();
+        AlarmSettingActivity activity = (AlarmSettingActivity) getActivity();
         new TimePickerDialog(activity, (v, hour, minute) -> {
             mAlarmViewModel.setHour(hour);
             mAlarmViewModel.setMinute(minute);
@@ -86,7 +86,7 @@ public class SetAlarmFragment extends TextToSpeechFragment implements SetAlarmHa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_set_alarm, container, false);
+        View view = inflater.inflate(R.layout.fragment_alarm_setting, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -122,7 +122,7 @@ public class SetAlarmFragment extends TextToSpeechFragment implements SetAlarmHa
     @Override
     void bindView() {
         if (mAlarmViewModel == null) {
-            mAlarmViewModel = new SetAlarmViewModel();
+            mAlarmViewModel = new AlarmSettingViewModel();
         }
 
         Calendar calendar;

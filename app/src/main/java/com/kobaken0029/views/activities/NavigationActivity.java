@@ -183,8 +183,8 @@ public class NavigationActivity extends BaseActivity
     @OnClick(R.id.alert_button)
     void onClickSetAlertButton() {
         startActivityForResult(
-                SetAlarmActivity.createIntent(this, mMemoHelper.find(mCurrentMemoId)),
-                SetAlarmActivity.SET_ALARM_ACTIVITY
+                AlarmSettingActivity.createIntent(this, mMemoHelper.find(mCurrentMemoId)),
+                AlarmSettingActivity.SET_ALARM_ACTIVITY
         );
         mFloatingActionViewModel.collapse();
     }
@@ -319,7 +319,7 @@ public class NavigationActivity extends BaseActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SetAlarmActivity.SET_ALARM_ACTIVITY) {
+        if (requestCode == AlarmSettingActivity.SET_ALARM_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
                 // 通知時間が設定されたメモを取得
                 Memo settingMemo = (Memo) data.getSerializableExtra(Memo.TAG);
