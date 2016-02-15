@@ -145,9 +145,7 @@ public class AlarmSettingFragment extends TextToSpeechFragment implements AlarmS
             }
 
             mSwitch.setChecked(mPostedMemo.getPostFlg() == 1);
-            mSwitch.setOnCheckedChangeListener((bv, isChecked) -> {
-                mPostedMemo.setPostFlg(isChecked ? 1 : 0);
-            });
+            mSwitch.setOnCheckedChangeListener((bv, isChecked) -> mPostedMemo.setPostFlg(isChecked ? 1 : 0));
         }
     }
 
