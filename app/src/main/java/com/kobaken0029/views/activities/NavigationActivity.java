@@ -235,10 +235,7 @@ public class NavigationActivity extends BaseActivity
     @OnItemClick(R.id.memo_list)
     void onClickItemMemoList(AdapterView<?> parent, int position) {
         // メモの位置をプリファレンスに保存
-        SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, position);
-        editor.commit();
+        savePositionToSharedPreferences(position);
 
         // 現在のメモIDを取得
         mCurrentMemoId = ((Memo) parent.getItemAtPosition(position)).getId();
@@ -280,11 +277,8 @@ public class NavigationActivity extends BaseActivity
             // Notificationから得られたメモを取得
             Memo memo = mMemoHelper.find(intent.getLongExtra(Memo.ID, 0L));
             if (memo == null) {
-                // プリファレンスを取得
-                SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
-
                 // プリファレンスからメモの位置を取得
-                int position = preferences.getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0);
+                int position = getPosition();
                 if (position >= memos.size()) {
                     position = memos.size() - 1;
                 }
@@ -425,6 +419,28 @@ public class NavigationActivity extends BaseActivity
         } catch (PendingIntent.CanceledException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * メモの位置をSharedPreferencesに保存する。
+     *
+     * @param position メモの位置
+     */
+    private void savePositionToSharedPreferences(int position) {
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, position);
+        editor.commit();
+    }
+
+    /**
+     * メモの位置をSharedPreferencesから取得する。
+     *
+     * @return メモの位置
+     */
+    private int getPosition() {
+        return getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE)
+                .getInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, 0);
     }
 
     @Override
