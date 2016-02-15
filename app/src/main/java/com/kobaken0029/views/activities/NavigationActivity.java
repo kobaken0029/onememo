@@ -173,15 +173,12 @@ public class NavigationActivity extends BaseActivity
             Memo deletedMemo = mMemoHelper.find(mCurrentMemoId);
             mMemoHelper.delete(NavigationActivity.this, deletedMemo);
             mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
-            ViewMemoFragment viewMemoFragment = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
-            if (viewMemoFragment != null) {
-                mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
+            mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
 
-                if (mViewMemoHandler == null) {
-                    mViewMemoHandler = viewMemoFragment;
-                }
-                mViewMemoHandler.onClickedDeleteButton(mMemoHelper.findAll());
+            if (mViewMemoHandler == null) {
+                mViewMemoHandler = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
             }
+            mViewMemoHandler.onClickedDeleteButton(mMemoHelper.findAll());
             updateAppWidget();
         });
         mFloatingActionViewModel.collapse();
