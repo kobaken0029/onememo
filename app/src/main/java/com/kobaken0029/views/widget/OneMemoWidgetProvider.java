@@ -29,7 +29,7 @@ public class OneMemoWidgetProvider extends AppWidgetProvider {
                 // ヘッダー
                 Intent activityIntent = new Intent(context, NavigationActivity.class);
                 PendingIntent activityPendingIntent = PendingIntent.getActivity(context, 0, activityIntent, 0);
-                remoteViews.setOnClickPendingIntent(R.id.header_text, activityPendingIntent);
+                remoteViews.setOnClickPendingIntent(R.id.header, activityPendingIntent);
 
                 // 新規作成アイコン
                 Intent clickIntent = new Intent(context, OneMemoWidgetProvider.class);
@@ -58,7 +58,8 @@ public class OneMemoWidgetProvider extends AppWidgetProvider {
 
                 appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
             }
-        }    }
+        }
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
