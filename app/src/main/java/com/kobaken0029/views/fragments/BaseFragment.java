@@ -1,7 +1,7 @@
 package com.kobaken0029.views.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.kobaken0029.OneMemoApplication;
 import com.kobaken0029.helpers.MemoHelper;

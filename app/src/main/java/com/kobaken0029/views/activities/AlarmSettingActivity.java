@@ -30,14 +30,14 @@ public class AlarmSettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_setting);
         Memo postedMemo = (Memo) getIntent().getSerializableExtra(Memo.TAG);
-        mHandler = (AlarmSettingFragment) getFragmentManager().findFragmentById(R.id.alarm_setting_fragment);
+        mHandler = (AlarmSettingFragment) getSupportFragmentManager().findFragmentById(R.id.alarm_setting_fragment);
         mHandler.setPostedMemo(postedMemo);
     }
 
     @Override
     public void finish() {
         if (mHandler == null) {
-            mHandler = (AlarmSettingFragment) getFragmentManager().findFragmentById(R.id.alarm_setting_fragment);
+            mHandler = (AlarmSettingFragment) getSupportFragmentManager().findFragmentById(R.id.alarm_setting_fragment);
         }
         mHandler.saveSetting();
         super.finish();
