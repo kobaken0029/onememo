@@ -142,7 +142,7 @@ public class NavigationActivity extends BaseActivity
      * @param state メモの状態
      */
     private void onClickStoreButton(@MemoState int state) {
-        MemoHandler memoHandler = (MemoFragment) getFragmentManager().findFragmentByTag(MemoFragment.TAG);
+        MemoHandler memoHandler = (MemoFragment) getSupportFragmentManager().findFragmentByTag(MemoFragment.TAG);
         Memo memo = memoHandler.saveMemo(state == MEMO_NEW ? new Memo() : mMemoHelper.find(mCurrentMemoId));
         popBackStackToViewMemoFragment(memo.getId());
         updateAppWidget();
@@ -176,7 +176,7 @@ public class NavigationActivity extends BaseActivity
             mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
 
             if (mViewMemoHandler == null) {
-                mViewMemoHandler = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
+                mViewMemoHandler = (ViewMemoFragment) getSupportFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
             }
             mViewMemoHandler.onClickedDeleteButton(mMemoHelper.findAll());
             updateAppWidget();
@@ -245,7 +245,7 @@ public class NavigationActivity extends BaseActivity
             getFragmentManager().popBackStack();
         }
 
-        ViewMemoFragment viewMemoFragment = (ViewMemoFragment) getFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
+        ViewMemoFragment viewMemoFragment = (ViewMemoFragment) getSupportFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
         if (viewMemoFragment != null) {
             if (mViewMemoHandler == null) {
                 mViewMemoHandler = viewMemoFragment;
@@ -430,7 +430,7 @@ public class NavigationActivity extends BaseActivity
         SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_ID, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(SHARED_PREFERENCES_MEMO_POSITION_KEY, position);
-        editor.commit();
+        editor.apply();
     }
 
     /**

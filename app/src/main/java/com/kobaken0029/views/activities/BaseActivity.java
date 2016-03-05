@@ -1,8 +1,8 @@
 package com.kobaken0029.views.activities;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.kobaken0029.OneMemoApplication;
@@ -46,7 +46,7 @@ public class BaseActivity extends AppCompatActivity {
      * @param key             キー
      */
     public void addFragment(int containerViewId, Fragment fragment, String key) {
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(containerViewId, fragment, key)
                 .commit();
     }
@@ -59,7 +59,7 @@ public class BaseActivity extends AppCompatActivity {
      * @param key             キー
      */
     public void replaceFragment(int containerViewId, Fragment fragment, String key) {
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(containerViewId, fragment, key)
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -72,7 +72,7 @@ public class BaseActivity extends AppCompatActivity {
      * @param fragment 対象フラグメント
      */
     public void removeFragment(Fragment fragment) {
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .remove(fragment)
                 .commit();
     }
