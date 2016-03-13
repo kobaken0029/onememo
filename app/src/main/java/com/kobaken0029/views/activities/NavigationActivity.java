@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -119,7 +120,7 @@ public class NavigationActivity extends BaseActivity
         mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
         mFloatingActionViewModel.collapse();
         drawerLayout.closeDrawer(GravityCompat.START);
-        getFragmentManager().popBackStack();
+        getSupportFragmentManager().popBackStack();
     }
 
     /**
@@ -218,7 +219,7 @@ public class NavigationActivity extends BaseActivity
      */
     @OnClick(R.id.drawer_create_memo)
     void onClickDrawerCreateMemo() {
-        if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) == null) {
+        if (getSupportFragmentManager().findFragmentByTag(MemoFragment.TAG) == null) {
             showMemoFragment(MEMO_NEW);
         } else {
             mFloatingActionMenu.collapse();
@@ -241,8 +242,8 @@ public class NavigationActivity extends BaseActivity
         mCurrentMemoId = ((Memo) parent.getItemAtPosition(position)).getId();
 
         // メモ作成画面の場合
-        if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) != null) {
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().findFragmentByTag(MemoFragment.TAG) != null) {
+            getSupportFragmentManager().popBackStack();
         }
 
         ViewMemoFragment viewMemoFragment = (ViewMemoFragment) getSupportFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
@@ -335,11 +336,11 @@ public class NavigationActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().findFragmentByTag(MemoFragment.TAG) != null) {
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().findFragmentByTag(MemoFragment.TAG) != null) {
             mMemoHelper.loadMemos(mMemoListAdapter, mDrawerViewModel);
             mFloatingActionViewModel.stateViewMemoFragment(!mMemoHelper.exists());
             drawerLayout.closeDrawer(GravityCompat.START);
+            getSupportFragmentManager().popBackStack();
             return;
         }
         super.onBackPressed();
@@ -444,7 +445,7 @@ public class NavigationActivity extends BaseActivity
     }
 
     @Override
-    public void onClicked() {
+    public void onClicked(View v) {
         mDrawerViewModel.getDrawerLayout().openDrawer(GravityCompat.START);
     }
 

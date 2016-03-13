@@ -27,7 +27,7 @@ public class ToolbarHelperImpl implements ToolbarHelper {
             toolbar.setNavigationIcon(R.drawable.ic_action_navigation_menu);
             if (isNavigationOnClickListenerImpl) {
                 NavigationOnClickListener listener = (NavigationOnClickListener) activity;
-                toolbar.setNavigationOnClickListener(v -> listener.onClicked());
+                toolbar.setNavigationOnClickListener(listener::onClicked);
             }
         } else {
             toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
@@ -43,7 +43,7 @@ public class ToolbarHelperImpl implements ToolbarHelper {
             toolbar.setNavigationIcon(R.drawable.ic_action_navigation_menu);
             if (isNavigationOnClickListenerImpl) {
                 NavigationOnClickListener listener = (NavigationOnClickListener) activity;
-                toolbar.setNavigationOnClickListener(v -> listener.onClicked());
+                toolbar.setNavigationOnClickListener(listener::onClicked);
             }
         } else {
             toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back);
