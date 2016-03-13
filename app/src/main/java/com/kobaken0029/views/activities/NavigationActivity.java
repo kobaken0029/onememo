@@ -468,27 +468,7 @@ public class NavigationActivity extends BaseActivity
                 finish();
                 break;
             case R.id.menu_voice_switch:
-                // プリファレンスを取得
-                SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_VOICE_SWITCH_ID, Context.MODE_PRIVATE);
-
-                // 音声再生するかどうかを取得
-                boolean isPlayVoice = !canPlayVoice(preferences);
-
-                // 音声再生を切り替え
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, isPlayVoice);
-                editor.apply();
-
-                // Menuを切り替え
-                item.setIcon(isPlayVoice ? R.drawable.ic_mic_white : R.drawable.ic_mic_off_white);
-
-                String formatArg = isPlayVoice
-                        ? getString(R.string.nav_play_voice_switch_on)
-                        : getString(R.string.nav_play_voice_switch_off);
-
-                // トーストを表示
-                UiUtil.showToast(getApplicationContext(), getString(R.string.nav_play_voice_switch_message, formatArg));
-
+                toggleVoicePlay(item);
                 break;
             case R.id.menu_setting:
                 N2ttsUtil.settingReadVoice(this);
@@ -515,6 +495,34 @@ public class NavigationActivity extends BaseActivity
             id = 0L;
         }
         return id;
+    }
+
+    /**
+     * 音声再生のON/OFFを切り替える。
+     *
+     * @param item menuItem
+     */
+    private void toggleVoicePlay(MenuItem item) {
+        // プリファレンスを取得
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_VOICE_SWITCH_ID, Context.MODE_PRIVATE);
+
+        // 音声再生するかどうかを取得
+        boolean isPlayVoice = !canPlayVoice(preferences);
+
+        // 音声再生を切り替え
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, isPlayVoice);
+        editor.apply();
+
+        // Menuを切り替え
+        item.setIcon(isPlayVoice ? R.drawable.ic_mic_white : R.drawable.ic_mic_off_white);
+
+        String formatArg = isPlayVoice
+                ? getString(R.string.nav_play_voice_switch_on)
+                : getString(R.string.nav_play_voice_switch_off);
+
+        // トーストを表示
+        UiUtil.showToast(getApplicationContext(), getString(R.string.nav_play_voice_switch_message, formatArg));
     }
 
     /**
