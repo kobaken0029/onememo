@@ -69,8 +69,8 @@ public class MemoFragment extends TextToSpeechFragment implements MemoHandler {
     @Override
     public void onResume() {
         super.onResume();
-        Toolbar t = findById(getActivity(), R.id.toolbar_menu);
-        mToolbarHelper.change((BaseActivity) getActivity(), t, R.string.create_view, true);
+        Toolbar toolbar = findById(getActivity(), R.id.toolbar_menu);
+        mToolbarHelper.change((BaseActivity) getActivity(), toolbar, R.string.create_view, true);
     }
 
     @Override
