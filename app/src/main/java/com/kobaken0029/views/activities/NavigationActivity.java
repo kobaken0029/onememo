@@ -66,6 +66,12 @@ public class NavigationActivity extends BaseActivity
     /** プリファレンスKey。 */
     public static final String SHARED_PREFERENCES_MEMO_POSITION_KEY = "position";
 
+    /** プリファレンスID。*/
+    private static final String SHARED_PREFERENCES_VOICE_SWITCH_ID = "voice_switch";
+
+    /** プリファレンスKEY。*/
+    private static final String SHARED_PREFERENCES_VOICE_SWITCH_KEY = "voice_switch_key";
+
     private static final int MEMO_NEW = 0;
     private static final int MEMO_EXISTING = 1;
 
@@ -265,7 +271,14 @@ public class NavigationActivity extends BaseActivity
         setContentView(R.layout.activity_navigation);
         ButterKnife.bind(this);
         bindView();
-        mToolbarHelper.init(this, toolbar, R.string.read_view, false, true);
+        mToolbarHelper.init(
+                this,
+                toolbar,
+                R.string.read_view,
+                false,
+                true,
+                canPlayVoice(getSharedPreferences(SHARED_PREFERENCES_VOICE_SWITCH_ID, Context.MODE_PRIVATE))
+        );
 
         // メモを全件取得
         List<Memo> memos = mMemoHelper.exists() ? mMemoHelper.findAll() : new ArrayList<>();
@@ -455,6 +468,9 @@ public class NavigationActivity extends BaseActivity
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.menu_voice_switch:
+                toggleVoicePlay(item);
+                break;
             case R.id.menu_setting:
                 N2ttsUtil.settingReadVoice(this);
                 break;
@@ -480,5 +496,43 @@ public class NavigationActivity extends BaseActivity
             id = 0L;
         }
         return id;
+    }
+
+    /**
+     * 音声再生のON/OFFを切り替える。
+     *
+     * @param item menuItem
+     */
+    private void toggleVoicePlay(MenuItem item) {
+        // プリファレンスを取得
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES_VOICE_SWITCH_ID, Context.MODE_PRIVATE);
+
+        // 音声再生するかどうかを取得
+        boolean isPlayVoice = !canPlayVoice(preferences);
+
+        // 音声再生を切り替え
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, isPlayVoice);
+        editor.apply();
+
+        // Menuを切り替え
+        item.setIcon(isPlayVoice ? R.drawable.ic_mic_white : R.drawable.ic_mic_off_white);
+
+        String formatArg = isPlayVoice
+                ? getString(R.string.nav_play_voice_switch_on)
+                : getString(R.string.nav_play_voice_switch_off);
+
+        // トーストを表示
+        UiUtil.showToast(getApplicationContext(), getString(R.string.nav_play_voice_switch_message, formatArg));
+    }
+
+    /**
+     * 音声を再生するかどうかをプリファレンスから取得する。
+     *
+     * @param preferences SharedPreferences
+     * @return 音声を再生出来る場合true
+     */
+    private boolean canPlayVoice(SharedPreferences preferences) {
+        return preferences.getBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, true);
     }
 }

@@ -109,8 +109,8 @@ public class ViewMemoFragment extends TextToSpeechFragment implements ViewMemoHa
     @Override
     public void onResume() {
         super.onResume();
-        Toolbar t = findById(getActivity(), R.id.toolbar_menu);
-        mToolbarHelper.change((BaseActivity) getActivity(), t, R.string.read_view, false);
+        Toolbar toolbar = findById(getActivity(), R.id.toolbar_menu);
+        mToolbarHelper.change((BaseActivity) getActivity(), toolbar, R.string.read_view, false);
 
         Memo memo = mMemoHelper.find(mViewMemoViewModel.getMemoId());
         if (memo != null) {

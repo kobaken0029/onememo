@@ -10,12 +10,18 @@ import com.kobaken0029.interfaces.OnMenuItemClickListener;
 
 public class ToolbarHelperImpl implements ToolbarHelper {
 
-    public void init(final BaseActivity activity, Toolbar toolbar, int titleId, boolean isShowBackArrow, boolean isShowMenu) {
+    public void init(final BaseActivity activity, Toolbar toolbar, int titleId,
+                     boolean isShowBackArrow, boolean isShowMenu, boolean canPlayVoice) {
         toolbar.setTitle(titleId);
         toolbar.setTitleTextColor(activity.getResources().getColor(android.R.color.white));
 
         if (isShowMenu) {
-            toolbar.inflateMenu(R.menu.main_menu);
+            if (canPlayVoice) {
+                toolbar.inflateMenu(R.menu.main_menu_voice_on);
+            } else {
+                toolbar.inflateMenu(R.menu.main_menu_voice_off);
+            }
+
             if (activity instanceof OnMenuItemClickListener) {
                 OnMenuItemClickListener listener = (OnMenuItemClickListener) activity;
                 toolbar.setOnMenuItemClickListener(listener::onMenuItemClicked);

@@ -25,20 +25,14 @@ import static butterknife.ButterKnife.findById;
  */
 public abstract class TextToSpeechFragment extends BaseFragment {
 
-    /**
-     * ハンドラのメッセージID
-     */
-    private static final int HANDLER_MESSAGE_ID = 1;
-
-    /**
-     * プリファレンスID。
-     */
+    /** プリファレンスID。*/
     private static final String SHARED_PREFERENCES_VOICE_SWITCH_ID = "voice_switch";
 
-    /**
-     * プリファレンスKEY。
-     */
+    /** プリファレンスKEY。*/
     private static final String SHARED_PREFERENCES_VOICE_SWITCH_KEY = "voice_switch_key";
+
+    /** ハンドラのメッセージID */
+    private static final int HANDLER_MESSAGE_ID = 1;
 
     private Handler mHandler;
     protected TextToSpeech mTextToSpeech;
@@ -71,27 +65,6 @@ public abstract class TextToSpeechFragment extends BaseFragment {
                 }
                 mHandler = new MyHandler(message, messageWindowTextView);
                 mHandler.sendEmptyMessage(HANDLER_MESSAGE_ID);
-            });
-            view.setOnLongClickListener(v -> {
-                // プリファレンスを取得
-                SharedPreferences preferences = getSharedPreferences();
-
-                // 音声再生するかどうかを取得
-                boolean isPlayVoice = !canPlayVoice(preferences);
-
-                // 音声再生を切り替え
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(SHARED_PREFERENCES_VOICE_SWITCH_KEY, isPlayVoice);
-                editor.commit();
-
-                String formatArg = isPlayVoice
-                        ? getString(R.string.nav_play_voice_switch_on)
-                        : getString(R.string.nav_play_voice_switch_off);
-
-                // トーストを表示
-                UiUtil.showToast(getActivity(), getString(R.string.nav_play_voice_switch_message, formatArg));
-
-                return false;
             });
         }
     }
