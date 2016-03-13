@@ -73,5 +73,6 @@
     <string name="voice7">忘れないように、メモしないと&#8230;</string>
     <string name="voice_set_alarm">通知日を設定してください。</string>
     <string name="voice_set_alarm_long_tap">そ、、、そんなにベタベタ触らないでください。。恥ずかしいですぅ・・・</string>
+    <string name="voice_on_off">ボイスON/OFF</string>
 
 </resources>
