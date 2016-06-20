@@ -185,7 +185,10 @@ public class NavigationActivity extends BaseActivity
             if (mViewMemoHandler == null) {
                 mViewMemoHandler = (ViewMemoFragment) getSupportFragmentManager().findFragmentByTag(ViewMemoFragment.TAG);
             }
-            mViewMemoHandler.onClickedDeleteButton(mMemoHelper.findAll());
+
+            List<Memo> memos = mMemoHelper.findAll();
+            mViewMemoHandler.onClickedDeleteButton(memos);
+            mCurrentMemoId = memos.get(0).getId();
             updateAppWidget();
         });
         mFloatingActionViewModel.collapse();
